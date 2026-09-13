@@ -93,6 +93,12 @@ Static pages, published from [`docs/`](docs/) to
   what is happening and when, a week selector, and a "changes this week" view
   that diffs one email against the last. One HTML file, no build step, one
   outbound request (Google Fonts).
+- **[Kiwi Businesses Going Under](docs/nz-insolvency-since-gfc/)** — New
+  Zealand company liquidations from 2005 to August 2026, by year, sector and
+  business size, counted in Isotype pictograms (one shopfront = 100 companies)
+  and told like an in-flight magazine feature: who went under, how small they
+  were, who sent them to court, and how it compares with 2009. One HTML file,
+  no build step, one outbound request (Google Fonts).
 
 Every Chrome extension also has a page on the site, at
 `unashamedai.broadley.org.nz/<extension-folder>/`, restating its README in the
