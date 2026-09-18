@@ -202,7 +202,7 @@ const SITES = {
     geom: { line: [[-41.20832,174.90311],[-41.20759,174.90441],[-41.20747,174.90468],[-41.20736,174.90487],[-41.20672,174.90602],[-41.20648,174.90647],[-41.20641,174.90661],[-41.20569,174.90789],[-41.20552,174.90817]] } },
   rutherford_resurf: { name: "Rutherford St / Connolly St resurfacing", cat: "night",
     geom: { line: [[-41.20427,174.91139],[-41.20439,174.91086],[-41.20473,174.90983],[-41.20521,174.90878],[-41.20552,174.90817],[-41.20569,174.90789],[-41.20641,174.90661],[-41.20672,174.90602],[-41.20736,174.90487],[-41.20759,174.90441],[-41.20832,174.90311]] } },
-  connolly_parking: { name: "Connolly Street (southbound, near Rutherford St)", cat: "parking",
+  connolly_parking: { name: "Connolly Street (southern section)", cat: "parking",
     geom: { line: [[-41.20160,174.91573],[-41.20383,174.91198],[-41.20427,174.91139]] } },
   connolly_resurf: { name: "Connolly Street resurfacing (southbound detour via Mills St)", cat: "night",
     geom: { line: [[-41.19958,174.91731],[-41.20055,174.91743],[-41.20105,174.91710],[-41.20160,174.91573],[-41.20383,174.91198],[-41.20427,174.91139]] } },
@@ -216,6 +216,12 @@ const SITES = {
     geom: { line: [[-41.20310,174.90607],[-41.20359,174.90502],[-41.20404,174.90386],[-41.20473,174.90244],[-41.20536,174.90134],[-41.20754,174.89761],[-41.20933,174.89399]] } },
   sh2_rail_corridor: { name: "SH2 rail corridor dayworks (near Melling)", cat: "tm",
     geom: { point: [-41.20582,174.90091], lines: [[[-41.20404,174.90386],[-41.20473,174.90244],[-41.20536,174.90134],[-41.20754,174.89761]]] } },
+  sh2_melling_dowse: { name: "SH2 southbound: Melling Link → Dowse Drive interchange", cat: "night",
+    geom: { line: [[-41.20310,174.90607],[-41.20359,174.90502],[-41.20404,174.90386],[-41.20473,174.90244],[-41.20536,174.90134],[-41.20754,174.89761],[-41.20933,174.89399],[-41.21072,174.89126],[-41.21462,174.88567],[-41.21600,174.88300]] } },
+  sh2_dowse_closure: { name: "SH2 southbound full closure: Melling Link → Dowse Drive (one night)", cat: "closed",
+    geom: { point: [-41.21250,174.88870], lines: [[[-41.20310,174.90607],[-41.20404,174.90386],[-41.20536,174.90134],[-41.20754,174.89761],[-41.20933,174.89399],[-41.21072,174.89126],[-41.21462,174.88567],[-41.21600,174.88300]]] } },
+  harbourview_detour: { name: "Detour to Harbour View Rd: over Melling Link Bridge, round the roundabout, straight across", cat: "detour",
+    geom: { line: [[-41.20552,174.90824],[-41.20505,174.90794],[-41.20459,174.90748],[-41.20351,174.90639],[-41.20310,174.90607],[-41.20290,174.90574],[-41.20285,174.90563],[-41.20280,174.90393],[-41.20322,174.90336],[-41.20335,174.90281],[-41.20326,174.90085],[-41.20270,174.89903]] } },
   // ---- long-term closures ----
   queens_closed: { name: "Queens Drive (Rutherford St → High St)", cat: "longterm",
     geom: { line: [[-41.20648,174.90647],[-41.20721,174.90708],[-41.20735,174.90720]] } },
@@ -245,7 +251,7 @@ const SITES = {
 // Long-term closures are carried on every week unless a weekly update lists them under "removed".
 const LONG_TERM = [
   { site: "queens_closed", text: "CLOSED until approximately 2029." },
-  { site: "queens_high", text: "CLOSED for upgrades." },
+  { site: "queens_high", text: "CLOSED for upgrades. On track to reopen in December 2026: the last stormwater pipe is in, streetlight poles go in next, then the pavement is rebuilt and resurfaced." },
   { site: "pharazyn", text: "CLOSED until approximately 2029." },
   { site: "block_rd", text: "Permanently CLOSED." },
   { site: "river_trail_west", text: "CLOSED from ~800 m south of Kennedy Good Bridge to 500 m north of Ewen Bridge. Use the eastern (city) side paths.", who: "Pedestrians & cyclists" },
@@ -310,6 +316,31 @@ const UPDATES = [
       { title: "Event — Hutt City Night Market", text: "Every Thursday from 4pm at Dowse Square: nearby roads busier than usual." },
     ],
     notes: "Work is weather dependent and may be rescheduled at short notice. Saturday work remains a possibility — expect heavier delays on market days and around weekly sport."
+  },
+  {
+    week: "2026-09-20", emailDate: "2026-09-18",
+    subject: "Roadworks update — week commencing Sunday 20 September 2026",
+    items: [
+      { site: "sh2_melling_dowse", text: "Overnight southbound lane closures between the Melling Link intersection and the Dowse Drive interchange for service relocation works.", when: "Sun 20 – Thu 24 Sep, 8pm–5am" },
+      { site: "sh2_dowse_closure", text: "One-night full southbound closure from the Melling Link intersection to the Dowse Drive interchange: a joint programme of Wellington Transport Alliance surfacing, gantry inspections and service relocation. Detour via local roads in Lower Hutt.", when: "Tue 22 Sep, night" },
+      { site: "harbourview_detour", text: "To reach Harbour View Road while SH2 southbound is closed: turn left off SH2, cross Melling Link Bridge, go around the roundabout, then straight over the intersection to Harbour View Road.", when: "Tue 22 Sep, night" },
+      { site: "marsden", text: "Northbound access only until further notice. From Normandale Road, or heading south on Marsden Street, use Bridge Street and Railway Avenue instead.", when: "Until further notice" },
+      { site: "marsden_detour", text: "Signed detour for southbound Marsden Street traffic.", when: "Until further notice" },
+      { site: "queens_slip", text: "Left-hand lane north (closest to Govind Bhula Park) is closed when joint bay works are in progress.", when: "When work in progress" },
+      { site: "daly_south", text: "Reduced parking and temporary speed limits as work progresses in the shoulder and footpath.", when: "All week" },
+      { site: "andrews_rbt", text: "Stop/go traffic management on all roads into the roundabout. Allow extra time through this area.", when: "Weekdays from Mon 21 Sep, 7am–5pm" },
+      { site: "dudley", text: "Traffic management in place at the south end, with reduced parking.", when: "All week" },
+      { site: "rutherford_south", text: "Traffic management remains in place, plus minor changes to the shared pathway through this area.", when: "All week" },
+      { site: "connolly_parking", text: "Road resurfacing in stages south of the National Storage facility, with reduced car parking in this area.", when: "From Thu 24 Sep" },
+    ],
+    region: [
+      { title: "SH1 — Vivian Street", text: "Overnight works Sunday to Wednesday; times vary." },
+      { title: "SH1 — coming up", text: "Southbound lane closures Ngauranga Interchange to Vivian Street, 9pm–4.30am, Sun 4 to Thu 15 October, with tunnel closures at the same time." },
+      { title: "SH58", text: "Ongoing roadworks; stop/go Monday to Thursday nights 7pm–5.30am for pavement work." },
+      { title: "SH2 (not part of the Melling project)", text: "Overnight lane closures for street light replacement: Wednesday night southbound, Thursday night northbound, 7pm–5.30am." },
+      { title: "Event — Hutt Half Marathon", text: "Sunday 20 Sep: traffic management on some roads; expect delays in parts of Petone, Seaview, Eastbourne and Lower Hutt." },
+    ],
+    notes: "Some of this work is weather dependent and may be rescheduled at short notice. (The email's own heading says \"week commencing Sunday 13 September\"; its dates are 20–24 September, so it is filed here as the week of 20 September.)"
   },
 ];
 

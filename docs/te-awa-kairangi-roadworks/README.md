@@ -64,7 +64,7 @@ changes them.
 ## Data and caveats
 
 - Roadworks content is transcribed from the NZTA / Te Wai Takamori o Te Awa
-  Kairangi "Roadworks update" emails (4 and 11 September 2026 at time of writing).
+  Kairangi "Roadworks update" emails (4, 11 and 18 September 2026 at time of writing).
   Wording is kept close to the source; extents along a street are a reading of the
   email, not a survey.
 - Street alignments are from [OpenStreetMap](https://www.openstreetmap.org/)
