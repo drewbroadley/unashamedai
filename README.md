@@ -93,6 +93,13 @@ Static pages, published from [`docs/`](docs/) to
   what is happening and when, a week selector, and a "changes this week" view
   that diffs one email against the last. One HTML file, no build step, one
   outbound request (Google Fonts).
+- **[Belmont & Kelson Roadworks](docs/sh2-belmont-kelson-roadworks/)** — the
+  same idea for NZTA's Friday "Wellington region state highway roadworks"
+  email, cut down to SH2 Western Hutt Road between Kelson and the Dowse
+  interchange: each night's lane or full closure past Belmont Domain, Kennedy
+  Good Bridge and Melling drawn on the actual carriageway, with a night-by-night
+  strip per job and the Upper Hutt and regional notes listed alongside. One HTML
+  file, no build step, one outbound request (Google Fonts).
 - **[Kiwi Businesses Going Under](docs/nz-insolvency-since-gfc/)** — New
   Zealand company liquidations from 2005 to August 2026, by year, sector and
   business size, counted in Isotype pictograms (one shopfront = 100 companies)
