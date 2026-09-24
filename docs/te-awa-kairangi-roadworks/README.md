@@ -14,7 +14,8 @@ turns that into a map you can actually plan a trip with.
 - Draws every street, bridge, roundabout and path named in the week's email on a
   vector map of the Lower Hutt CBD and Melling, coloured by what is happening:
   road/lane closed, one-way only, traffic management, night works, reduced
-  parking, footpath/trail closed, long-term closure (to ~2029), signed detour.
+  parking, footpath/trail closed, long-term closure (to ~2029), signed detour,
+  planned closure (announced but not started yet).
 - Click any line, pin or list entry for the wording from the email, the days and
   hours it applies, and which email it came from.
 - **Week selector** in the header steps between weekly emails.
@@ -25,6 +26,10 @@ turns that into a map you can actually plan a trip with.
 - Works the email mentions outside the CBD (Naenae Road and friends) and around
   the wider region (Terrace Tunnel, Remutaka Hill, events) are listed in the
   sidebar; the ones with a location can be panned to.
+- **Project news** carries the roadworks-relevant parts of the programme's
+  monthly community update into the week it arrived: intersection progress,
+  announced future closures (drawn on the map where they have a location), and
+  changes to layouts or speed limits.
 - Pan, wheel-zoom and pinch-zoom; keyboard focus works on the list.
 
 ## What it can touch
@@ -55,6 +60,9 @@ All the content lives in two arrays near the top of the last `<script>` block in
 - `UPDATES` — one entry per weekly email: `week` (the Sunday it commences),
   `emailDate`, the `items` (each `{ site, text, when }` referencing a site id),
   any `region` notes, and the email's own weather/Saturday caveat in `notes`.
+  A week can also carry an optional `news` object for the monthly community
+  update that arrived during it: `{ title, date, items }`, where each item is
+  `{ title, text }` or, if it has a place on the map, `{ site, title, when, text }`.
 
 To add a week: append a new object to `UPDATES` (add any new place to `SITES`
 first). The page diffs consecutive weeks itself, so "Changes this week" needs no
@@ -64,9 +72,14 @@ changes them.
 ## Data and caveats
 
 - Roadworks content is transcribed from the NZTA / Te Wai Takamori o Te Awa
-  Kairangi "Roadworks update" emails (4, 11 and 18 September 2026 at time of writing).
-  Wording is kept close to the source; extents along a street are a reading of the
-  email, not a survey.
+  Kairangi "Roadworks update" emails (4, 11 and 18 September 2026 at time of writing),
+  plus the monthly community update of 24 September 2026. Wording is kept close to
+  the source; extents along a street are a reading of the email, not a survey.
+- The Rutherford Street closure from January 2027 is traced from the closure map
+  on the programme's
+  [Rutherford Street closure page](https://teawakairangi.co.nz/our-projects/our-projects/rutherford-street-closure-january-2027/)
+  (the section between Woolworths and Harvey Norman, either side of Queens Drive)
+  and marked approximate.
 - Street alignments are from [OpenStreetMap](https://www.openstreetmap.org/)
   (© OpenStreetMap contributors, ODbL), simplified to roughly 5–10 m. The western
   Hutt River Trail is not in OSM any more, so its closed extent is drawn as an

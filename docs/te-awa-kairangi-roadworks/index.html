@@ -11,7 +11,7 @@
   --ground:#EEF1F0; --panel:#FFFFFF; --ink:#18262B; --ink-2:#4B5A60; --ink-3:#7B888D; --rule:#D7DDDC;
   --accent:#1E6B75; --accent-ink:#FFFFFF;
   --map-ground:#E8ECEA; --map-road:#FFFFFF; --map-case:#C9D0CF; --map-water:#B6D2DE; --map-park:#D5E3D3; --map-rail:#9AA6A9; --map-label:#5B6A70; --map-halo:#E8ECEA;
-  --c-closed:#C4302B; --c-oneway:#D9640F; --c-tm:#D89B12; --c-night:#4D4BAF; --c-parking:#2B8A80; --c-path:#6B8E23; --c-longterm:#5A6670; --c-works:#8A6A3E; --c-detour:#1E6B75;
+  --c-closed:#C4302B; --c-oneway:#D9640F; --c-tm:#D89B12; --c-night:#4D4BAF; --c-parking:#2B8A80; --c-path:#6B8E23; --c-longterm:#5A6670; --c-works:#8A6A3E; --c-detour:#1E6B75; --c-planned:#A23B72;
   --new:#1E6B75; --removed:#9E3B36;
   --shadow:0 2px 10px rgba(24,38,43,.12);
 }
@@ -19,14 +19,14 @@
   --ground:#121A1D; --panel:#1A2427; --ink:#E6ECEC; --ink-2:#B3BFC2; --ink-3:#7F8E93; --rule:#2D3A3E;
   --accent:#5CB8C2; --accent-ink:#0E1A1C;
   --map-ground:#1B2528; --map-road:#334044; --map-case:#12191B; --map-water:#1F3B49; --map-park:#213128; --map-rail:#5C6B70; --map-label:#A9B6BA; --map-halo:#1B2528;
-  --c-closed:#F0665F; --c-oneway:#F28B3B; --c-tm:#E9B93C; --c-night:#8C8AE8; --c-parking:#4FC0B4; --c-path:#A3C85A; --c-longterm:#98A5AE; --c-works:#C9A26E; --c-detour:#5CB8C2;
+  --c-closed:#F0665F; --c-oneway:#F28B3B; --c-tm:#E9B93C; --c-night:#8C8AE8; --c-parking:#4FC0B4; --c-path:#A3C85A; --c-longterm:#98A5AE; --c-works:#C9A26E; --c-detour:#5CB8C2; --c-planned:#E07AB0;
   --new:#5CB8C2; --removed:#F08A84; --shadow:0 2px 12px rgba(0,0,0,.4);
 }}
 :root[data-theme="dark"]{
   --ground:#121A1D; --panel:#1A2427; --ink:#E6ECEC; --ink-2:#B3BFC2; --ink-3:#7F8E93; --rule:#2D3A3E;
   --accent:#5CB8C2; --accent-ink:#0E1A1C;
   --map-ground:#1B2528; --map-road:#334044; --map-case:#12191B; --map-water:#1F3B49; --map-park:#213128; --map-rail:#5C6B70; --map-label:#A9B6BA; --map-halo:#1B2528;
-  --c-closed:#F0665F; --c-oneway:#F28B3B; --c-tm:#E9B93C; --c-night:#8C8AE8; --c-parking:#4FC0B4; --c-path:#A3C85A; --c-longterm:#98A5AE; --c-works:#C9A26E; --c-detour:#5CB8C2;
+  --c-closed:#F0665F; --c-oneway:#F28B3B; --c-tm:#E9B93C; --c-night:#8C8AE8; --c-parking:#4FC0B4; --c-path:#A3C85A; --c-longterm:#98A5AE; --c-works:#C9A26E; --c-detour:#5CB8C2; --c-planned:#E07AB0;
   --new:#5CB8C2; --removed:#F08A84; --shadow:0 2px 12px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
@@ -90,6 +90,8 @@ svg.map.drag{cursor:grabbing}
 .wline{stroke:var(--c);stroke-width:5.5px;pointer-events:stroke;cursor:pointer}
 .wline.detour{stroke-width:3.5px;stroke-dasharray:8 6}
 .wline.longterm{stroke-width:6px;stroke-dasharray:2 7;stroke-linecap:butt}
+.wline.planned{stroke-width:5px;stroke-dasharray:9 6}
+.newsrc{font-size:11.5px;color:var(--ink-3);margin:-4px 0 6px}
 .wline.path{stroke-width:3.5px;stroke-dasharray:1 6}
 .wpoly{fill:var(--c);fill-opacity:.35;stroke:var(--c);stroke-width:1.5px;vector-effect:non-scaling-stroke;cursor:pointer}
 .work.dim{opacity:.22}
@@ -225,6 +227,8 @@ const SITES = {
   // ---- long-term closures ----
   queens_closed: { name: "Queens Drive (Rutherford St → High St)", cat: "longterm",
     geom: { line: [[-41.20648,174.90647],[-41.20721,174.90708],[-41.20735,174.90720]] } },
+  rutherford_2027: { name: "Rutherford Street at Queens Drive (from January 2027)", cat: "planned", approx: true,
+    geom: { line: [[-41.20702,174.90548],[-41.20672,174.90602],[-41.20648,174.90647],[-41.20641,174.90661],[-41.20613,174.90711]] } },
   queens_high: { name: "Queens Drive / High Street intersection", cat: "longterm",
     geom: { point: [-41.20721,174.90715] } },
   pharazyn: { name: "Pharazyn Street (Marsden St → Block Rd)", cat: "longterm",
@@ -340,7 +344,22 @@ const UPDATES = [
       { title: "SH2 (not part of the Melling project)", text: "Overnight lane closures for street light replacement: Wednesday night southbound, Thursday night northbound, 7pm–5.30am." },
       { title: "Event — Hutt Half Marathon", text: "Sunday 20 Sep: traffic management on some roads; expect delays in parts of Petone, Seaview, Eastbourne and Lower Hutt." },
     ],
-    notes: "Some of this work is weather dependent and may be rescheduled at short notice. (The email's own heading says \"week commencing Sunday 13 September\"; its dates are 20–24 September, so it is filed here as the week of 20 September.)"
+    notes: "Some of this work is weather dependent and may be rescheduled at short notice. (The email's own heading says \"week commencing Sunday 13 September\"; its dates are 20–24 September, so it is filed here as the week of 20 September.)",
+    // The monthly community update (not the weekly roadworks list) that arrived during this week.
+    news: { title: "September community update", date: "2026-09-24", items: [
+      { site: "queens_high", title: "High Street / Queens Drive: home stretch", when: "Reopens December 2026",
+        text: "Most of the underground work is done and kerbs and footpaths are going in now. Next comes about 320 m³ of concrete (53 truckloads) for the road subbase, then more than 1,000 tonnes of asphalt, then traffic lights, signage and temporary road markings. Still set to reopen in December." },
+      { site: "rutherford_2027", title: "Rutherford Street closing from January 2027", when: "From mid-January 2027 · about two years",
+        text: "Rutherford Street closes where it meets Queens Drive so the junction can be raised two metres to meet the new bridge and rebuilt with traffic lights, alongside utility upgrades and a new substation. Woolworths and Harvey Norman stay open, but the section between them closes. PetVet gets a new entrance from High Street. The temporary walking and cycling route moves to High Street, taking out 27 car parks there. It starts only once High Street / Queens Drive reopens, and Queens Drive between Rutherford Street and High Street stays closed throughout." },
+      { title: "Melling Link Bridge layout is staying",
+        text: "The layout trialled since July (both lanes northbound, left lane still usable southbound) stays for the rest of construction. Over the 8-week trial, afternoon-peak trips from Rutherford Street to Melling Link got about 4 minutes faster, and from Cornwall and Pretoria Streets almost 2 minutes faster. The morning peak barely changed." },
+      { title: "SH2 south of Melling: 50 km/h is the legal limit",
+        text: "The temporary limit covers drainage, retaining-wall and rail work, now at full pace after contaminated material was found and removed. NZTA is looking at whether the limit can safely go up while work continues. Until then it is the maximum, not a suggestion." },
+      { title: "No work in the river channel, September to November",
+        text: "Work in the flowing channel of Te Awa Kairangi is restricted over spring to protect native fish spawning and migration, so fewer excavators in the river. Crews keep working on berms, stopbanks and the river edges." },
+      { title: "Hutt Saturday Market",
+        text: "The Riverbank car park market has a new operator and a new name, Hutt Saturday Market, in the same place for now. The project team has a stand there on the third Saturday of each month." },
+    ] }
   },
 ];
 
@@ -354,7 +373,8 @@ const pathOf=(pts,close)=>pts.map((p,i)=>(i?'L':'M')+P(p).map(v=>v.toFixed(1)).j
 const CATS={
   closed:{label:'Road / lane closed',sw:'line'}, oneway:{label:'One-way only',sw:'line'}, tm:{label:'Traffic management · delays',sw:'line'},
   night:{label:'Night works',sw:'line'}, parking:{label:'Reduced parking',sw:'line'}, path:{label:'Footpath / trail closed',sw:'dash'},
-  longterm:{label:'Long-term closure (to ~2029)',sw:'dash'}, works:{label:'Other works',sw:'line'}, detour:{label:'Signed detour',sw:'dash'}
+  longterm:{label:'Long-term closure (to ~2029)',sw:'dash'}, works:{label:'Other works',sw:'line'}, detour:{label:'Signed detour',sw:'dash'},
+  planned:{label:'Planned closure (from Jan 2027)',sw:'dash'}
 };
 const cvar=c=>`var(--c-${c})`;
 
@@ -403,6 +423,7 @@ function diffOf(){ const prev=prevItems(); if(!prev) return {added:new Set(),rem
   const added=new Set(), changed=new Set(); for(const [s,i] of cm){ if(!pm.has(s)) added.add(s); else if(pm.get(s).text!==i.text||pm.get(s).when!==i.when) changed.add(s); }
   const removed=[...pm.values()].filter(i=>!cm.has(i.site)); return {added,removed,changed}; }
 
+function newsItems(){ const n=UPDATES[wi].news; return n?n.items:[]; }
 function drawWorks(){
   const d=diffOf(); const items=currentItems(); let html='';
   const draw=(site,id,extra)=>{ const S=SITES[id]; if(!S||!S.geom) return; const g=S.geom; const cat=S.cat; const lines=g.lines?[...g.lines]:[]; if(g.line) lines.push(g.line);
@@ -412,6 +433,7 @@ function drawWorks(){
     html+=`</g>`; };
   for(const lt of LONG_TERM) draw(lt,lt.site,'');
   for(const it of items) draw(it,it.site,'');
+  for(const n of newsItems()) if(n.site&&!items.some(i=>i.site===n.site)&&!LONG_TERM.some(l=>l.site===n.site)) draw(n,n.site,'');
   worksG.innerHTML=html;
   worksG.querySelectorAll('.work').forEach(el=>{ el.addEventListener('mouseenter',()=>hover(el.dataset.site,true)); el.addEventListener('mouseleave',()=>hover(el.dataset.site,false)); });
   drawOverlay(); applyDim();
@@ -455,9 +477,9 @@ function select(id, pan){ activeSite=id; applyDim(); drawOverlay();
   document.querySelectorAll('.item').forEach(el=>el.classList.toggle('active',el.dataset.site===id));
   const card=document.getElementById('card');
   if(!id){card.classList.remove('on');return;}
-  const S=SITES[id]; const it=currentItems().find(i=>i.site===id)||LONG_TERM.find(l=>l.site===id); const u=UPDATES[wi];
+  const S=SITES[id]; const ni=newsItems().find(n=>n.site===id); const it=currentItems().find(i=>i.site===id)||ni||LONG_TERM.find(l=>l.site===id); const u=UPDATES[wi]; const fromNews=it===ni;
   card.style.setProperty('--c',cvar(S.cat));
-  card.innerHTML=`<button class="x" aria-label="Close">×</button><h3>${S.name}</h3><div class="wh">${it.when||'Long-term closure'}${it.who?' · '+it.who:''}</div><p>${it.text}</p><div class="src">${CATS[S.cat].label} · from the ${fmtDate(u.emailDate)} email${S.geom&&S.geom.line&&id==='river_trail_west'?' · alignment approximate':''}</div>`;
+  card.innerHTML=`<button class="x" aria-label="Close">×</button><h3>${S.name}</h3><div class="wh">${it.when||'Long-term closure'}${it.who?' · '+it.who:''}</div><p>${it.text}</p><div class="src">${CATS[S.cat].label} · from the ${fromNews?u.news.title+' of '+fmtDate(u.news.date):fmtDate(u.emailDate)+' email'}${(S.geom&&S.geom.line&&id==='river_trail_west')||S.approx?' · extent approximate':''}</div>`;
   card.classList.add('on'); card.querySelector('.x').onclick=()=>select(null);
   const el=document.querySelector(`.item[data-site="${id}"]`); if(el) el.scrollIntoView({block:'nearest',behavior:'smooth'});
   if(pan&&S.geom){ const g=S.geom; let pts=g.point?[g.point]:(g.line||g.poly||(g.lines&&g.lines.flat())); if(pts){ const xs=pts.map(p=>P(p)); const cx=xs.reduce((a,p)=>a+p[0],0)/xs.length, cy=xs.reduce((a,p)=>a+p[1],0)/xs.length; const W=wrap.clientWidth,H=wrap.clientHeight; const s=Math.max(view.s,1.2); setView({s,tx:W/2-cx*s,ty:H/2-cy*s}); } }
@@ -476,10 +498,12 @@ function renderSide(){
   let html=`<section><h2>This week in Lower Hutt <b>${local.length}</b></h2>${local.map(i=>row(i)).join('')}`;
   if(showDiff&&d.removed.length) html+=d.removed.map(i=>`<div class="item gone" data-site="${i.site}" style="--c:${cvar(SITES[i.site].cat)}"><div class="sw"></div><div><div class="nm">${SITES[i.site].name}<span class="chg gone">Finished</span></div><div class="tx">Listed last week, not this week: ${i.text}</div></div></div>`).join('');
   html+=`</section>`;
+  if(u.news&&u.news.items.length){ const nr=n=>n.site?row({site:n.site,text:n.text,when:n.when}):`<div class="r"><b>${n.title}</b><span>${n.text}</span></div>`;
+    html+=`<section class="region"><h2>Project news <b>${u.news.items.length}</b></h2><div class="newsrc">From the ${u.news.title}, ${fmtDate(u.news.date)}</div>${u.news.items.map(nr).join('')}</section>`; }
   html+=`<section><h2>Long-term closures <b>${LONG_TERM.length}</b></h2>${LONG_TERM.map(l=>row(l,true)).join('')}</section>`;
   if(elsewhere.length) html+=`<section><h2>Elsewhere in the city <b>${elsewhere.length}</b></h2>${elsewhere.map(i=>row(i)).join('')}</section>`;
   if(u.region&&u.region.length) html+=`<section class="region"><h2>Around the region</h2>${u.region.map(r=>`<div class="r"><b>${r.title}</b><span>${r.text}</span></div>`).join('')}</section>`;
-  html+=`<div class="note">${u.notes} Source: NZTA / Te Wai Takamori o Te Awa Kairangi roadworks email of ${fmtDate(u.emailDate)}. Street alignments from OpenStreetMap; extents are approximate.</div>`;
+  html+=`<div class="note">${u.notes} Source: NZTA / Te Wai Takamori o Te Awa Kairangi roadworks email of ${fmtDate(u.emailDate)}${u.news?` and the ${u.news.title} of ${fmtDate(u.news.date)}`:''}. Street alignments from OpenStreetMap; extents are approximate.</div>`;
   side.innerHTML=html;
   side.querySelectorAll('.item').forEach(el=>{ const go=()=>select(el.dataset.site,true); el.addEventListener('click',go); el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}}); });
 }
