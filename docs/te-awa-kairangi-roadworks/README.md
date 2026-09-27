@@ -72,14 +72,19 @@ changes them.
 ## Data and caveats
 
 - Roadworks content is transcribed from the NZTA / Te Wai Takamori o Te Awa
-  Kairangi "Roadworks update" emails (4, 11 and 18 September 2026 at time of writing),
-  plus the monthly community update of 24 September 2026. Wording is kept close to
+  Kairangi "Roadworks update" emails (4, 11, 18 and 25 September 2026 at time of
+  writing), plus the monthly community update of 24 September 2026. Wording is kept close to
   the source; extents along a street are a reading of the email, not a survey.
 - The Rutherford Street closure from January 2027 is traced from the closure map
   on the programme's
   [Rutherford Street closure page](https://teawakairangi.co.nz/our-projects/our-projects/rutherford-street-closure-january-2027/)
   (the section between Woolworths and Harvey Norman, either side of Queens Drive)
   and marked approximate.
+- Where this email and NZTA's separate state highway email disagree on a time,
+  the page gives both (25 September: Māoribank resurfacing "to 5.30pm" here,
+  5.30am there). The Rutherford Street (north) shoulder works "by Repco" are drawn
+  along the whole Melling Link to Connolly Street stretch, because Repco is not on
+  OpenStreetMap and the email gives no closer location.
 - Street alignments are from [OpenStreetMap](https://www.openstreetmap.org/)
   (© OpenStreetMap contributors, ODbL), simplified to roughly 5–10 m. The western
   Hutt River Trail is not in OSM any more, so its closed extent is drawn as an
