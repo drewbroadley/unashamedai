@@ -204,6 +204,8 @@ const SITES = {
     geom: { line: [[-41.20832,174.90311],[-41.20759,174.90441],[-41.20747,174.90468],[-41.20736,174.90487],[-41.20672,174.90602],[-41.20648,174.90647],[-41.20641,174.90661],[-41.20569,174.90789],[-41.20552,174.90817]] } },
   rutherford_resurf: { name: "Rutherford St / Connolly St resurfacing", cat: "night",
     geom: { line: [[-41.20427,174.91139],[-41.20439,174.91086],[-41.20473,174.90983],[-41.20521,174.90878],[-41.20552,174.90817],[-41.20569,174.90789],[-41.20641,174.90661],[-41.20672,174.90602],[-41.20736,174.90487],[-41.20759,174.90441],[-41.20832,174.90311]] } },
+  rutherford_north: { name: "Rutherford Street (north, by Repco)", cat: "works", approx: true,
+    geom: { line: [[-41.20552,174.90817],[-41.20521,174.90878],[-41.20502,174.90920],[-41.20487,174.90951],[-41.20473,174.90983],[-41.20456,174.91034],[-41.20439,174.91086]] } },
   connolly_parking: { name: "Connolly Street (southern section)", cat: "parking",
     geom: { line: [[-41.20160,174.91573],[-41.20383,174.91198],[-41.20427,174.91139]] } },
   connolly_resurf: { name: "Connolly Street resurfacing (southbound detour via Mills St)", cat: "night",
@@ -360,6 +362,35 @@ const UPDATES = [
       { title: "Hutt Saturday Market",
         text: "The Riverbank car park market has a new operator and a new name, Hutt Saturday Market, in the same place for now. The project team has a stand there on the third Saturday of each month." },
     ] }
+  },
+  {
+    week: "2026-09-27", emailDate: "2026-09-25",
+    subject: "Roadworks update for week commencing Sunday 27 September 2026",
+    items: [
+      { site: "sh2_melling_normandale", text: "Night works and southbound lane closures on SH2 to relocate services. Expected to continue through to 15 October. NZTA's state highway email for the same week places them between the Melling interchange and the Normandale overbridge, running to 5.30am.", when: "Sun 27 Sep – Thu 1 Oct, 8pm–5am" },
+      { site: "sh2_rail_corridor", text: "In the old railway corridor, crews have started installing 227 bored piles for the foundations of five retaining walls (daytime). Overnight they are relocating 174 m of 11 kV electrical cable out of the SH2 southbound shoulder. The reduced speed limit here is the legal maximum, not a suggestion.", when: "Days and nights" },
+      { site: "marsden", text: "Northbound access only until further notice. From Normandale Road, or heading south on Marsden Street, use Bridge Street and Railway Avenue instead.", when: "Until further notice" },
+      { site: "marsden_detour", text: "Signed detour for southbound Marsden Street traffic.", when: "Until further notice" },
+      { site: "queens_slip", text: "Left-hand lane north (closest to Govind Bhula Park) is closed when joint bay works are in progress.", when: "When work in progress" },
+      { site: "daly_south", text: "Reduced parking and temporary speed limits as work progresses in the shoulder and footpath.", when: "All week" },
+      { site: "andrews_rbt", text: "Traffic management at the Riverbank car park access. Allow extra time through this area.", when: "Weekdays 7am–5pm" },
+      { site: "dudley", text: "Traffic management in place at the south end, with reduced parking.", when: "All week" },
+      { site: "margaret_rbt", text: "Night works, weather permitting. Follow detours.", when: "Sun 27 – Mon 28 Sep, 7pm–5am" },
+      { site: "rutherford_south", text: "Traffic management remains in place, plus minor changes to the shared pathway through this area.", when: "All week" },
+      { site: "rutherford_north", text: "Minor works in the road shoulder by Repco. The email does not say exactly where along this stretch.", when: "Wed 30 Sep – Fri 2 Oct, daytime" },
+      { site: "connolly_parking", text: "Road resurfacing in stages south of the National Storage facility, with reduced car parking in this area.", when: "Tue 29 – Wed 30 Sep, daytime" },
+    ],
+    region: [
+      { title: "SH1 — Transmission Gully", text: "Lane closures Monday to Friday: northbound 6am–3.30pm, southbound 9.30am–4pm." },
+      { title: "SH1 — Churton Park to Tawa", text: "Northbound lane closures Wednesday and Thursday nights, 8pm–5am, for pavement works." },
+      { title: "SH1 — Vivian Street, Kent Terrace, Basin Reserve", text: "Works on Vivian St and Kent Tce Monday, Wednesday and Thursday nights, and around the Basin Reserve Sunday to Thursday nights, 7pm–5.30am." },
+      { title: "SH1 — coming up", text: "Southbound closures Ngauranga Interchange to Vivian Street, 9pm–4.30am, Sun 4 to Thu 15 October, with tunnel closures at the same time." },
+      { title: "SH2 — Māoribank (not part of the Melling project)", text: "Resurfacing between Akatarawa Road and Fergusson Drive, Tuesday night from 8pm. The email says it ends at 5.30pm; NZTA's state highway email for the same week says 5.30am." },
+      { title: "SH58 — Haywards Interchange", text: "Night works and lane closures for guardrail replacement, Sunday night 8pm–5am." },
+      { title: "SH58 — safety improvements", text: "Ongoing work between Moonshine Road and Flightys/Murphys roads; stop/go Sunday to Thursday nights, 7pm–5.30am." },
+      { title: "SH59 — Mana Esplanade", text: "Day and night works Sunday to Friday. Allow extra time." },
+    ],
+    notes: "Some of this work depends on the weather and may be rescheduled at short notice. Some work may also take place over the weekend."
   },
 ];
 

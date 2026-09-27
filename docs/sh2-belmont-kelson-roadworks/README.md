@@ -31,9 +31,9 @@ Same code, different email, different stretch of road.
 - **Week selector** in the header steps between weekly emails, and **Changes
   this week** flags what is *new*, *updated* or *finished* since the previous one
   (both come alive once a second week is added).
-- SH2 jobs further north (Upper Hutt, Te Marua, Kaitoke) and the regional notes
-  (Remutaka Hill, the Urban Motorway closures, the Māoribank speed limit, speed
-  cameras) are listed in the sidebar without a map location.
+- SH2 jobs elsewhere (Upper Hutt, Māoribank, Te Marua, Kaitoke, the Ngauranga
+  on-ramp) and the regional notes (Remutaka Hill, the Urban Motorway closures,
+  speed limits and cameras) are listed in the sidebar without a map location.
 - Pan, wheel-zoom and pinch-zoom; keyboard focus works on the list.
 - A link to subscribe to the SH2 Hutt Valley list at the bottom of the sidebar.
 
@@ -65,7 +65,7 @@ in `index.html`:
 - `SITES` — one entry per place, with a stable id, a display name, a category,
   an optional `dir` line (which direction of travel it affects) and its geometry
   (`line`, `lines`, `point` or `poly` in `[lat, lon]`). Sites with `geom: null`
-  and `offmap: true` are listed under "Further north on SH2".
+  and `offmap: true` are listed under "Elsewhere on SH2".
 - `UPDATES` — one entry per weekly email: `week` (the Saturday the email's week
   starts), `emailDate`, the `items` (each `{ site, text, when, days }`, where
   `days` is the list of ISO dates the job runs and feeds the night strip), any
@@ -79,8 +79,10 @@ extra work. The SH2 line geometry for a new section can be sliced from the
 ## Data and caveats
 
 - Roadworks content is transcribed from the NZTA Wellington Transport Alliance
-  "Wellington region state highway roadworks" email (18 September 2026, for the
-  week of 19–25 September, at time of writing). Wording is kept close to the
+  "Wellington region state highway roadworks" emails (18 and 25 September 2026,
+  for the weeks of 19 September and 26 September, at time of writing). From
+  25 September NZTA is trialling a new layout for this email; the content is the
+  same kind of list. Wording is kept close to the
   source; where the email names a street as a start or end point, the line runs
   to that street's junction with SH2.
 - Street alignments are from [OpenStreetMap](https://www.openstreetmap.org/)
