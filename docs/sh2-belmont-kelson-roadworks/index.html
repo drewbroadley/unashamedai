@@ -199,13 +199,15 @@ const SITES = {
     geom: { line: [[-41.2031,174.90583],[-41.20312,174.90579],[-41.2032,174.90562],[-41.20343,174.90515],[-41.20377,174.90442],[-41.20404,174.90386],[-41.20473,174.90244],[-41.20513,174.90159],[-41.20533,174.90121],[-41.20554,174.90084],[-41.20576,174.90049],[-41.20608,174.89999],[-41.20619,174.89983],[-41.2063,174.89965],[-41.20646,174.89937],[-41.20667,174.89898],[-41.20731,174.89785],[-41.20788,174.89673],[-41.2081,174.89632],[-41.20834,174.89585],[-41.20859,174.89535],[-41.20927,174.89389],[-41.20934,174.89376]] } },
   belmont_domain: { name: "Belmont Domain", cat: "tm", dir: "Access from Owen Street / SH2",
     geom: { poly: [[-41.19171,174.93028],[-41.19128,174.92997],[-41.19063,174.9302],[-41.19016,174.93012],[-41.19035,174.93092],[-41.19019,174.93123],[-41.19021,174.93182],[-41.18979,174.93199],[-41.18865,174.93322],[-41.18802,174.93513],[-41.18989,174.93337],[-41.19171,174.93028]] } },
-  // ---- further north on SH2 (not on this map) ----
+  // ---- elsewhere on SH2 (not on this map) ----
   totara_park: { name: "Upper Hutt, Totara Park Road", cat: "tm", geom: null, offmap: true },
   brown_owl: { name: "Brown Owl, north of Topaz Street → Norana Road", cat: "night", geom: null, offmap: true },
   te_marua_twin_lakes: { name: "Te Marua, Twin Lakes Road", cat: "tm", geom: null, offmap: true },
   te_marua_plateau: { name: "Te Marua, Kaitoke Loop Road South → Plateau Road", cat: "night", geom: null, offmap: true },
   kaitoke_gilbert: { name: "Kaitoke, Gilbert Road → Kaitoke Loop Road North", cat: "night", geom: null, offmap: true },
   kaitoke_waterworks: { name: "Kaitoke, Waterworks Road", cat: "tm", geom: null, offmap: true },
+  maoribank: { name: "Māoribank, Akatarawa Road → Fergusson Drive", cat: "night", geom: null, offmap: true },
+  ngauranga_onramp: { name: "Ngauranga, northbound on-ramp", cat: "night", geom: null, offmap: true },
 };
 
 // Long-term closures carried on every week unless a weekly update lists them under "removed".
@@ -234,6 +236,23 @@ const UPDATES = [
       { title: "SH2 — Māoribank speed limit", text: "A new 50 km/h limit (down from 70) applies on the 1.3 km residential section of SH2 at Māoribank, Upper Hutt, from Monday 14 September. Adds about 11 seconds to the trip; expected to cut injury crashes by about 28 percent." },
       { title: "SH2 — average speed cameras", text: "Over the coming months new average speed safety cameras start operating on SH2 at Te Mārua and Brown Owl. Dates to be confirmed." },
       { title: "Wairarapa", text: "Speed limits will be lowered on three short sections of state highway; dates to be confirmed." },
+    ],
+    notes: "Roadworks are weather dependent and may be postponed at short notice."
+  },
+  {
+    week: "2026-09-26", emailDate: "2026-09-25",
+    subject: "SH2 Hutt Valley roadworks for the week ahead, 26 September – 2 October 2026",
+    items: [
+      { site: "melling_normandale", text: "Southbound lane closure between the Melling interchange and the Normandale overbridge for Melling Transport Improvements Project work. The Melling project's own email says these night closures to relocate services are expected to continue to 15 October.", when: "Sun 27 Sep – Thu 1 Oct nights, 8pm – 5.30am", days: ["2026-09-27","2026-09-28","2026-09-29","2026-09-30","2026-10-01"] },
+      { site: "belmont_domain", text: "No SH2 works at or beside Belmont Domain this week. Last week's streetlight lane closures past the domain and Kennedy Good Bridge are finished.", when: "For reference", days: [] },
+      { site: "maoribank", text: "Road resurfacing near Bernadette Street under stop/go traffic management.", when: "Tue 29 Sep night, 8pm – 5.30am", days: ["2026-09-29"] },
+      { site: "totara_park", text: "Excavation on Totara Park Road under lane and side-road closures. Eastbound Totara Park Road is closed, along with the SH2 northbound right turn into it and the SH2 southbound left lane.", when: "Mon 28 Sep – Fri 2 Oct, 9.30am – 2.45pm", days: ["2026-09-28","2026-09-29","2026-09-30","2026-10-01","2026-10-02"] },
+      { site: "ngauranga_onramp", text: "Jarden Mile project traffic signal sensor work under a northbound lane closure. No northbound access to the on-ramp from the Hutt Road / Jarden Mile intersection; a short detour runs via the Ngauranga Commercial Centre turn bay.", when: "Mon 28 Sep night, 8pm – 5.30am", days: ["2026-09-28"] },
+    ],
+    region: [
+      { title: "SH2 — Remutaka Hill Road", text: "No high-risk roadworks scheduled this week." },
+      { title: "SH1 — Urban Motorway, coming up", text: "From the Melling project's email: southbound closures Ngauranga Interchange to Vivian Street, 9pm–4.30am, Sun 4 to Thu 15 October, with tunnel closures at the same time." },
+      { title: "About this email", text: "NZTA is trialling a new layout for this email and has asked for feedback." },
     ],
     notes: "Roadworks are weather dependent and may be postponed at short notice."
   },
@@ -373,13 +392,13 @@ function renderSide(){
   document.getElementById('wk').innerHTML=`<span>Roadworks week</span>${fmtWeek(u.week)}`;
   document.getElementById('prev').disabled=wi===0; document.getElementById('next').disabled=wi===UPDATES.length-1;
   const chip=id=>showDiff&&wi>0?(d.added.has(id)?'<span class="chg new">New</span>':d.changed.has(id)?'<span class="chg upd">Updated</span>':''):'';
-  const row=(it)=>{ const S=SITES[it.site]; const c=CATS[S.cat]; const pt=S.geom&&S.geom.point&&!S.geom.lines; return `<div class="item" data-site="${it.site}" tabindex="0" role="button" style="--c:${cvar(S.cat)}"><div class="sw ${pt?'point':c.sw==='dash'?'dash':''}"></div><div><div class="nm">${S.name}${chip(it.site)}</div>${it.when?`<div class="wh">${it.when}</div>`:''}${S.dir?`<div class="dir">${S.dir}</div>`:''}<div class="tx">${it.text}</div>${it.days?dayStrip(it):''}${!S.geom?'<div class="who">Further north on SH2 · not on this map</div>':''}</div></div>`; };
+  const row=(it)=>{ const S=SITES[it.site]; const c=CATS[S.cat]; const pt=S.geom&&S.geom.point&&!S.geom.lines; return `<div class="item" data-site="${it.site}" tabindex="0" role="button" style="--c:${cvar(S.cat)}"><div class="sw ${pt?'point':c.sw==='dash'?'dash':''}"></div><div><div class="nm">${S.name}${chip(it.site)}</div>${it.when?`<div class="wh">${it.when}</div>`:''}${S.dir?`<div class="dir">${S.dir}</div>`:''}<div class="tx">${it.text}</div>${it.days?dayStrip(it):''}${!S.geom?'<div class="who">Elsewhere on SH2 · not on this map</div>':''}</div></div>`; };
   const local=u.items.filter(i=>!SITES[i.site].offmap), elsewhere=u.items.filter(i=>SITES[i.site].offmap);
   let html=`<section><h2>This week near Belmont &amp; Kelson <b>${local.length}</b></h2>${local.map(row).join('')}`;
   if(showDiff&&d.removed.length) html+=d.removed.map(i=>`<div class="item gone" data-site="${i.site}" style="--c:${cvar(SITES[i.site].cat)}"><div class="sw"></div><div><div class="nm">${SITES[i.site].name}<span class="chg gone">Finished</span></div><div class="tx">Listed last week, not this week: ${i.text}</div></div></div>`).join('');
   html+=`</section>`;
   if(LONG_TERM.length) html+=`<section><h2>Long-term closures <b>${LONG_TERM.length}</b></h2>${LONG_TERM.map(row).join('')}</section>`;
-  if(elsewhere.length) html+=`<section><h2>Further north on SH2 <b>${elsewhere.length}</b></h2>${elsewhere.map(row).join('')}</section>`;
+  if(elsewhere.length) html+=`<section><h2>Elsewhere on SH2 <b>${elsewhere.length}</b></h2>${elsewhere.map(row).join('')}</section>`;
   if(u.region&&u.region.length) html+=`<section class="region"><h2>Around the region</h2>${u.region.map(r=>`<div class="r"><b>${r.title}</b><span>${r.text}</span></div>`).join('')}</section>`;
   html+=`<div class="note">${u.notes} Source: NZTA Wellington Transport Alliance "Wellington region state highway roadworks" email of ${fmtDate(u.emailDate)}. Street alignments from OpenStreetMap; extents are approximate. <a class="sub" href="https://confirmsubscription.com/h/t/D234C038E802AAF0" target="_blank" rel="noopener">Subscribe to the SH2 Hutt Valley roadworks email →</a></div>`;
   side.innerHTML=html;
