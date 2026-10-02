@@ -208,6 +208,9 @@ const SITES = {
   kaitoke_waterworks: { name: "Kaitoke, Waterworks Road", cat: "tm", geom: null, offmap: true },
   maoribank: { name: "Māoribank, Akatarawa Road → Fergusson Drive", cat: "night", geom: null, offmap: true },
   ngauranga_onramp: { name: "Ngauranga, northbound on-ramp", cat: "night", geom: null, offmap: true },
+  fergusson_mangaroa: { name: "Upper Hutt, Fergusson Drive / Mangaroa Hill Road intersection", cat: "night", geom: null, offmap: true },
+  ngauranga_north_sb: { name: "SH2 southbound, north of the Ngauranga interchange", cat: "night", geom: null, offmap: true },
+  ngauranga_offramp: { name: "Ngauranga, southbound off-ramp", cat: "night", geom: null, offmap: true },
 };
 
 // Long-term closures carried on every week unless a weekly update lists them under "removed".
@@ -253,6 +256,27 @@ const UPDATES = [
       { title: "SH2 — Remutaka Hill Road", text: "No high-risk roadworks scheduled this week." },
       { title: "SH1 — Urban Motorway, coming up", text: "From the Melling project's email: southbound closures Ngauranga Interchange to Vivian Street, 9pm–4.30am, Sun 4 to Thu 15 October, with tunnel closures at the same time." },
       { title: "About this email", text: "NZTA is trialling a new layout for this email and has asked for feedback." },
+    ],
+    notes: "Roadworks are weather dependent and may be postponed at short notice."
+  },
+  {
+    week: "2026-10-03", emailDate: "2026-10-02",
+    subject: "SH2 Hutt Valley roadworks for the week ahead, 3 – 9 October 2026",
+    items: [
+      { site: "melling_normandale", text: "Southbound lane closure between the Melling interchange and the Normandale overbridge for Melling Transport Improvements Project work. The Melling project's own email says these closures relocate services and will need another couple of weeks after this one, at the same hours, while new 11 kV power cables are connected (it gives a 5am finish).", when: "Sun 4 – Thu 8 Oct nights, 8pm – 5.30am", days: ["2026-10-04","2026-10-05","2026-10-06","2026-10-07","2026-10-08"] },
+      { site: "belmont_domain", text: "No SH2 works at or beside Belmont Domain this week.", when: "For reference", days: [] },
+      { site: "fergusson_mangaroa", text: "Intelligent transport systems (ITS) maintenance under a southbound lane closure.", when: "Tue 6 – Thu 8 Oct nights, 7pm – 5.30am", days: ["2026-10-06","2026-10-07","2026-10-08"] },
+      { site: "totara_park", text: "Pipe excavation on Totara Park Road. The SH2 northbound right turn into Totara Park Road and the SH2 southbound left lane are closed for the work.", when: "Mon 5 – Fri 9 Oct, 9.30am – 2.45pm", days: ["2026-10-05","2026-10-06","2026-10-07","2026-10-08","2026-10-09"] },
+      { site: "ngauranga_north_sb", text: "Southbound lane closure on SH2 north of the Ngauranga interchange, because of the SH1 Urban Motorway southbound maintenance closure.", when: "Sun 4 – Thu 8 Oct nights, 8pm – 5am", days: ["2026-10-04","2026-10-05","2026-10-06","2026-10-07","2026-10-08"] },
+      { site: "ngauranga_onramp", text: "Site pack-up after the Jarden Mile intersection work, under a northbound lane closure. No access to the northbound on-ramp from the Hutt Road / Jarden Mile intersection; follow the short signposted detour.", when: "Sun 4 – Thu 8 Oct nights, 9pm – 5am", days: ["2026-10-04","2026-10-05","2026-10-06","2026-10-07","2026-10-08"] },
+      { site: "ngauranga_offramp", text: "Site pack-up after the Jarden Mile intersection work: the right-hand lane of the southbound off-ramp is closed.", when: "Sun 4 – Thu 8 Oct nights, 10pm – 5am", days: ["2026-10-04","2026-10-05","2026-10-06","2026-10-07","2026-10-08"] },
+    ],
+    region: [
+      { title: "SH1 — Urban Motorway closures start Sunday", text: "Sun 4 to Thu 15 October: southbound maintenance on the Urban Motorway plus planned tunnel closures, timed together. The Melling project's email gives the hours as 9pm–4.30am, Ngauranga to Vivian Street, with the Hawkestone Street southbound on-ramp also closed. The window allows for bad weather and may finish early." },
+      { title: "SH2 — average speed cameras", text: "The cameras between Te Mārua and Brown Owl start operating on Wednesday 21 October. Warning signs, including temporary electronic boards, go up early next week. Fourteen people were killed or seriously injured on this 4 km stretch between 2015 and September last year." },
+      { title: "SH2 — Māoribank 50 km/h signs", text: "Extra 50 km/h repeater signs go up on Fergusson Drive near the petrol station and at the Mangaroa Hill Road intersection, finishing Sunday night." },
+      { title: "SH2 — Remutaka Hill Road", text: "No high-risk roadworks scheduled this week." },
+      { title: "Wairarapa (from NZTA's SH2 and SH53 Wairarapa email)", text: "New 50 km/h limits at SH2 Featherston south and SH53 Martinborough from Monday 19 October; SH2 Masterton north goes to 80 km/h before the end of the year (date TBC). Masterton High Street streetlight pole replacements under a northbound lane closure, 8am–3.30pm: Monday (Intermediate to Derby St) and Tuesday–Wednesday (Intermediate to Vivian St). The Carterton rebuild between Brooklyn Road and Howard Street is finished." },
     ],
     notes: "Roadworks are weather dependent and may be postponed at short notice."
   },
