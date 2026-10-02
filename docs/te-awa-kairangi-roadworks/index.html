@@ -392,6 +392,33 @@ const UPDATES = [
     ],
     notes: "Some of this work depends on the weather and may be rescheduled at short notice. Some work may also take place over the weekend."
   },
+  {
+    week: "2026-10-04", emailDate: "2026-10-02",
+    subject: "Roadworks update for week commencing Sunday 4 October 2026",
+    items: [
+      { site: "sh2_melling_normandale", text: "Night works and southbound lane closures between the Melling Link intersection and the Normandale Road overbridge to relocate services. Another couple of weeks at the same hours will follow while the new 11 kV power cables are connected. NZTA's state highway email for the same week gives a 5.30am finish.", when: "Sun 4 – Thu 8 Oct, 8pm–5am" },
+      { site: "marsden", text: "Northbound access only until further notice. From Normandale Road, or heading south on Marsden Street, use Bridge Street and Railway Avenue instead.", when: "Until further notice" },
+      { site: "marsden_detour", text: "Signed detour for southbound Marsden Street traffic.", when: "Until further notice" },
+      { site: "queens_slip", text: "Left-hand lane north (closest to Govind Bhula Park) is closed when joint bay works are in progress.", when: "When work in progress" },
+      { site: "daly_south", text: "Reduced parking and temporary speed limits as work progresses in the shoulder and footpath.", when: "All week" },
+      { site: "andrews_rbt", text: "Traffic management at the Riverbank car park access. Allow extra time through this area.", when: "Weekdays 7am–5pm" },
+      { site: "dudley", text: "Traffic management in place at the south end, with reduced parking.", when: "All week" },
+      { site: "rutherford_south", text: "Traffic management remains in place, plus minor changes to the shared pathway through this area.", when: "All week" },
+    ],
+    region: [
+      { title: "SH1 — Urban Motorway closures start", text: "Southbound closures Ngauranga Interchange to Vivian Street, 9pm–4.30am, Sun 4 to Thu 15 October, with tunnel closures at the same time. The Hawkestone Street southbound on-ramp is closed on the same nights." },
+      { title: "SH2 — Ngauranga (from NZTA's SH2 Hutt Valley email)", text: "Because of the Urban Motorway closure, SH2 southbound loses a lane north of the Ngauranga interchange Sun–Thu nights, 8pm–5am. The northbound on-ramp from Hutt Road / Jarden Mile is closed Sun–Thu nights 9pm–5am (signposted detour), and the right-hand lane of the southbound off-ramp is closed 10pm–5am." },
+      { title: "SH2 — Upper Hutt (from NZTA's SH2 Hutt Valley email)", text: "Southbound lane closure at Fergusson Drive / Mangaroa Hill Road Tue–Thu nights, 7pm–5.30am. Totara Park Road pipe excavation Mon–Fri, 9.30am–2.45pm. Average speed cameras between Te Mārua and Brown Owl start on Wednesday 21 October." },
+      { title: "SH1 — central city and Hataitai", text: "Various works over the coming week. Plan ahead and expect some delays." },
+      { title: "SH58 — safety improvements", text: "Ongoing day and night works between Moonshine Road and Flightys/Murphys roads; stop/go Sunday to Thursday nights, 7pm–5.30am, for surfacing." },
+      { title: "Hutt City Council — summer reseals", text: "The council's summer road maintenance programme starts in the coming months. Streets due for resealing will be told directly." },
+    ],
+    notes: "Some of this work depends on the weather and may be rescheduled at short notice. Some work may also take place over the weekend.",
+    news: { title: "weekly roadworks email", date: "2026-10-02", items: [
+      { site: "queens_high", title: "High Street / Queens Drive: first concrete pour", when: "Reopens December 2026",
+        text: "Good progress and a run of fine weather let crews start the first concrete pour ahead of plan, in the closed section of Queens Drive leading to Kings Crescent. The concrete forms the base of the intersection and will later be covered with asphalt. Still set to reopen in December." },
+    ] }
+  },
 ];
 
 </script>
@@ -534,7 +561,7 @@ function renderSide(){
   html+=`<section><h2>Long-term closures <b>${LONG_TERM.length}</b></h2>${LONG_TERM.map(l=>row(l,true)).join('')}</section>`;
   if(elsewhere.length) html+=`<section><h2>Elsewhere in the city <b>${elsewhere.length}</b></h2>${elsewhere.map(i=>row(i)).join('')}</section>`;
   if(u.region&&u.region.length) html+=`<section class="region"><h2>Around the region</h2>${u.region.map(r=>`<div class="r"><b>${r.title}</b><span>${r.text}</span></div>`).join('')}</section>`;
-  html+=`<div class="note">${u.notes} Source: NZTA / Te Wai Takamori o Te Awa Kairangi roadworks email of ${fmtDate(u.emailDate)}${u.news?` and the ${u.news.title} of ${fmtDate(u.news.date)}`:''}. Street alignments from OpenStreetMap; extents are approximate.</div>`;
+  html+=`<div class="note">${u.notes} Source: NZTA / Te Wai Takamori o Te Awa Kairangi roadworks email of ${fmtDate(u.emailDate)}${u.news&&u.news.date!==u.emailDate?` and the ${u.news.title} of ${fmtDate(u.news.date)}`:''}. Street alignments from OpenStreetMap; extents are approximate.</div>`;
   side.innerHTML=html;
   side.querySelectorAll('.item').forEach(el=>{ const go=()=>select(el.dataset.site,true); el.addEventListener('click',go); el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}}); });
 }

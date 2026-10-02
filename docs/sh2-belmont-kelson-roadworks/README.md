@@ -32,7 +32,7 @@ Same code, different email, different stretch of road.
   this week** flags what is *new*, *updated* or *finished* since the previous one
   (both come alive once a second week is added).
 - SH2 jobs elsewhere (Upper Hutt, Māoribank, Te Marua, Kaitoke, the Ngauranga
-  on-ramp) and the regional notes (Remutaka Hill, the Urban Motorway closures,
+  ramps) and the regional notes (Remutaka Hill, the Urban Motorway closures,
   speed limits and cameras) are listed in the sidebar without a map location.
 - Pan, wheel-zoom and pinch-zoom; keyboard focus works on the list.
 - A link to subscribe to the SH2 Hutt Valley list at the bottom of the sidebar.
@@ -79,8 +79,10 @@ extra work. The SH2 line geometry for a new section can be sliced from the
 ## Data and caveats
 
 - Roadworks content is transcribed from the NZTA Wellington Transport Alliance
-  "Wellington region state highway roadworks" emails (18 and 25 September 2026,
-  for the weeks of 19 September and 26 September, at time of writing). From
+  "Wellington region state highway roadworks" emails (18 and 25 September and
+  2 October 2026 at time of writing). The SH2 Hutt Valley edition is the main
+  source; the SH2 and SH53 Wairarapa edition feeds the Wairarapa notes, and the
+  Melling project's own weekly email adds detail on the Melling closures. From
   25 September NZTA is trialling a new layout for this email; the content is the
   same kind of list. Wording is kept close to the
   source; where the email names a street as a start or end point, the line runs
