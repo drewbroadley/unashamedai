@@ -63,6 +63,8 @@ All the content lives in two arrays near the top of the last `<script>` block in
   A week can also carry an optional `news` object for the monthly community
   update that arrived during it: `{ title, date, items }`, where each item is
   `{ title, text }` or, if it has a place on the map, `{ site, title, when, text }`.
+  The weekly email's own progress note (its opening paragraph) can use the same
+  `news` object with the weekly email's date.
 
 To add a week: append a new object to `UPDATES` (add any new place to `SITES`
 first). The page diffs consecutive weeks itself, so "Changes this week" needs no
@@ -72,8 +74,11 @@ changes them.
 ## Data and caveats
 
 - Roadworks content is transcribed from the NZTA / Te Wai Takamori o Te Awa
-  Kairangi "Roadworks update" emails (4, 11, 18 and 25 September 2026 at time of
-  writing), plus the monthly community update of 24 September 2026. Wording is kept close to
+  Kairangi "Roadworks update" emails (4, 11, 18 and 25 September and 2 October 2026
+  at time of writing), plus the monthly community update of 24 September 2026.
+  State highway items also draw on NZTA's separate SH2 Hutt Valley email for the
+  same week where it adds detail (for example the Ngauranga closures that go
+  with the Urban Motorway shutdown). Wording is kept close to
   the source; extents along a street are a reading of the email, not a survey.
 - The Rutherford Street closure from January 2027 is traced from the closure map
   on the programme's
