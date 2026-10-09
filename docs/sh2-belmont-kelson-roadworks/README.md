@@ -80,7 +80,7 @@ extra work. The SH2 line geometry for a new section can be sliced from the
 
 - Roadworks content is transcribed from the NZTA Wellington Transport Alliance
   "Wellington region state highway roadworks" emails (18 and 25 September and
-  2 October 2026 at time of writing). The SH2 Hutt Valley edition is the main
+  2 and 9 October 2026 at time of writing). The SH2 Hutt Valley edition is the main
   source; the SH2 and SH53 Wairarapa edition feeds the Wairarapa notes, and the
   Melling project's own weekly email adds detail on the Melling closures. From
   25 September NZTA is trialling a new layout for this email; the content is the
