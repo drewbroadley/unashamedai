@@ -74,8 +74,8 @@ changes them.
 ## Data and caveats
 
 - Roadworks content is transcribed from the NZTA / Te Wai Takamori o Te Awa
-  Kairangi "Roadworks update" emails (4, 11, 18 and 25 September and 2 October 2026
-  at time of writing), plus the monthly community update of 24 September 2026.
+  Kairangi "Roadworks update" emails (4, 11, 18 and 25 September and 2 and 9 October
+  2026 at time of writing), plus the monthly community update of 24 September 2026.
   State highway items also draw on NZTA's separate SH2 Hutt Valley email for the
   same week where it adds detail (for example the Ngauranga closures that go
   with the Urban Motorway shutdown). Wording is kept close to
