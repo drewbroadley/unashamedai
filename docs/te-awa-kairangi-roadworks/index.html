@@ -216,6 +216,8 @@ const SITES = {
     geom: { line: [[-41.20351,174.90639],[-41.20459,174.90748],[-41.20505,174.90794],[-41.20536,174.90807],[-41.20552,174.90824]] } },
   sh2_kgb_melling: { name: "SH2 southbound: Kennedy Good Bridge → Melling Link Bridge", cat: "night",
     geom: { line: [[-41.18998,174.92977],[-41.19077,174.92811],[-41.19241,174.92539],[-41.19493,174.92087],[-41.19717,174.91689],[-41.19806,174.91518],[-41.20178,174.90867],[-41.20215,174.90775],[-41.20245,174.90718],[-41.20284,174.90664],[-41.20310,174.90607]] } },
+  sh2_nb_grounsell_melling: { name: "SH2 northbound: Grounsell Crescent → Melling interchange", cat: "night",
+    geom: { line: [[-41.19502,174.92096],[-41.1954,174.92024],[-41.19615,174.91881],[-41.19676,174.91766],[-41.19698,174.91726],[-41.19717,174.91689],[-41.1974,174.91649],[-41.19781,174.91578],[-41.19815,174.9152],[-41.19839,174.91477],[-41.19858,174.91444],[-41.19884,174.91392],[-41.19908,174.91347],[-41.1992,174.91322],[-41.19938,174.91288],[-41.19972,174.91226],[-41.20017,174.91146],[-41.20093,174.91013],[-41.20178,174.90867],[-41.20191,174.90845],[-41.20198,174.90832],[-41.20214,174.90803],[-41.20227,174.90779],[-41.20232,174.9077],[-41.2025,174.90734],[-41.20254,174.90726],[-41.20256,174.90721],[-41.20268,174.90697],[-41.20284,174.90664],[-41.20295,174.90639],[-41.20306,174.90615],[-41.2031,174.90607]] } },
   sh2_melling_normandale: { name: "SH2 southbound: Melling Link → Normandale Rd overbridge", cat: "night",
     geom: { line: [[-41.20310,174.90607],[-41.20359,174.90502],[-41.20404,174.90386],[-41.20473,174.90244],[-41.20536,174.90134],[-41.20754,174.89761],[-41.20933,174.89399]] } },
   sh2_rail_corridor: { name: "SH2 rail corridor dayworks (near Melling)", cat: "tm",
@@ -418,6 +420,32 @@ const UPDATES = [
       { site: "queens_high", title: "High Street / Queens Drive: first concrete pour", when: "Reopens December 2026",
         text: "Good progress and a run of fine weather let crews start the first concrete pour ahead of plan, in the closed section of Queens Drive leading to Kings Crescent. The concrete forms the base of the intersection and will later be covered with asphalt. Still set to reopen in December." },
     ] }
+  },
+  {
+    week: "2026-10-11", emailDate: "2026-10-09",
+    subject: "Roadworks update for week commencing Sunday 11 October 2026",
+    items: [
+      { site: "sh2_melling_normandale", text: "The cable relocation in the SH2 southbound shoulder, under way since mid-September, is finished. Paving is reinstated overnight under southbound lane closures, and the closures end by 15 October. Wellington Electricity returns in November to commission the new power lines and streetlights. NZTA's SH2 Hutt Valley email lists the closure Sunday to Thursday nights, to 5.30am.", when: "Mon 12 – Thu 15 Oct, 8pm–5am" },
+      { site: "sh2_nb_grounsell_melling", text: "Northbound lane closure for streetlight pole replacements (not part of the Melling project).", when: "Tue 13 Oct night, 7pm–5.30am" },
+      { site: "marsden", text: "Northbound access only until further notice. From Normandale Road, or heading south on Marsden Street, use Bridge Street and Railway Avenue instead.", when: "Until further notice" },
+      { site: "marsden_detour", text: "Signed detour for southbound Marsden Street traffic.", when: "Until further notice" },
+      { site: "queens_slip", text: "Left-hand lane north (closest to Govind Bhula Park) is closed when joint bay works are in progress.", when: "When work in progress" },
+      { site: "daly_south", text: "Reduced parking and temporary speed limits as work progresses in the shoulder and footpath.", when: "All week" },
+      { site: "andrews_rbt", text: "Traffic management at the Riverbank car park access. Allow extra time through this area.", when: "Weekdays 7am–5pm" },
+      { site: "dudley", text: "Traffic management in place at the south end, with reduced parking.", when: "All week" },
+      { site: "rutherford_south", text: "Traffic management remains in place, plus minor changes to the cycle and pedestrian paths by the former Dulux building and beyond. Navigate with care.", when: "All week" },
+      { site: "connolly_parking", text: "Reduced parking in the southbound lane near the Health Hub.", when: "All week" },
+    ],
+    region: [
+      { title: "SH1 — Urban Motorway closures, final week", text: "Southbound closures Ngauranga to Willis Street, plus the Hawkestone Street southbound on-ramp, 9pm–4.30am until Thursday 15 October, with tunnel closures. Clifton Terrace northbound on-ramp closed Sunday and Monday nights, 9pm–4.30am. NZTA reports 5.8 km resurfaced in the first five nights." },
+      { title: "SH2 — Ngauranga to Petone", text: "Southbound lane closure north of the Ngauranga interchange Sun–Thu nights, 7pm–5am, for the Urban Motorway closure. Northbound lane closure Ngauranga to Petone Thursday night, 7pm–5.30am, for resurfacing." },
+      { title: "SH2 — Upper Hutt", text: "Totara Park Road: SH2 northbound right turn and southbound left lane closed Mon–Fri, 8.30am–3pm. Resurfacing between Akatarawa Road and Fergusson Drive Sunday night under stop/go (NZTA's SH2 email). Average speed cameras between Te Mārua and Brown Owl start Wednesday 21 October." },
+      { title: "SH1 — north of Wellington", text: "Transmission Gully southbound lane closures (Waitangirua to Takapu substation) Mon, Wed and Fri, 7am–5pm, and altered layouts at the interchanges Mon–Thu nights. Johnsonville northbound closure between the off- and on-ramps Wednesday night, 9pm–4.30am, with southbound lane closures the same night." },
+      { title: "SH58 and SH59", text: "SH58 safety works continue between Moonshine Road and Flightys/Murphys roads. Full SH58 closure Postgate Drive to the SH59 Paremata intersection Wednesday night from 9pm (the email says to 4.30pm). Several SH59 lane closures around Plimmerton, Mana Bridge, Paremata and Mungavin through the week." },
+      { title: "Hutt City Council works", text: "Reynolds Bach Drive stop/go until 23 October (Silverstream landfill). Cuba Street, Petone near Bouverie Street, stop/go 12–13 October, 9am–3.30pm. 1245–1359 Taita Drive stop/go 12–30 October, 9am–4pm. Wainuiomata Road northbound from #91 closed 14 October, 9am–3pm, with a detour." },
+      { title: "Events — Lower Hutt Events Centre", text: "NZ Bonsai Expo, Friday 9 to Sunday 11 October. MANA FC XII, Friday 16 October evening (to 10.30pm)." },
+    ],
+    notes: "Some of this work depends on the weather and may be rescheduled at short notice. Some work may also take place over the weekend."
   },
 ];
 

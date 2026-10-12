@@ -211,6 +211,8 @@ const SITES = {
   fergusson_mangaroa: { name: "Upper Hutt, Fergusson Drive / Mangaroa Hill Road intersection", cat: "night", geom: null, offmap: true },
   ngauranga_north_sb: { name: "SH2 southbound, north of the Ngauranga interchange", cat: "night", geom: null, offmap: true },
   ngauranga_offramp: { name: "Ngauranga, southbound off-ramp", cat: "night", geom: null, offmap: true },
+  te_marua_north: { name: "Te Marua, north of Twin Lakes Road", cat: "tm", geom: null, offmap: true },
+  ngauranga_petone_nb: { name: "SH2 northbound: Ngauranga interchange → Petone", cat: "night", geom: null, offmap: true },
 };
 
 // Long-term closures carried on every week unless a weekly update lists them under "removed".
@@ -277,6 +279,27 @@ const UPDATES = [
       { title: "SH2 — Māoribank 50 km/h signs", text: "Extra 50 km/h repeater signs go up on Fergusson Drive near the petrol station and at the Mangaroa Hill Road intersection, finishing Sunday night." },
       { title: "SH2 — Remutaka Hill Road", text: "No high-risk roadworks scheduled this week." },
       { title: "Wairarapa (from NZTA's SH2 and SH53 Wairarapa email)", text: "New 50 km/h limits at SH2 Featherston south and SH53 Martinborough from Monday 19 October; SH2 Masterton north goes to 80 km/h before the end of the year (date TBC). Masterton High Street streetlight pole replacements under a northbound lane closure, 8am–3.30pm: Monday (Intermediate to Derby St) and Tuesday–Wednesday (Intermediate to Vivian St). The Carterton rebuild between Brooklyn Road and Howard Street is finished." },
+    ],
+    notes: "Roadworks are weather dependent and may be postponed at short notice."
+  },
+  {
+    week: "2026-10-10", emailDate: "2026-10-09",
+    subject: "SH2 Hutt Valley roadworks for the week ahead, 10 – 16 October 2026",
+    items: [
+      { site: "grounsell_melling", text: "Northbound lane closure between Grounsell Crescent and the Melling interchange for streetlight pole replacements.", when: "Tue 13 Oct night, 7pm – 5.30am", days: ["2026-10-13"] },
+      { site: "melling_normandale", text: "Southbound lane closure between the Melling interchange and the Normandale overbridge for Melling project work. The Melling project's email says the cable relocation is now finished: this week is paving reinstatement, 12–15 October, 8pm–5am, and the closures end by 15 October. Wellington Electricity returns in November to commission the new power lines and streetlights.", when: "Sun 11 – Thu 15 Oct nights, 8pm – 5.30am", days: ["2026-10-11","2026-10-12","2026-10-13","2026-10-14","2026-10-15"] },
+      { site: "belmont_domain", text: "No works at the domain itself. The nearest is Tuesday night's northbound lane closure from Grounsell Crescent to Melling, just south of Kennedy Good Bridge.", when: "For reference", days: [] },
+      { site: "maoribank", text: "Road resurfacing between Akatarawa Road and Fergusson Drive / Mangaroa Hill Road under stop/go traffic management.", when: "Sun 11 Oct night, 7pm – 5.30am", days: ["2026-10-11"] },
+      { site: "te_marua_north", text: "Utility works under an altered lane layout.", when: "Mon 12 Oct, 9am – 3pm", days: ["2026-10-12"] },
+      { site: "totara_park", text: "Pipe excavation on Totara Park Road. The SH2 northbound right turn and the southbound left lane are closed for the work.", when: "Mon 12 – Fri 16 Oct, 8.30am – 3pm", days: ["2026-10-12","2026-10-13","2026-10-14","2026-10-15","2026-10-16"] },
+      { site: "ngauranga_north_sb", text: "Southbound lane closure north of the Ngauranga interchange, because of the SH1 Urban Motorway southbound maintenance closure.", when: "Sun 11 – Thu 15 Oct nights, 7pm – 5am", days: ["2026-10-11","2026-10-12","2026-10-13","2026-10-14","2026-10-15"] },
+      { site: "ngauranga_petone_nb", text: "Road resurfacing under a northbound lane closure.", when: "Thu 15 Oct night, 7pm – 5.30am", days: ["2026-10-15"] },
+    ],
+    region: [
+      { title: "SH1 — Urban Motorway, final week", text: "After five nights NZTA had resurfaced 5.8 km of the southbound lanes, plus graffiti removal, drainage clearance and traffic cable work. Closures and tunnel closures continue Sunday 11 to Thursday 15 October. The Melling project's email gives the closure as Ngauranga to Willis Street plus the Hawkestone Street on-ramp, 9pm–4.30am." },
+      { title: "SH2 — average speed cameras", text: "The cameras between Te Mārua and Brown Owl start operating on Wednesday 21 October." },
+      { title: "SH2 — Remutaka Hill Road", text: "No high-risk roadworks scheduled this week." },
+      { title: "Wairarapa (from NZTA's SH2 and SH53 Wairarapa email)", text: "New 50 km/h limits at SH2 Featherston south and SH53 Martinborough from Monday 19 October (about 5 and 4 seconds added; injury crashes expected down 27% and 23%). This week, daytime stop/go patch resurfacing at Mt Bruce weigh station (Mon–Tue), Opaki north of Southey Road (Wed) and Southey to Lennies Road (Thu), and SH53 Featherston at Revans/Waite Streets (Fri). Carterton water pipe work Richmond Road to Costley Street, Mon–Fri, 7am–5.30pm. Greytown, Bidwills Cutting Road resurfacing Thursday night under stop/go." },
     ],
     notes: "Roadworks are weather dependent and may be postponed at short notice."
   },
