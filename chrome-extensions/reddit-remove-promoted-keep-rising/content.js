@@ -57,14 +57,40 @@
 
   // ---- Keep the feed on Rising ----------------------------------------------
   // The default home feed ("/", "?feed=home", or "/best/") sorts by Best; the
-  // Rising sort is the stable path /rising/. Redirect there every time you land
-  // on or navigate back to the default home feed. No loop risk: /rising/ is not
-  // a redirect target, so it never bounces.
+  // Rising sort is the path /rising/. Redirect there every time you land on or
+  // navigate back to the default home feed.
+  //
+  // Loop guard: we don't control what Reddit does with /rising/. If it sends us
+  // straight back to the default feed (server redirect or client-side URL
+  // rewrite), redirecting again would reload the tab forever. So each redirect
+  // is stamped in this tab's sessionStorage; landing back on the default feed
+  // within BOUNCE_WINDOW_MS means Reddit bounced us, and we stop redirecting for
+  // the rest of this tab's life. If sessionStorage is unavailable we can't
+  // detect a bounce, so we don't redirect at all.
+  const REDIRECT_KEY = "rrf-rising-redirect-at";
+  const GAVE_UP_KEY = "rrf-rising-gave-up";
+  const BOUNCE_WINDOW_MS = 5000;
+
   function enforceRisingSort() {
-    if (!settings.sortRising) return;
+    if (!settings.enabled || !settings.sortRising) return;
     const p = location.pathname;
     const isDefaultHome = p === "/" || p === "/best" || p === "/best/";
     if (!isDefaultHome) return; // leave /rising/, /hot/, /new/, /top/, /r/*, etc.
+    try {
+      if (sessionStorage.getItem(GAVE_UP_KEY)) return;
+      const last = Number(sessionStorage.getItem(REDIRECT_KEY)) || 0;
+      if (last && Date.now() - last < BOUNCE_WINDOW_MS) {
+        sessionStorage.setItem(GAVE_UP_KEY, "1");
+        console.warn(
+          "[Reddit Declutter] Reddit sent /rising/ back to the default feed; " +
+            "not redirecting again in this tab to avoid a reload loop."
+        );
+        return;
+      }
+      sessionStorage.setItem(REDIRECT_KEY, String(Date.now()));
+    } catch (_) {
+      return; // no sessionStorage → no bounce detection → no redirect
+    }
     location.replace(location.origin + "/rising/");
   }
 
@@ -117,7 +143,7 @@
       }
     }
     if (touched) {
-      if (changes.sortRising && changes.sortRising.newValue) enforceRisingSort();
+      if (changes.enabled || changes.sortRising) enforceRisingSort();
       pageHiddenCount = 0;
       document
         .querySelectorAll("." + HIDDEN_CLASS)

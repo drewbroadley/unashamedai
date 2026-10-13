@@ -14,10 +14,18 @@ no de-obfuscation is needed:
   `<shreddit-post>`. The extension hides each `<shreddit-ad-post>` plus its
   trailing `<hr>` so no double divider is left behind.
 - **Keep Rising** — the home feed defaults to "Best"; the Rising sort lives at
-  the stable URL `/rising/`. Whenever you land on or navigate back to the default
-  home feed (`/`, `?feed=home`, or `/best/`) the extension redirects to
-  `/rising/`. No loop risk: `/rising/` isn't a redirect target, and explicit
-  sorts you pick (`/hot/`, `/new/`, `/top/`, …) are left alone.
+  `/rising/`. Whenever you land on or navigate back to the default home feed
+  (`/`, `?feed=home`, or `/best/`) the extension redirects to `/rising/` (a full
+  page load). Explicit sorts you pick (`/hot/`, `/new/`, `/top/`, …) and
+  subreddits are left alone.
+- **Reload-loop guard** — the extension doesn't control what Reddit does with
+  `/rising/`. If Reddit sends it straight back to the default feed, redirecting
+  again would reload the tab forever. So each redirect is timestamped in the
+  tab's `sessionStorage`; landing back on the default feed within 5 seconds
+  counts as a bounce, and the extension stops redirecting in that tab (a warning
+  is logged to the console). Worst case is one wasted reload per tab, after
+  which you stay on Best. If `sessionStorage` is unavailable, it doesn't
+  redirect at all rather than risk a loop.
 
 A `MutationObserver` re-applies the ad filter as you scroll and as the feed
 lazy-loads more posts.
@@ -38,6 +46,17 @@ lazy-loads more posts.
 - **Keep feed sorted by Rising** — redirect default home (Best) → Rising.
 - **Dim instead of remove** — fade & collapse hidden posts (hover to peek).
 - A live counter of how many promoted posts were hidden on the page.
+
+## Data it stores
+
+- `chrome.storage.sync` — your four popup toggles. Nothing else.
+- The page's `sessionStorage` on `www.reddit.com` — two keys used only by the
+  reload-loop guard: `rrf-rising-redirect-at` (timestamp of the last redirect)
+  and `rrf-rising-gave-up` (set once a bounce is detected). Reddit's own scripts
+  can read the page's `sessionStorage`; neither key holds anything about you.
+  Both are cleared when the tab closes.
+
+Nothing leaves your machine: no network requests, no analytics.
 
 ## Security
 
@@ -61,3 +80,11 @@ network calls, and `sender.id`-validated messaging. Enforced by
 - If Reddit renames the ad element, adjust the selector in
   [`content.js`](content.js) (`shreddit-ad-post`).
 - Only the new `www.reddit.com` design is supported (not `old.reddit.com`).
+- If the tab keeps landing on Best instead of Rising, Reddit is probably
+  redirecting `/rising/` away and the loop guard has stepped in. Check the
+  console for `[Reddit Declutter]`, or switch off **Keep feed sorted by Rising**.
+- The bounce guard can misfire if you click Home within 5 seconds of being
+  redirected to Rising. You stay on Best for that tab; a new tab resets it.
+- The **Enable** master switch now turns off the Rising redirect too (in 1.0.0
+  it only turned off ad hiding).
+- Redirect-loop behaviour is covered by `../tests/reddit-rising.test.mjs`.
