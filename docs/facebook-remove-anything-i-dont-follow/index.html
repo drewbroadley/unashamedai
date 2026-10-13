@@ -66,13 +66,13 @@
   <div class="tag">Chrome extension · Facebook</div>
   <h1>Facebook Feed: Only Friends &amp; Follows</h1>
   <p>Strips your Facebook home feed down to just the content you asked for: posts from <b>friends</b>, <b>Pages and people you follow</b>, and <b>groups you are in</b>. Sponsored ads, Suggested for you, People you may know, Reels and posts from accounts you don't follow are removed.</p>
-  <div class="facts"><div class="fact"><b>Version</b><span>1.0.0</span></div><div class="fact"><b>Permissions</b><span>storage only</span></div><div class="fact"><b>Runs on</b><span>www.facebook.com, HTTPS, top frame</span></div><div class="fact"><b>Network</b><span>None</span></div></div>
+  <div class="facts"><div class="fact"><b>Version</b><span>1.1.0</span></div><div class="fact"><b>Permissions</b><span>storage only</span></div><div class="fact"><b>Runs on</b><span>www.facebook.com, HTTPS, top frame</span></div><div class="fact"><b>Network</b><span>None</span></div></div>
 </section>
 <main class="wrap">
 <section>
 <h2>What gets hidden</h2>
 <div class="tablewrap"><table><tr><th>Signal</th><th>How it is detected</th></tr>
-<tr><td>Sponsored / Ads</td><td>The reconstructed <em>visible</em> "Ad" / "Sponsored" label, or an ad call-to-action button such as "Shop now".</td></tr>
+<tr><td>Sponsored / Ads</td><td>An ad call-to-action button such as "Shop now", an ad-only link ("Why am I seeing this ad?"), an "Ad" / "Sponsored" label exposed to screen readers, or the reconstructed <em>visible</em> label.</td></tr>
 <tr><td>People you may know, Suggested, Reels, Pages for you</td><td>The module header's <code>aria-label</code>.</td></tr>
 <tr><td>Accounts you don't follow</td><td>A Follow / Add friend / Join button in the post header.</td></tr>
 </table></div>
@@ -82,7 +82,7 @@
 <h2>Why Facebook is the hard one</h2>
 <p>Facebook actively fights feed filtering, so naive text matching fails. Three specific tricks are worked around:</p>
 <ul>
-<li><b>No stable anchors.</b> Class names are randomised and there is no <code>role="feed"</code>. The feed list is found heuristically as the element whose children are post cards, each containing an "Actions for this post" menu.</li>
+<li><b>No stable anchors.</b> Class names are randomised and anchors come and go. The feed list is found by trying <code>role="feed"</code>, then the list under the hidden "News Feed posts" heading, then heuristically as the element whose children are post cards, each with a per-post "Actions" / "More options" menu.</li>
 <li><b>Decoy text and a scrambled "Sponsored".</b> Hidden spans repeating "Facebook" poison <code>textContent</code>, and the Sponsored label is rendered as dozens of single-character spans, real letters plus ~50 decoys, CSS-reordered and pushed outside the clip box. It even seeds decoy letters into non-ads as a honeypot. So the extension never trusts raw text: it keeps only the characters whose box lies inside the label's box, reads them left to right, and gets the true label ("Ad", "Sponsored", or a timestamp like "52m").</li>
 <li><b>Clean accessibility labels.</b> Facebook keeps <code>aria-label</code>s honest for screen readers, so those carry the reliable signals: ad buttons, module headers, and Follow / Add friend / Join buttons.</li>
 </ul>
@@ -112,7 +112,7 @@
 <section>
 <h2>Honest caveats</h2>
 <ul>
-<li>Facebook's ad obfuscation is a moving target. The visible-label reconstruction is robust today; if Facebook changes the technique, <code>renderedLabel()</code> / <code>hasSponsoredLabel()</code> in <code>content.js</code> are where to adjust. For bullet-proof ad blocking a dedicated blocker with maintained filter lists is still the gold standard.</li>
+<li>Facebook's ad obfuscation is a moving target. The visible-label reconstruction is robust today; if Facebook changes the technique, <code>isAd()</code> and the label helpers in <code>content.js</code> are where to adjust. For bullet-proof ad blocking a dedicated blocker with maintained filter lists is still the gold standard.</li>
 <li>A friend who is also shown as a suggested follow is an edge case: relationship is read from the header buttons, so turn "Hide accounts I don't follow" off if it feels too aggressive.</li>
 </ul>
 </section>
