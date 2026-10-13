@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Facebook Feed: Only Friends & Follows",
   "description": "Hides everything in your Facebook feed except posts from friends and Pages/people you follow — removing Sponsored ads, Suggested for you, People you may know, and Reels.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "permissions": ["storage"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'none'"

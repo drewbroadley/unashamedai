@@ -12,10 +12,12 @@ It's the Facebook sibling of the LinkedIn feed filter in this repo.
 Facebook actively fights feed scraping / ad blocking, so naive text matching
 fails. This extension works around three specific tricks:
 
-1. **No stable anchors.** Class names are randomized and there's no
-   `role="feed"` or `data-pagelet`. The feed list is found heuristically (the
-   element whose children are the post cards, each containing an "Actions for
-   this post" menu), and its direct children are treated as posts.
+1. **No stable anchors.** Class names are randomized and the anchors that do
+   exist come and go. The feed list is found by trying, in order:
+   `role="feed"`; the list under Facebook's visually hidden "News Feed posts"
+   heading; then heuristically, as the element whose children are post cards,
+   each with a per-post "Actions for this post" / "More options" menu. Its
+   direct children are treated as posts.
 
 2. **Decoy text + scrambled "Sponsored".** Facebook injects hidden spans
    repeating `"Facebook"` to poison `textContent`, and renders the
@@ -37,7 +39,7 @@ fails. This extension works around three specific tricks:
 
 | Signal | How it's detected |
 |--------|-------------------|
-| **Sponsored / Ads** | reconstructed visible `"Ad"`/`"Sponsored"` label, or an ad CTA aria-label |
+| **Sponsored / Ads** | an ad CTA aria-label; an ad-only link ("Why am I seeing this ad?" or a `/privacy_sandbox/` `attributionsrc`); an `"Ad"`/`"Sponsored"` label exposed via `aria-label`, `aria-labelledby` or SVG text; or the reconstructed visible label |
 | **People you may know / Suggested / Reels / Pages for you** | module header `aria-label` |
 | **Accounts you don't follow** | a `Follow` / `Add friend` / `Join` button in the post header |
 
@@ -72,8 +74,8 @@ in the popup.
 ## Caveats
 
 - Facebook's ad obfuscation is a moving target. The visible-label reconstruction
-  is robust today, but if Facebook changes the technique the `renderedLabel()` /
-  `hasSponsoredLabel()` functions in [`content.js`](content.js) are where to
+  is robust today, but if Facebook changes the technique the `isAd()`,
+  `hasAccessibleAdLabel()`, `renderedLabel()` and `hasSponsoredLabel()` functions in [`content.js`](content.js) are where to
   adjust. For bullet-proof ad blocking specifically, a dedicated blocker like
   uBlock Origin with maintained filter lists is still the gold standard.
 - Right-rail "Sponsored" boxes are outside the main feed and are left untouched.
