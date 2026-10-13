@@ -7,10 +7,11 @@
  *
  * Why this is hard on Facebook (and how we deal with it):
  *
- *  - Class names are randomized and there is no `role="feed"` /
- *    `data-pagelet` to anchor on. We find the feed list heuristically (the
- *    element whose children are the post cards — each card contains an
- *    "Actions for this post" menu) and treat its direct children as posts.
+ *  - Class names are randomized and anchors come and go. We look for the feed
+ *    list in order: `role="feed"`, the list under Facebook's hidden "News Feed
+ *    posts" heading, then heuristically (the element whose children are the
+ *    post cards, each with a per-post "Actions"/"More options" menu). Its
+ *    direct children are treated as posts.
  *
  *  - Facebook injects decoy text (hidden spans repeating "Facebook") and
  *    SCRAMBLES the "Sponsored" label (e.g. "Ssoopetnrd35i466Ati8404lc13f")
@@ -53,7 +54,18 @@
     /^(People you may know|People you might know|Suggested for you|Suggested Reels|Reels|Reels and short videos|Pages for you|Friend suggestions|Suggested groups|Groups you should join|Suggested events|People to follow|Popular near you)\b/i;
 
   // "Not in your network" actions shown for suggested people/pages/groups.
-  const REL_CTA = /^(Follow|Add friend|Join|Like Page)$/i;
+  // Also matches aria-labels that append a name ("Follow Acme Ltd"), but never
+  // "Following" (someone you already follow).
+  const REL_CTA = /^(Follow|Add friend|Join|Join group|Like Page)(\s.*)?$/i;
+
+  // Plain-text labels Facebook prints above recommended posts. Matched against
+  // whole leaf text, so decoy letters elsewhere in the card can't trigger it.
+  const SUGGESTED_TEXT =
+    /^(Suggested for you|Suggested post|Recommended post|Recommended for you|Popular near you|Because you follow .+|Based on your activity)$/i;
+
+  // How far below a card's top edge counts as its header (author line,
+  // "Suggested for you" banner and Follow button).
+  const HEADER_BAND_PX = 220;
 
   // The rendered ad label. Facebook ALSO injects decoy scrambled-"Sponsored"
   // text into non-ads as a honeypot, so matching letters is a trap — we must
@@ -61,22 +73,57 @@
   const AD_LABEL = /^(Ad|Sponsored|Paid partnership)$/i;
 
   // ---- Feed + post discovery -----------------------------------------------
+  // Per-post menu button labels. Facebook renames these from time to time, so
+  // we accept several variants rather than one exact string.
+  const POST_MENU_SEL = [
+    '[aria-label^="Actions for this post"]',
+    '[aria-label^="More options for this"]',
+    '[aria-label^="More options"]',
+    '[aria-label^="Actions for"]',
+    '[aria-label="See more options"]',
+  ].join(",");
+
+  // Visually hidden heading Facebook puts directly above the feed list for
+  // screen readers (e.g. "News Feed posts").
+  const FEED_HEADING = /^(News Feed posts|Feed posts)$/i;
+
   let feedEl = null;
   function findFeed() {
     if (feedEl && feedEl.isConnected && feedEl.childElementCount > 3) return feedEl;
+    feedEl = null;
+
+    // 1. An explicit feed role, when Facebook ships one.
+    const roleFeed = document.querySelector('[role="feed"]');
+    if (roleFeed && roleFeed.childElementCount > 1) return (feedEl = roleFeed);
+
+    // 2. The list that follows the hidden "News Feed posts" heading: walk up
+    //    from the heading until we reach an ancestor that has a sibling-or-child
+    //    list of post-sized cards.
+    for (const h of document.querySelectorAll("h2,h3")) {
+      if (!FEED_HEADING.test((h.textContent || "").trim())) continue;
+      let node = h;
+      for (let i = 0; i < 4 && node; i++, node = node.parentElement) {
+        const cand = bestListUnder(node);
+        if (cand) return (feedEl = cand);
+      }
+    }
+
+    // 3. Heuristic: the element whose children are mostly post cards.
+    feedEl = bestListUnder(document, 6);
+    return feedEl;
+  }
+
+  // The div under `root` whose direct children look most like post cards.
+  function bestListUnder(root, minScore = 3) {
     let best = null;
     let bestScore = 0;
-    for (const e of document.querySelectorAll("div")) {
+    for (const e of root.querySelectorAll("div")) {
       const n = e.childElementCount;
-      if (n < 4 || n > 80) continue;
+      if (n < 2 || n > 80) continue;
       let score = 0;
       for (const c of e.children) {
         if (c.tagName !== "DIV") continue;
-        if (
-          c.querySelector(
-            '[aria-label^="Actions for this post"],[aria-label^="More options for this"]'
-          )
-        ) {
+        if (c.querySelector(POST_MENU_SEL)) {
           score += 2;
         } else if (c.offsetHeight > 180) {
           score += 1;
@@ -87,17 +134,48 @@
         best = e;
       }
     }
-    if (bestScore >= 6) feedEl = best;
-    return feedEl;
+    return bestScore >= minScore ? best : null;
   }
 
   // ---- Per-post detectors ---------------------------------------------------
+
+  // Links only ads carry: the "Why am I seeing this ad?" page and the
+  // Privacy Sandbox attribution-reporting source Facebook registers on
+  // sponsored links.
+  const AD_LINK_SEL = [
+    'a[href*="/ads/about"]',
+    'a[href*="/ads/preferences"]',
+    'a[attributionsrc*="/privacy_sandbox/"]',
+  ].join(",");
 
   function isAd(post) {
     for (const b of post.querySelectorAll('[role="button"],a[role="link"]')) {
       if (AD_CTA.test((b.getAttribute("aria-label") || "").trim())) return true;
     }
-    return hasSponsoredLabel(post);
+    if (post.querySelector(AD_LINK_SEL)) return true;
+    return hasAccessibleAdLabel(post) || hasSponsoredLabel(post);
+  }
+
+  // The label as exposed to screen readers: an aria-label, an aria-labelledby
+  // reference, or an SVG <text>/<title>. AD_LABEL is anchored, so the scrambled
+  // decoy letters Facebook seeds elsewhere can't match.
+  function hasAccessibleAdLabel(post) {
+    for (const el of post.querySelectorAll("[aria-label],[aria-labelledby],svg")) {
+      if (AD_LABEL.test((el.getAttribute("aria-label") || "").trim())) return true;
+      const ids = el.getAttribute("aria-labelledby");
+      if (ids) {
+        for (const id of ids.split(/\s+/)) {
+          const ref = id && document.getElementById(id);
+          if (ref && AD_LABEL.test((ref.textContent || "").trim())) return true;
+        }
+      }
+      if (el.tagName.toLowerCase() === "svg") {
+        for (const t of el.querySelectorAll("text,title")) {
+          if (AD_LABEL.test((t.textContent || "").trim())) return true;
+        }
+      }
+    }
+    return false;
   }
 
   // Facebook renders the "Sponsored"/"Ad" label (and every post's timestamp) as
@@ -144,6 +222,18 @@
     return false;
   }
 
+  // A recommended post: a "Suggested for you"-style label in the card header.
+  function isSuggestedPost(post) {
+    const top = post.getBoundingClientRect().top;
+    for (const el of post.querySelectorAll("span,div,a")) {
+      if (el.childElementCount !== 0) continue;
+      const txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (!txt || txt.length > 60 || !SUGGESTED_TEXT.test(txt)) continue;
+      if (el.getBoundingClientRect().top - top <= HEADER_BAND_PX) return true;
+    }
+    return false;
+  }
+
   // A "Follow"/"Add friend"/"Join" action in the post *header* (not buried in a
   // nested reshared card) means the author is someone you don't follow.
   function isNonFollowed(post) {
@@ -153,7 +243,7 @@
       const aria = (b.getAttribute("aria-label") || "").trim();
       if (!REL_CTA.test(txt) && !REL_CTA.test(aria)) continue;
       // Only count it when it sits in the author/header band near the top.
-      if (b.getBoundingClientRect().top - top <= 140) return true;
+      if (b.getBoundingClientRect().top - top <= HEADER_BAND_PX) return true;
     }
     return false;
   }
@@ -166,7 +256,8 @@
     // Virtualized placeholder with reserved height but no content yet.
     if (!post.querySelector('[aria-label],[role="button"]')) return null;
 
-    if (settings.hideSuggested && isModule(post)) return { hide: true, reason: "module" };
+    if (settings.hideSuggested && (isModule(post) || isSuggestedPost(post)))
+      return { hide: true, reason: "module" };
     if (settings.hideSponsored && isAd(post)) return { hide: true, reason: "sponsored" };
     if (settings.hideNonFollowed && isNonFollowed(post))
       return { hide: true, reason: "not-followed" };
