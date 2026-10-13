@@ -225,13 +225,13 @@ EXTENSIONS = [
     title="Reddit: Hide Promoted & Keep Rising",
     desc="Removes Promoted and Sponsored ads from the Reddit home feed, keeps the feed sorted by Rising instead of Best, and hides posts and comments from accounts that look like bots.",
     lede="Removes <b>Promoted / Sponsored</b> ads from the Reddit home feed, <b>keeps the feed sorted by Rising</b> instead of the default “Best”, and <b>hides posts and comments from accounts that look like bots</b>.",
-    facts=[("Version","1.1.0"),("Permissions","storage only"),("Runs on","www.reddit.com, HTTPS, top frame"),("Network","Reddit profile lookups only")],
+    facts=[("Version","1.1.1"),("Permissions","storage only"),("Runs on","www.reddit.com, HTTPS, top frame"),("Network","Reddit profile lookups only")],
     sections=[
       ("How it works", """
 <p>Reddit's current UI ("shreddit") is built from clean, semantic web components, so nothing needs de-obfuscating:</p>
 <ul>
 <li><b>Hide ads.</b> Every feed ad is a <code>&lt;shreddit-ad-post&gt;</code> element carrying a <code>promoted</code> attribute, separated from real posts by <code>&lt;hr&gt;</code> rules. The extension hides each ad plus its trailing rule so no double divider is left behind.</li>
-<li><b>Keep Rising.</b> The Rising sort lives at the stable URL <code>/rising/</code>. Landing on the default home feed (<code>/</code>, <code>?feed=home</code> or <code>/best/</code>) redirects there. No loop risk: <code>/rising/</code> is never itself redirected, and sorts you pick explicitly (<code>/hot/</code>, <code>/new/</code>, <code>/top/</code>) are left alone.</li>
+<li><b>Keep Rising.</b> The Rising sort lives at the stable URL <code>/rising/</code>. Landing on the default home feed (<code>/</code>, <code>?feed=home</code> or <code>/best/</code>) redirects there, and sorts you pick explicitly (<code>/hot/</code>, <code>/new/</code>, <code>/top/</code>) are left alone. If Reddit sends the tab straight back to the home feed, the extension stops redirecting in that tab rather than reloading forever.</li>
 <li><b>Hide likely bots.</b> Every post and comment carries an <code>author</code> attribute. For each author the extension reads their public profile (<code>/user/&lt;name&gt;/about.json</code>, plus <code>/overview.json</code> for borderline accounts), scores it, and hides their posts in feeds and their comments in threads when the score reaches your threshold. Human replies nested under a hidden bot comment stay visible, and the post you opened is never hidden.</li>
 </ul>
 <p>A <code>MutationObserver</code> re-applies everything as you scroll and as the feed or thread lazy-loads more.</p>
