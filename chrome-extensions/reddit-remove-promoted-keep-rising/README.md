@@ -17,8 +17,11 @@ no de-obfuscation is needed:
 - **Keep Rising** — the home feed defaults to "Best"; the Rising sort lives at
   the stable URL `/rising/`. Whenever you land on or navigate back to the default
   home feed (`/`, `?feed=home`, or `/best/`) the extension redirects to
-  `/rising/`. No loop risk: `/rising/` isn't a redirect target, and explicit
-  sorts you pick (`/hot/`, `/new/`, `/top/`, …) are left alone.
+  `/rising/`. Explicit sorts you pick (`/hot/`, `/new/`, `/top/`, …) are left
+  alone. If Reddit sends the tab straight back to the home feed (for example by rewriting
+  `/rising/` back to `/`), the extension stops redirecting in that
+  tab instead of reloading forever; it remembers this with two small per-tab
+  flags in `sessionStorage`.
 - **Hide likely bots** — every post (`<shreddit-post>`) and comment
   (`<shreddit-comment>`) carries an `author` attribute. For each author on the
   page the extension reads their public profile and scores it (below). When
@@ -89,7 +92,7 @@ What gets hidden:
    stripped, and likely-bot posts and comments disappear a moment after the page
    loads (each profile takes one request to check).
 
-If you already had 1.0.0 loaded, press the reload icon on its card in
+If you already had an earlier version loaded, press the reload icon on its card in
 `chrome://extensions`.
 
 ## Options (toolbar popup)
@@ -170,6 +173,10 @@ If you already had 1.0.0 loaded, press the reload icon on its card in
 - Comment hiding targets the comment's `slot="commentAvatar" / "commentMeta" /
   "comment" / "actionRow"` children. If Reddit renames those, the extension falls
   back to hiding the whole comment (including replies under it).
+- **Keep Rising can be overridden by Reddit.** Version 1.1.0 and earlier could
+  reload endlessly when Reddit bounced `/rising/` back to `/`; 1.1.1 detects
+  the bounce and gives up for that tab, so you may see the Best sort on those
+  accounts. Toggling the option off and on again retries.
 - Only the new `www.reddit.com` design is supported (not `old.reddit.com`).
 - If Reddit renames the ad element, adjust the selector in
   [`content.js`](content.js) (`shreddit-ad-post`).
