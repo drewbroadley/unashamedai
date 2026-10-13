@@ -40,8 +40,8 @@ fails. This extension works around three specific tricks:
 | Signal | How it's detected |
 |--------|-------------------|
 | **Sponsored / Ads** | an ad CTA aria-label; an ad-only link ("Why am I seeing this ad?" or a `/privacy_sandbox/` `attributionsrc`); an `"Ad"`/`"Sponsored"` label exposed via `aria-label`, `aria-labelledby` or SVG text; or the reconstructed visible label |
-| **People you may know / Suggested / Reels / Pages for you** | module header `aria-label` |
-| **Accounts you don't follow** | a `Follow` / `Add friend` / `Join` button in the post header |
+| **People you may know / Suggested / Reels / Pages for you** | module header `aria-label`, or a "Suggested for you" / "Recommended post" label in the post header |
+| **Accounts you don't follow** | a `Follow` / `Add friend` / `Join` button (or one labelled e.g. "Follow Acme Ltd") in the post header; "Following" is kept |
 
 Everything else — friends, Pages/people you already follow, groups you're in,
 and your own posts — is kept.

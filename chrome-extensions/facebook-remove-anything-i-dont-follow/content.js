@@ -54,7 +54,18 @@
     /^(People you may know|People you might know|Suggested for you|Suggested Reels|Reels|Reels and short videos|Pages for you|Friend suggestions|Suggested groups|Groups you should join|Suggested events|People to follow|Popular near you)\b/i;
 
   // "Not in your network" actions shown for suggested people/pages/groups.
-  const REL_CTA = /^(Follow|Add friend|Join|Like Page)$/i;
+  // Also matches aria-labels that append a name ("Follow Acme Ltd"), but never
+  // "Following" (someone you already follow).
+  const REL_CTA = /^(Follow|Add friend|Join|Join group|Like Page)(\s.*)?$/i;
+
+  // Plain-text labels Facebook prints above recommended posts. Matched against
+  // whole leaf text, so decoy letters elsewhere in the card can't trigger it.
+  const SUGGESTED_TEXT =
+    /^(Suggested for you|Suggested post|Recommended post|Recommended for you|Popular near you|Because you follow .+|Based on your activity)$/i;
+
+  // How far below a card's top edge counts as its header (author line,
+  // "Suggested for you" banner and Follow button).
+  const HEADER_BAND_PX = 220;
 
   // The rendered ad label. Facebook ALSO injects decoy scrambled-"Sponsored"
   // text into non-ads as a honeypot, so matching letters is a trap — we must
@@ -211,6 +222,18 @@
     return false;
   }
 
+  // A recommended post: a "Suggested for you"-style label in the card header.
+  function isSuggestedPost(post) {
+    const top = post.getBoundingClientRect().top;
+    for (const el of post.querySelectorAll("span,div,a")) {
+      if (el.childElementCount !== 0) continue;
+      const txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (!txt || txt.length > 60 || !SUGGESTED_TEXT.test(txt)) continue;
+      if (el.getBoundingClientRect().top - top <= HEADER_BAND_PX) return true;
+    }
+    return false;
+  }
+
   // A "Follow"/"Add friend"/"Join" action in the post *header* (not buried in a
   // nested reshared card) means the author is someone you don't follow.
   function isNonFollowed(post) {
@@ -220,7 +243,7 @@
       const aria = (b.getAttribute("aria-label") || "").trim();
       if (!REL_CTA.test(txt) && !REL_CTA.test(aria)) continue;
       // Only count it when it sits in the author/header band near the top.
-      if (b.getBoundingClientRect().top - top <= 140) return true;
+      if (b.getBoundingClientRect().top - top <= HEADER_BAND_PX) return true;
     }
     return false;
   }
@@ -233,7 +256,8 @@
     // Virtualized placeholder with reserved height but no content yet.
     if (!post.querySelector('[aria-label],[role="button"]')) return null;
 
-    if (settings.hideSuggested && isModule(post)) return { hide: true, reason: "module" };
+    if (settings.hideSuggested && (isModule(post) || isSuggestedPost(post)))
+      return { hide: true, reason: "module" };
     if (settings.hideSponsored && isAd(post)) return { hide: true, reason: "sponsored" };
     if (settings.hideNonFollowed && isNonFollowed(post))
       return { hide: true, reason: "not-followed" };
