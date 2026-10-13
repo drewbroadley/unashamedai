@@ -278,14 +278,35 @@
 
   // ---- Keep the feed on Rising ----------------------------------------------
   // The default home feed ("/", "?feed=home", or "/best/") sorts by Best; the
-  // Rising sort is the stable path /rising/. Redirect there every time you land
-  // on or navigate back to the default home feed. No loop risk: /rising/ is not
-  // a redirect target, so it never bounces.
+  // Rising sort is the path /rising/. Redirect there when you land on or
+  // navigate back to the default home feed.
+  //
+  // Loop guard: if Reddit sends us straight back to the home feed (a server
+  // redirect, or its client router rewriting /rising/ to /), redirecting again
+  // would reload forever. So a redirect is remembered for the tab session, and
+  // landing back on home within BOUNCE_MS of one means Reddit is overriding
+  // us: stop redirecting in this tab and leave the page alone. sessionStorage
+  // holds only these two non-sensitive per-tab flags (see ../SECURITY.md).
+  const RISING_LAST_KEY = "rrf-rising-last";
+  const RISING_OFF_KEY = "rrf-rising-bounced";
+  const BOUNCE_MS = 10000;
+
   function enforceRisingSort() {
     if (!settings.sortRising) return;
     const p = location.pathname;
     const isDefaultHome = p === "/" || p === "/best" || p === "/best/";
     if (!isDefaultHome) return; // leave /rising/, /hot/, /new/, /top/, /r/*, etc.
+    try {
+      if (sessionStorage.getItem(RISING_OFF_KEY)) return;
+      const last = Number(sessionStorage.getItem(RISING_LAST_KEY)) || 0;
+      if (Date.now() - last < BOUNCE_MS) {
+        sessionStorage.setItem(RISING_OFF_KEY, "1");
+        return;
+      }
+      sessionStorage.setItem(RISING_LAST_KEY, String(Date.now()));
+    } catch (_) {
+      return; // no sessionStorage means no loop guard, so don't redirect at all
+    }
     location.replace(location.origin + "/rising/");
   }
 
@@ -343,7 +364,16 @@
       }
     }
     if (touched) {
-      if (changes.sortRising && changes.sortRising.newValue) enforceRisingSort();
+      if (changes.sortRising && changes.sortRising.newValue) {
+        // Switching the option back on is a fresh request: forget a bounce.
+        try {
+          sessionStorage.removeItem(RISING_OFF_KEY);
+          sessionStorage.removeItem(RISING_LAST_KEY);
+        } catch (_) {
+          /* no sessionStorage */
+        }
+        enforceRisingSort();
+      }
       pageHiddenCount = 0;
       resetBotState();
       document
