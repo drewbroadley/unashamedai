@@ -64,9 +64,17 @@ pre-commit check should keep it green.
 
 ## Network
 
-- **No network calls at all** in these extensions. If one is ever added it must
-  be **HTTPS only**, validate the response before use, and send the minimum data
-  necessary. Never HTTP.
+- **No network calls by default.** Every network call an extension makes must be
+  **HTTPS only**, validate the response before use, send the minimum data
+  necessary, and be named in that extension's README. Never HTTP. Today there
+  are two:
+  - `facebook-group-player-wanted-alerts`: optional phone push to `ntfy.sh`,
+    off by default, behind a runtime-granted optional host permission.
+  - `reddit-remove-promoted-keep-rising`: likely-bot detection reads public
+    profile JSON (`/user/<name>/about.json` and `/overview.json`) from
+    `www.reddit.com` itself, the same origin the content script already runs
+    on, so no host permission is involved. Usernames are validated before they
+    go into the URL, requests are throttled, and nothing is sent anywhere else.
 
 ## Anti-patterns (never do)
 

@@ -10,7 +10,7 @@
       <div class="logo">r</div>
       <div>
         <h1>Declutter</h1>
-        <p class="sub">Hide promoted &amp; keep Rising</p>
+        <p class="sub">Hide promoted, likely bots &amp; keep Rising</p>
       </div>
     </header>
 
@@ -50,9 +50,75 @@
       <span class="switch"></span>
     </label>
 
-    <div class="stat">
-      <span id="count">0</span>
-      <small>promoted posts hidden on this page</small>
+    <h2>Likely bots</h2>
+
+    <label class="row toggle">
+      <span>
+        <strong>Hide likely bots</strong>
+        <small>Checks each author's public Reddit profile (age, karma, activity)</small>
+      </span>
+      <input type="checkbox" id="hideBots" />
+      <span class="switch"></span>
+    </label>
+
+    <label class="row toggle">
+      <span>
+        <strong>In feeds</strong>
+        <small>Posts in the home feed, subreddits and search</small>
+      </span>
+      <input type="checkbox" id="botsInFeed" />
+      <span class="switch"></span>
+    </label>
+
+    <label class="row toggle">
+      <span>
+        <strong>In comments</strong>
+        <small>The comment itself; human replies under it stay visible</small>
+      </span>
+      <input type="checkbox" id="botsInComments" />
+      <span class="switch"></span>
+    </label>
+
+    <label class="row toggle">
+      <span>
+        <strong>Check recent activity</strong>
+        <small>A second lookup for borderline accounts: bursts, repeats, posts with no comments</small>
+      </span>
+      <input type="checkbox" id="botDeepCheck" />
+      <span class="switch"></span>
+    </label>
+
+    <div class="row nums">
+      <label>
+        <small>Min age (days)</small>
+        <input type="number" id="botMinAgeDays" min="0" max="3650" step="1" />
+      </label>
+      <label>
+        <small>Min karma</small>
+        <input type="number" id="botMinKarma" min="0" max="100000" step="1" />
+      </label>
+      <label>
+        <small>Hide at score</small>
+        <input type="number" id="botScoreThreshold" min="1" max="20" step="1" />
+      </label>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span id="count">0</span>
+        <small>promoted posts hidden</small>
+      </div>
+      <div class="stat">
+        <span id="botCount">0</span>
+        <small>bot posts/comments hidden</small>
+      </div>
+    </div>
+
+    <div class="bots">
+      <p class="bots-head">Flagged on this page <small id="pending"></small></p>
+      <ul id="botList"></ul>
+      <p class="empty" id="botEmpty">None yet.</p>
+      <button type="button" class="link" id="clearAllow" hidden>Forget my "not a bot" list</button>
     </div>
 
     <footer>Open your <a href="https://www.reddit.com/rising/" target="_blank">Reddit feed</a> to see it in action.</footer>
