@@ -223,41 +223,70 @@ EXTENSIONS = [
     slug="reddit-remove-promoted-keep-rising",
     tag="Chrome extension · Reddit",
     title="Reddit: Hide Promoted & Keep Rising",
-    desc="Removes Promoted and Sponsored ads from the Reddit home feed and keeps the feed sorted by Rising instead of Best.",
-    lede="Removes <b>Promoted / Sponsored</b> ads from the Reddit home feed and <b>keeps the feed sorted by Rising</b> instead of the default “Best”.",
-    facts=[("Version","1.0.0"),("Permissions","storage only"),("Runs on","www.reddit.com, HTTPS, top frame"),("Network","None")],
+    desc="Removes Promoted and Sponsored ads from the Reddit home feed, keeps the feed sorted by Rising instead of Best, and hides posts and comments from accounts that look like bots.",
+    lede="Removes <b>Promoted / Sponsored</b> ads from the Reddit home feed, <b>keeps the feed sorted by Rising</b> instead of the default “Best”, and <b>hides posts and comments from accounts that look like bots</b>.",
+    facts=[("Version","1.1.0"),("Permissions","storage only"),("Runs on","www.reddit.com, HTTPS, top frame"),("Network","Reddit profile lookups only")],
     sections=[
       ("How it works", """
 <p>Reddit's current UI ("shreddit") is built from clean, semantic web components, so nothing needs de-obfuscating:</p>
 <ul>
 <li><b>Hide ads.</b> Every feed ad is a <code>&lt;shreddit-ad-post&gt;</code> element carrying a <code>promoted</code> attribute, separated from real posts by <code>&lt;hr&gt;</code> rules. The extension hides each ad plus its trailing rule so no double divider is left behind.</li>
 <li><b>Keep Rising.</b> The Rising sort lives at the stable URL <code>/rising/</code>. Landing on the default home feed (<code>/</code>, <code>?feed=home</code> or <code>/best/</code>) redirects there. No loop risk: <code>/rising/</code> is never itself redirected, and sorts you pick explicitly (<code>/hot/</code>, <code>/new/</code>, <code>/top/</code>) are left alone.</li>
+<li><b>Hide likely bots.</b> Every post and comment carries an <code>author</code> attribute. For each author the extension reads their public profile (<code>/user/&lt;name&gt;/about.json</code>, plus <code>/overview.json</code> for borderline accounts), scores it, and hides their posts in feeds and their comments in threads when the score reaches your threshold. Human replies nested under a hidden bot comment stay visible, and the post you opened is never hidden.</li>
 </ul>
-<p>A <code>MutationObserver</code> re-applies the filter as you scroll and as the feed lazy-loads more posts.</p>
+<p>A <code>MutationObserver</code> re-applies everything as you scroll and as the feed or thread lazy-loads more.</p>
+"""),
+      ("How an account is scored", """
+<div class="tablewrap"><table><tr><th>Signal</th><th>Points</th></tr>
+<tr><td>Profile 404s (shadowbanned or deleted)</td><td>3</td></tr>
+<tr><td>Account suspended</td><td>3</td></tr>
+<tr><td>Younger than <b>Min age</b> (default 30 days)</td><td>2, +1 if under 7 days</td></tr>
+<tr><td>Total karma under <b>Min karma</b> (default 20)</td><td>1</td></tr>
+<tr><td>Reddit's auto-generated username shape (<code>Adjective-Noun-1234</code>)</td><td>1</td></tr>
+<tr><td>Lots of post karma, almost no comment karma (karma farming)</td><td>1</td></tr>
+<tr><td>Recent activity: 5+ posts and no comments</td><td>1</td></tr>
+<tr><td>Recent activity: the same comment posted 3+ times</td><td>2</td></tr>
+<tr><td>Recent activity: 25+ posts/comments inside 24 hours</td><td>2</td></tr>
+<tr><td>Recent activity: an old account whose whole history is from the last 30 days</td><td>2</td></tr>
+</table></div>
+<p>An author is hidden when the total reaches <b>Hide at score</b> (default 3). A brand-new account with no karma is hidden; a three-week-old account with real karma is not, unless something else also looks off; an old account with plenty of karma never is.</p>
 """),
       ("Options (toolbar popup)", """
 <ul>
 <li><b>Enable</b>: master on/off.</li>
 <li><b>Hide Promoted / Sponsored</b> and <b>Keep feed sorted by Rising</b>: each independently.</li>
-<li><b>Dim instead of remove</b>: fade and collapse hidden posts, hover to peek.</li>
-<li>A live count of promoted posts hidden on the page.</li>
+<li><b>Dim instead of remove</b>: fade and collapse hidden posts and comments, hover to peek.</li>
+<li><b>Hide likely bots</b>, <b>In feeds</b>, <b>In comments</b>, <b>Check recent activity</b>, and the three thresholds.</li>
+<li>Live counts, plus the list of accounts flagged on the page with their reasons and a <b>Not a bot</b> button that allowlists them.</li>
 </ul>
 """),
-      ("What it can touch", FEED_FILTER_TOUCH("reddit.com", "https://www.reddit.com/*") + NO_NETWORK),
+      ("What it can touch", touch_table([
+        ('permissions: ["storage"]', "Settings and the “not a bot” list in <code>chrome.storage.sync</code>; a 24-hour profile cache in <code>chrome.storage.local</code>. The only permission requested."),
+        ("host_permissions", "<b>None.</b> Profile lookups go to <code>www.reddit.com</code>, the page the script already runs on, so they are same-origin."),
+        ('content_scripts.matches: ["https://www.reddit.com/*"]', "HTTPS only, and only reddit.com. No other site is touched."),
+        ("content_scripts.all_frames: false", "Top-level document only; nothing is injected into embedded iframes."),
+        ('run_at: "document_start"', "So the page is filtered as it renders rather than flashing unfiltered first."),
+        ("content_security_policy", "<code>script-src 'self'</code>: no remote code, no <code>eval</code>, no inline script."),
+      ]) + """<div class="callout"><b>One kind of network request, to Reddit only.</b> To check an author the extension fetches their public profile JSON from <code>www.reddit.com</code>: one at a time, at most one every 1.5 seconds, backing off if Reddit says slow down. Because the request comes from your Reddit tab, Reddit sees which profiles were looked up from your session. Nothing is sent to any other server; no analytics, no telemetry. The cache keeps only creation date, karma and activity counts per username, never post or comment text, and expires after a day.</div>"""),
       ("What it does not do", """
 <ul>
-<li>Does not vote, post, comment or subscribe on your behalf.</li>
+<li>Does not vote, post, comment, report, block or subscribe on your behalf.</li>
 <li>Does not read cookies, tokens or credentials.</li>
-<li>Does not load anything from the network, ever.</li>
+<li>Does not load code from anywhere, and does not inject UI into Reddit.</li>
 </ul>
 """),
       ("Honest caveats", """
 <ul>
+<li><b>It's a heuristic.</b> Brand-new humans get caught and patient bots on aged, karma-farmed accounts get through. Tune the thresholds, use <b>Not a bot</b>, or turn on <b>Dim</b> to see what's hidden.</li>
+<li>Big threads fill in over several minutes (one lookup per new author, ~40 a minute), top of the page first. Cached authors are instant.</li>
+<li>Reddit's rate limits for these requests are undocumented. Errors are never treated as a bot signal; that author just stays visible.</li>
 <li>Only the current <code>www.reddit.com</code> design is supported, not <code>old.reddit.com</code>.</li>
 <li>If Reddit renames the ad element, the <code>shreddit-ad-post</code> selector in <code>content.js</code> is the one line to change.</li>
 </ul>
 """),
-      ("Security", SHARED_SECURITY.format(repo=REPO)),
+      ("Security", """
+<p>Follows the repo's shared <a href="{repo}/blob/main/chrome-extensions/SECURITY.md">security guidelines</a> (the OWASP Browser Extension Vulnerabilities Cheat Sheet): <code>storage</code> is the only permission, the content script runs HTTPS-only in the top frame, a strict CSP forbids remote code, no <code>innerHTML</code> or <code>eval</code>, usernames are validated before they go into a URL, and popup&#8596;page messaging checks <code>sender.id</code>. A static audit (<code>tests/owasp-audit.mjs</code>) enforces the static rules on every extension in the repo, and the scorer has its own unit tests.</p>
+""".format(repo=REPO)),
       ("Install", install("reddit-remove-promoted-keep-rising")),
     ]),
 
