@@ -292,7 +292,7 @@
   const BOUNCE_MS = 10000;
 
   function enforceRisingSort() {
-    if (!settings.sortRising) return;
+    if (!settings.enabled || !settings.sortRising) return; // Enable is the master switch
     const p = location.pathname;
     const isDefaultHome = p === "/" || p === "/best" || p === "/best/";
     if (!isDefaultHome) return; // leave /rising/, /hot/, /new/, /top/, /r/*, etc.
@@ -372,6 +372,8 @@
         } catch (_) {
           /* no sessionStorage */
         }
+        enforceRisingSort();
+      } else if (changes.enabled && changes.enabled.newValue) {
         enforceRisingSort();
       }
       pageHiddenCount = 0;

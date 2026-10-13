@@ -225,7 +225,7 @@ EXTENSIONS = [
     title="Reddit: Hide Promoted & Keep Rising",
     desc="Removes Promoted and Sponsored ads from the Reddit home feed, keeps the feed sorted by Rising instead of Best, and hides posts and comments from accounts that look like bots.",
     lede="Removes <b>Promoted / Sponsored</b> ads from the Reddit home feed, <b>keeps the feed sorted by Rising</b> instead of the default “Best”, and <b>hides posts and comments from accounts that look like bots</b>.",
-    facts=[("Version","1.1.1"),("Permissions","storage only"),("Runs on","www.reddit.com, HTTPS, top frame"),("Network","Reddit profile lookups only")],
+    facts=[("Version","1.1.2"),("Permissions","storage only"),("Runs on","www.reddit.com, HTTPS, top frame"),("Network","Reddit profile lookups only")],
     sections=[
       ("How it works", """
 <p>Reddit's current UI ("shreddit") is built from clean, semantic web components, so nothing needs de-obfuscating:</p>

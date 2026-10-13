@@ -176,7 +176,9 @@ If you already had an earlier version loaded, press the reload icon on its card 
 - **Keep Rising can be overridden by Reddit.** Version 1.1.0 and earlier could
   reload endlessly when Reddit bounced `/rising/` back to `/`; 1.1.1 detects
   the bounce and gives up for that tab, so you may see the Best sort on those
-  accounts. Toggling the option off and on again retries.
+  accounts. Toggling the option off and on again retries. Before 1.1.2 the
+  **Enable** master switch didn't stop the redirect; now it does. Covered by
+  [`../tests/reddit-rising.test.mjs`](../tests/reddit-rising.test.mjs).
 - Only the new `www.reddit.com` design is supported (not `old.reddit.com`).
 - If Reddit renames the ad element, adjust the selector in
   [`content.js`](content.js) (`shreddit-ad-post`).
