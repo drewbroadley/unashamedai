@@ -507,6 +507,80 @@
       grid-template-columns: repeat(5, 1fr);
       gap: 6px;
     }
+    .mode-switcher {
+      width: 375px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      background: #14171d;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .mode-tab {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .mode-tab.active {
+      background: var(--card);
+      color: var(--accent);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+    }
+    .day-dots {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .day-dot {
+      background: #14171d;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 11px;
+    }
+    .day-dot.done {
+      border-color: rgba(16, 185, 129, 0.45);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .behaviour-item {
+      background: #14171d;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .cta-btn {
+      width: 100%;
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: var(--accent);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cta-btn:hover {
+      background: rgba(16, 185, 129, 0.24);
+    }
   </style>
 </head>
 <body>
@@ -514,6 +588,14 @@
   <div class="caption">
     <strong>Weighting For Life</strong>
     <span>iOS Concept · Local iCloud · NZFCD</span>
+  </div>
+
+  <!-- Interactive Concept Screen Switcher -->
+  <div class="mode-switcher">
+    <button class="mode-tab" id="tab-onboarding" onclick="setViewMode('onboarding')">1. Setup (Wk 1)</button>
+    <button class="mode-tab active" id="tab-log" onclick="setViewMode('log')">2. Daily Log</button>
+    <button class="mode-tab" id="tab-routines" onclick="setViewMode('routines')">3. Routines</button>
+    <button class="mode-tab" id="tab-review" onclick="setViewMode('review')">4. Review</button>
   </div>
 
   <div class="phone">
@@ -534,7 +616,7 @@
       <div class="pills">
         <!-- My Weight Today Pill (right beside Normal) -->
         <button class="pill weight-pill" id="btn-weight" onclick="toggleWeightDrawer()" title="Tap to record today's weight">
-          85.4 kg
+          ⚖️ 85.4kg
         </button>
         <button class="pill" id="btn-exercise" onclick="toggleExercise()">Normal</button>
         <button class="pill" id="btn-review" onclick="toggleReviewView()">Review</button>
@@ -555,10 +637,14 @@
         <span style="width:65px;color:var(--muted);">Current</span>
         <input id="slider-cur" type="range" min="50" max="130" step="0.1" value="85.4" oninput="setTodayWeight(this.value)" />
       </div>
-      <div class="slider-row" style="padding-top:4px;border-top:1px solid var(--border);">
+      <div class="slider-row" id="goal-slider-row" style="padding-top:4px;border-top:1px solid var(--border);">
         <span style="width:65px;color:var(--muted);">Goal</span>
         <input id="slider-goal" type="range" min="50" max="130" step="0.5" value="78.0" oninput="setGoalWeight(this.value)" />
         <span id="lbl-goal" style="width:52px;text-align:right;color:var(--muted);">78.0 kg</span>
+      </div>
+      <div id="goal-locked-row" style="display:none;padding-top:6px;border-top:1px solid var(--border);color:var(--muted);font-size:11px;justify-content:space-between;align-items:center;">
+        <span>🔒 Goal weight unlocks after Week 1 baseline</span>
+        <span style="color:var(--accent);cursor:pointer;font-weight:600;" onclick="setViewMode('onboarding')">View Setup →</span>
       </div>
     </div>
 
@@ -593,12 +679,8 @@
           <div id="matches-scroll" class="matches-scroll"></div>
         </div>
 
-        <!-- 1-Tap Routines -->
-        <div class="routines-row">
-          <button class="routine-chip" onclick="quickRoutine('☕', 'Flat white', 11, 9, 3, 11, 0.3)">☕ Flat white</button>
-          <button class="routine-chip" onclick="quickRoutine('🥣', 'Oats & gold kiwifruit', 45, 8, 4, 15, 0.1)">🥣 Morning oats</button>
-          <button class="routine-chip" onclick="quickRoutine('🥚', '2 poached eggs on Vogels', 32, 21, 12, 3, 1.1)">🥚 Eggs on Vogels</button>
-        </div>
+        <!-- 1-Tap Active Routines + Link to Routines Page -->
+        <div class="routines-row" id="daily-routines-row"></div>
       </div>
 
       <!-- 4. Clean Today's Food + Recorded Weight List -->
@@ -610,6 +692,18 @@
         <span id="too-much-action">Balance tomorrow</span>
       </button>
     </div>
+
+    <!-- ==================== ONBOARDING / WEEK 1 SETUP VIEW ==================== -->
+    <div id="onboarding-view" style="display:none;flex-direction:column;gap:10px;flex:1;">
+      <div class="seg-bar" style="grid-template-columns:repeat(2, 1fr);">
+        <button class="seg-btn" id="seg-ob-week1" onclick="setOnboardingStage('week1')">Step 1: 7-Day Baseline</button>
+        <button class="seg-btn active" id="seg-ob-complete" onclick="setOnboardingStage('complete')">Step 2: Behaviours & Goal</button>
+      </div>
+      <div id="onboarding-content" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:520px;"></div>
+    </div>
+
+    <!-- ==================== ROUTINES PAGE VIEW ==================== -->
+    <div id="routines-view" style="display:none;flex-direction:column;gap:10px;flex:1;overflow-y:auto;max-height:560px;"></div>
 
     <!-- ==================== REVIEW VIEW (Days / Weeks / Years: Eating vs Weight) ==================== -->
     <div id="review-view" style="display:none;flex-direction:column;gap:12px;flex:1;">
@@ -740,10 +834,22 @@
       { label: '2024 (Daily Avg · Full Year)', weightKg: 94.1, delta: '—', c: 188, p: 120, f: 64, su: 42, sa: 4.6, note: 'Avg per day · Initial logs' }
     ];
 
+    const routinesList = [
+      { id: 'r1', icon: '☕', shortLabel: 'Flat white', name: 'Flat white, standard milk', freq: 'Every day', time: '7:45 am', reason: 'Spotted 6/7 mornings in Week 1', active: true, c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+      { id: 'r2', icon: '🥣', shortLabel: 'Morning oats', name: 'Oats & gold kiwifruit', freq: 'Weekdays', time: '8:10 am', reason: 'Spotted 4 weekday mornings in Week 1', active: true, c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
+      { id: 'r3', icon: '🥚', shortLabel: 'Eggs on Vogels', name: '2 poached eggs on Vogels', freq: 'Tue / Thu / Sun', time: '8:15 am', reason: 'Spotted 3 mornings in Week 1', active: true, c: 32, p: 21, f: 12, su: 3, sa: 1.1 },
+      { id: 'r4', icon: '🌯', shortLabel: 'Chicken wrap', name: 'Chicken & avocado wrap', freq: 'Weekdays', time: '12:40 pm', reason: 'Spotted 3 lunches in Week 1', active: false, c: 38, p: 42, f: 18, su: 4, sa: 1.4 },
+      { id: 'r5', icon: '🐟', shortLabel: 'Salmon & kumara', name: 'King salmon & baked kumara', freq: '2× / week', time: '6:50 pm', reason: 'Spotted 2 dinners in Week 1', active: false, c: 35, p: 34, f: 26, su: 9, sa: 0.3 }
+    ];
+
+    const freqOptions = ['Every day', 'Weekdays', 'Weekends', '🔥 Exercise days', 'Tue / Thu / Sun', '2× / week'];
+    const routineTimes = ['7:45 am', '8:10 am', '12:40 pm', '6:50 pm'];
+
     const state = {
       dayIndex: 0, // 0 = Today, 1 = Yesterday, etc.
       goalKg: 78.0,
-      viewMode: 'log', // 'log' | 'review'
+      viewMode: 'log', // 'onboarding' | 'log' | 'routines' | 'review'
+      onboardingStage: 'complete', // 'week1' (recording 7 days) | 'complete' (behaviours + goal + routines)
       reviewPeriod: 'days', // 'days' | 'weeks' | 'years'
       intakeExpanded: false,
       weightDrawerOpen: false,
@@ -751,7 +857,9 @@
       searchQuery: '',
       matchLimit: 10,
       timeOptions: ['Now', '8:00 am', '12:30 pm'],
-      timeIndex: 0
+      timeIndex: 0,
+      newRoutineFoodIdx: 9,
+      newRoutineFreqIdx: 0
     };
 
     const nzfcdCatalog = [
@@ -896,6 +1004,16 @@
       render();
     }
 
+    function setViewMode(mode) {
+      state.viewMode = mode;
+      render();
+    }
+
+    function setOnboardingStage(stage) {
+      state.onboardingStage = stage;
+      render();
+    }
+
     function toggleReviewView() {
       state.viewMode = state.viewMode === 'log' ? 'review' : 'log';
       render();
@@ -926,6 +1044,11 @@
 
     function setGoalWeight(val) {
       state.goalKg = +Number(val).toFixed(1);
+      render();
+    }
+
+    function nudgeGoalWeight(delta) {
+      state.goalKg = +(state.goalKg + delta).toFixed(1);
       render();
     }
 
@@ -988,6 +1111,53 @@
       render();
     }
 
+    function toggleRoutineActive(id) {
+      const r = routinesList.find(item => item.id === id);
+      if (r) {
+        r.active = !r.active;
+        render();
+      }
+    }
+
+    function cycleRoutineFreq(id, ev) {
+      if (ev) ev.stopPropagation();
+      const r = routinesList.find(item => item.id === id);
+      if (!r) return;
+      const curIdx = freqOptions.indexOf(r.freq);
+      r.freq = freqOptions[(curIdx + 1) % freqOptions.length];
+      render();
+    }
+
+    function cycleRoutineTime(id, ev) {
+      if (ev) ev.stopPropagation();
+      const r = routinesList.find(item => item.id === id);
+      if (!r) return;
+      const curIdx = routineTimes.indexOf(r.time);
+      r.time = routineTimes[(curIdx + 1) % routineTimes.length];
+      render();
+    }
+
+    function addNewRoutine() {
+      const foodSel = document.getElementById('sel-routine-food');
+      const freqSel = document.getElementById('sel-routine-freq');
+      const fIdx = foodSel ? Number(foodSel.value) : state.newRoutineFoodIdx;
+      const freq = freqSel ? freqSel.value : 'Every day';
+      const item = nzfcdCatalog[fIdx] || nzfcdCatalog[0];
+      const shortWords = item.name.split(',')[0];
+      routinesList.unshift({
+        id: 'r' + Date.now(),
+        icon: item.icon,
+        shortLabel: shortWords,
+        name: item.name,
+        freq,
+        time: '8:00 am',
+        reason: 'Custom routine created by you',
+        active: true,
+        c: item.c, p: item.p, f: item.f, su: item.su, sa: item.sa
+      });
+      render();
+    }
+
     function removeEntry(id, ev) {
       ev.stopPropagation();
       currentDay().entries = currentDay().entries.filter(e => e.id !== id);
@@ -996,6 +1166,256 @@
 
     function escapeHtml(str) {
       return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+    }
+
+    function getWeek1Average() {
+      const n = daysData.length;
+      const sum = daysData.reduce((acc, d) => {
+        const t = getTotalsForEntries(d.entries);
+        return {
+          w: acc.w + d.weightKg,
+          c: acc.c + t.c,
+          p: acc.p + t.p,
+          f: acc.f + t.f,
+          su: acc.su + t.su,
+          sa: acc.sa + t.sa
+        };
+      }, { w: 0, c: 0, p: 0, f: 0, su: 0, sa: 0 });
+      return {
+        weightKg: +(sum.w / n).toFixed(1),
+        c: Math.round(sum.c / n),
+        p: Math.round(sum.p / n),
+        f: Math.round(sum.f / n),
+        su: Math.round(sum.su / n),
+        sa: +(sum.sa / n).toFixed(1)
+      };
+    }
+
+    function renderOnboarding() {
+      document.getElementById('seg-ob-week1').className = state.onboardingStage === 'week1' ? 'seg-btn active' : 'seg-btn';
+      document.getElementById('seg-ob-complete').className = state.onboardingStage === 'complete' ? 'seg-btn active' : 'seg-btn';
+
+      const container = document.getElementById('onboarding-content');
+      const avg = getWeek1Average();
+      const chronologicalDays = daysData.slice().reverse();
+
+      if (state.onboardingStage === 'week1') {
+        container.innerHTML = `
+          <div class="card" style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+              <strong style="color:var(--accent);">Week 1 Setup · Record Your Baseline</strong>
+              <span style="color:var(--muted);">7 / 7 days</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.45;">
+              Before we ask for a <strong style="color:var(--text);">Goal Weight</strong>, record <strong style="color:var(--text);">1 week of normal eating</strong> and your <strong style="color:var(--text);">current weight</strong> each day. We’ll learn your eating behaviours and suggest routines automatically.
+            </div>
+            <div class="day-dots">
+              ${chronologicalDays.map((d, idx) => `
+                <div class="day-dot done" onclick="jumpToDay(${daysData.length - 1 - idx})" style="cursor:pointer;" title="Tap to view ${escapeHtml(d.label)}">
+                  <span style="color:var(--muted);">${escapeHtml(d.shortDate.split(' ')[0])}</span>
+                  <strong style="color:var(--accent);">✓</strong>
+                  <span style="color:var(--text);font-weight:600;">${d.weightKg.toFixed(1)}</span>
+                </div>
+              `).join('')}
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding-top:4px;border-top:1px solid var(--border);color:var(--muted);">
+              <span>🔒 Goal Weight & Daily Limits</span>
+              <span>Unlocks after Day 7</span>
+            </div>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+            <strong>What we’re learning this week</strong>
+            <div class="behaviour-item">
+              <div>
+                <div style="font-weight:600;">⚖️ Daily Current Weight</div>
+                <div style="color:var(--muted);">Recorded alongside your food log (${chronologicalDays[0].weightKg.toFixed(1)} → ${daysData[0].weightKg.toFixed(1)} kg)</div>
+              </div>
+              <span style="color:var(--accent);font-weight:700;">7 logged</span>
+            </div>
+            <div class="behaviour-item">
+              <div>
+                <div style="font-weight:600;">🥣 Repeated Meals & Times</div>
+                <div style="color:var(--muted);">Spotting morning coffee, weekday breakfasts & staples</div>
+              </div>
+              <span style="color:var(--accent);font-weight:700;">19 items</span>
+            </div>
+          </div>
+
+          <button class="cta-btn" onclick="setOnboardingStage('complete')">
+            <span>✓ Finish Week 1 · See Behaviours & Set Goal</span>
+            <span>→</span>
+          </button>
+        `;
+      } else {
+        const targetLim = getLimitsForDay(0);
+        container.innerHTML = `
+          <!-- 1. Behaviours Built from Week 1 Eating -->
+          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong style="color:var(--accent);">1. Your Week 1 Eating Behaviours</strong>
+              <span style="color:var(--muted);">Avg ${avg.weightKg} kg</span>
+            </div>
+            <div style="font-size:11px;color:var(--muted);">
+              Your 7-day baseline average: <strong style="color:var(--carbs);">${avg.c}g C</strong> · <strong style="color:var(--protein);">${avg.p}g P</strong> · <strong style="color:var(--fat);">${avg.f}g F</strong> · <strong style="color:var(--sugar);">${avg.su}g Su</strong> · <strong style="color:var(--salt);">${avg.sa}g Sa</strong>
+            </div>
+            <div class="behaviour-item">
+              <div>
+                <div style="font-weight:600;">☕ Morning Flat White Habit</div>
+                <div style="color:var(--muted);">Logged 6 of 7 mornings around 7:45 am</div>
+              </div>
+              <span style="color:var(--carbs);font-weight:600;">Routine</span>
+            </div>
+            <div class="behaviour-item">
+              <div>
+                <div style="font-weight:600;">🥚 High-Protein Weekday Breakfasts</div>
+                <div style="color:var(--muted);">Oats or Poached Eggs on Vogels 5/7 days</div>
+              </div>
+              <span style="color:var(--accent);font-weight:600;">Keep</span>
+            </div>
+            <div class="behaviour-item">
+              <div>
+                <div style="font-weight:600;">🍟 Saturday Takeaway Spike</div>
+                <div style="color:var(--muted);">Pie + fish & chips pushed Salt to 5.3g & Fat to 77g</div>
+              </div>
+              <span style="color:var(--protein);font-weight:600;">Balance</span>
+            </div>
+          </div>
+
+          <!-- 2. Ask Goal Weight Now That Baseline Is Known -->
+          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;border-color:rgba(16,185,129,0.4);">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>2. Set Your Goal Weight</strong>
+              <span style="color:var(--muted);">Current: <strong style="color:var(--text);">${daysData[0].weightKg.toFixed(1)} kg</strong></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <span style="color:var(--muted);">Target Goal Weight</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <button class="step-btn" onclick="nudgeGoalWeight(-0.5)">-0.5</button>
+                <strong style="font-size:14px;color:var(--accent);min-width:58px;text-align:center;">${state.goalKg.toFixed(1)} kg</strong>
+                <button class="step-btn" onclick="nudgeGoalWeight(0.5)">+0.5</button>
+              </div>
+            </div>
+            <input type="range" min="55" max="115" step="0.5" value="${state.goalKg}" oninput="setGoalWeight(this.value)" style="width:100%;accent-color:var(--accent);" />
+            <div style="font-size:11px;color:var(--muted);display:flex;justify-content:space-between;padding-top:4px;border-top:1px solid var(--border);">
+              <span>Daily limits from your baseline:</span>
+              <span style="color:var(--text);font-weight:600;">${targetLim.c}C · ${targetLim.p}P · ${targetLim.f}F · ${targetLim.su}Su · ${targetLim.sa}Sa</span>
+            </div>
+          </div>
+
+          <!-- 3. Suggested Routines & Offer Routines Page -->
+          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>3. Suggested Routines from Week 1</strong>
+              <span style="color:var(--accent);cursor:pointer;font-weight:600;" onclick="setViewMode('routines')">Routines Page →</span>
+            </div>
+            ${routinesList.slice(0, 4).map(r => `
+              <div class="behaviour-item" onclick="toggleRoutineActive('${r.id}')" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                  <span>${escapeHtml(r.icon)}</span>
+                  <div style="min-width:0;">
+                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                    <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.freq)} · ${escapeHtml(r.time)} (${escapeHtml(r.reason)})</div>
+                  </div>
+                </div>
+                <span class="pill ${r.active ? 'weight-pill' : ''}" style="height:22px;padding:0 7px;">
+                  ${r.active ? '✓ Active' : '+ Add'}
+                </span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button class="cta-btn" onclick="setViewMode('routines')" style="justify-content:center;">
+              <span>⚙ Open Routines Page</span>
+            </button>
+            <button class="cta-btn" onclick="setViewMode('log')" style="justify-content:center;">
+              <span>Go to Daily Log →</span>
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function renderRoutines() {
+      const el = document.getElementById('routines-view');
+      const activeRoutines = routinesList.filter(r => r.active);
+      const suggestedRoutines = routinesList.filter(r => !r.active);
+
+      el.innerHTML = `
+        <!-- Active Routines (Appear as 1-Tap Chips on Daily Log) -->
+        <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong>Your Active Routines (${activeRoutines.length})</strong>
+            <span style="color:var(--muted);font-size:11px;">Tap schedule/time to edit</span>
+          </div>
+          ${activeRoutines.length === 0 ? `<div style="color:var(--muted);">No active routines yet. Add a suggested routine below.</div>` : ''}
+          ${activeRoutines.map(r => `
+            <div class="behaviour-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <div style="display:flex;align-items:center;gap:7px;min-width:0;">
+                  <span>${escapeHtml(r.icon)}</span>
+                  <div style="min-width:0;">
+                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                    <div style="color:var(--muted);font-size:11px;">${r.c}C · ${r.p}P · ${r.f}F · ${r.su}Su · ${r.sa}Sa</div>
+                  </div>
+                </div>
+                <button class="pill" style="height:22px;padding:0 7px;" onclick="toggleRoutineActive('${r.id}')">Remove</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-top:4px;border-top:1px solid var(--border);font-size:11px;">
+                <div style="display:flex;gap:4px;align-items:center;">
+                  <button class="pill weight-pill" style="height:22px;padding:0 7px;font-size:11px;" onclick="cycleRoutineFreq('${r.id}', event)" title="Tap to change schedule">
+                    📅 ${escapeHtml(r.freq)}
+                  </button>
+                  <button class="pill" style="height:22px;padding:0 7px;font-size:11px;" onclick="cycleRoutineTime('${r.id}', event)" title="Tap to change default time">
+                    🕒 ${escapeHtml(r.time)}
+                  </button>
+                </div>
+                <button class="pill" style="height:22px;padding:0 7px;font-size:11px;color:var(--accent);" onclick="quickRoutine('${r.icon}', '${escapeHtml(r.shortLabel)}', ${r.c}, ${r.p}, ${r.f}, ${r.su}, ${r.sa}); setViewMode('log');">
+                  + Log now
+                </button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Suggested from Your Week 1 Eating -->
+        <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="color:var(--accent);">Suggested from Your Week 1 Eating</strong>
+            <span style="color:var(--muted);font-size:11px;">1-tap add</span>
+          </div>
+          ${suggestedRoutines.length === 0 ? `<div style="color:var(--muted);">All Week 1 suggested routines are active!</div>` : ''}
+          ${suggestedRoutines.map(r => `
+            <div class="behaviour-item" onclick="toggleRoutineActive('${r.id}')" style="cursor:pointer;">
+              <div style="display:flex;align-items:center;gap:7px;min-width:0;">
+                <span>${escapeHtml(r.icon)}</span>
+                <div style="min-width:0;">
+                  <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                  <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.reason)} · ${escapeHtml(r.freq)}</div>
+                </div>
+              </div>
+              <span class="pill weight-pill" style="height:22px;padding:0 8px;">+ Add</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Create Custom Routine -->
+        <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+          <strong>Create a Routine</strong>
+          <select id="sel-routine-food" class="text-input" style="width:100%;">
+            ${nzfcdCatalog.slice(0, 15).map((item, idx) => `
+              <option value="${idx}">${escapeHtml(item.icon)} ${escapeHtml(item.name)}</option>
+            `).join('')}
+          </select>
+          <div style="display:flex;gap:6px;">
+            <select id="sel-routine-freq" class="text-input" style="flex:1;">
+              ${freqOptions.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('')}
+            </select>
+            <button class="pill weight-pill" style="height:32px;padding:0 12px;" onclick="addNewRoutine()">+ Create Routine</button>
+          </div>
+        </div>
+      `;
     }
 
     function renderNutrientFooter(vals, lim, isAvg = false) {
@@ -1199,6 +1619,13 @@
       const d = currentDay();
       const limits = getLimitsForDay(state.dayIndex);
       const totals = getTotalsForEntries(d.entries);
+      const isBaselineWeek1 = state.onboardingStage === 'week1';
+
+      // Top Mode Switcher Tabs
+      ['onboarding', 'log', 'routines', 'review'].forEach(m => {
+        const tab = document.getElementById('tab-' + m);
+        if (tab) tab.className = state.viewMode === m ? 'mode-tab active' : 'mode-tab';
+      });
 
       // Header Updates
       document.getElementById('day-title').textContent = d.label;
@@ -1210,17 +1637,31 @@
       document.getElementById('lbl-goal').textContent = state.goalKg.toFixed(1) + ' kg';
       document.getElementById('slider-goal').value = state.goalKg;
 
+      // Hide Goal Weight slider during Week 1 Baseline recording
+      document.getElementById('goal-slider-row').style.display = isBaselineWeek1 ? 'none' : 'flex';
+      document.getElementById('goal-locked-row').style.display = isBaselineWeek1 ? 'flex' : 'none';
+
       const exBtn = document.getElementById('btn-exercise');
       exBtn.textContent = d.heavyExercise ? '🔥 Exercise' : 'Normal';
       exBtn.className = d.heavyExercise ? 'pill active-exercise' : 'pill';
 
       const revBtn = document.getElementById('btn-review');
-      revBtn.className = state.viewMode === 'review' ? 'pill active-review' : 'pill';
-      revBtn.textContent = state.viewMode === 'review' ? '← Log' : 'Review';
+      revBtn.className = state.viewMode !== 'log' ? 'pill active-review' : 'pill';
+      revBtn.textContent = state.viewMode !== 'log' ? '← Log' : 'Review';
 
       document.getElementById('log-view').style.display = state.viewMode === 'log' ? 'flex' : 'none';
+      document.getElementById('onboarding-view').style.display = state.viewMode === 'onboarding' ? 'flex' : 'none';
+      document.getElementById('routines-view').style.display = state.viewMode === 'routines' ? 'flex' : 'none';
       document.getElementById('review-view').style.display = state.viewMode === 'review' ? 'flex' : 'none';
 
+      if (state.viewMode === 'onboarding') {
+        renderOnboarding();
+        return;
+      }
+      if (state.viewMode === 'routines') {
+        renderRoutines();
+        return;
+      }
       if (state.viewMode === 'review') {
         renderReview();
         return;
@@ -1292,6 +1733,19 @@
         }).join('');
       }
 
+      // Dynamic 1-Tap Routine Chips + Routines Page link
+      const routinesRowEl = document.getElementById('daily-routines-row');
+      const activeRoutines = routinesList.filter(r => r.active);
+      routinesRowEl.innerHTML = activeRoutines.map(r => `
+        <button class="routine-chip" onclick="quickRoutine('${r.icon}', '${escapeHtml(r.shortLabel)}', ${r.c}, ${r.p}, ${r.f}, ${r.su}, ${r.sa})" title="${escapeHtml(r.freq)} · ${escapeHtml(r.time)}">
+          ${escapeHtml(r.icon)} ${escapeHtml(r.shortLabel)}
+        </button>
+      `).join('') + `
+        <button class="routine-chip" style="border-color:rgba(16,185,129,0.4);color:var(--accent);" onclick="setViewMode('routines')">
+          ⚙ Routines
+        </button>
+      `;
+
       // 3. Recorded Weight Row + Food List
       const listEl = document.getElementById('food-list');
       const weightRowHtml = `
@@ -1300,7 +1754,7 @@
             <span>⚖️</span>
             <span style="font-weight:600;color:var(--accent);">Recorded weight (${escapeHtml(d.label)}): ${d.weightKg.toFixed(1)} kg</span>
           </div>
-          <span style="color:var(--muted);">Goal ${state.goalKg.toFixed(1)} kg · Edit</span>
+          <span style="color:var(--muted);">${isBaselineWeek1 ? 'Week 1 Baseline · Edit' : `Goal ${state.goalKg.toFixed(1)} kg · Edit`}</span>
         </div>
       `;
 
