@@ -58,7 +58,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      min-height: 700px;
+      min-height: 720px;
     }
     .statusbar {
       display: flex;
@@ -182,7 +182,7 @@
       flex: 1;
       accent-color: var(--accent);
     }
-    /* 2. Plain English Log Input */
+    /* 2. Plain English Log Input + Ranked NZFCD Matches */
     .input-box {
       display: flex;
       flex-direction: column;
@@ -205,15 +205,13 @@
       outline: none;
     }
     .text-input:focus { border-color: var(--accent); }
-    .btn-add {
-      background: var(--accent);
-      color: #052e16;
+    .btn-clear {
+      background: transparent;
       border: none;
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
+      color: var(--muted);
+      font-size: 14px;
       cursor: pointer;
+      padding: 0 4px;
     }
     .routines-row {
       display: flex;
@@ -234,6 +232,97 @@
       cursor: pointer;
     }
     .routine-chip:hover { color: var(--text); border-color: #3f4656; }
+
+    /* Ranked Search Matches List */
+    .matches-panel {
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .matches-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 0 2px;
+    }
+    .matches-limit-toggle {
+      background: #111318;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .matches-scroll {
+      max-height: 250px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 2px;
+    }
+    .matches-scroll::-webkit-scrollbar { width: 4px; }
+    .matches-scroll::-webkit-scrollbar-thumb { background: #2e3442; border-radius: 999px; }
+    .match-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 9px;
+      border-radius: 10px;
+      background: #12151b;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .match-row:hover {
+      background: var(--card-hover);
+      border-color: #363d4d;
+    }
+    .match-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .match-rank {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      width: 18px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .match-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .match-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .match-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .score-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+
     /* 3. Clean Food List */
     .food-list {
       flex: 1;
@@ -345,20 +434,31 @@
       <div id="intake-details" class="expanded-details" style="display:none;"></div>
     </div>
 
-    <!-- 3. Plain-English Quick Log + 1-Tap Routines -->
+    <!-- 3. Plain-English Search + Ranked NZFCD Matches + Routines -->
     <div class="card input-box">
       <div class="input-row">
         <input
           id="food-input"
           class="text-input"
           type="text"
-          placeholder="Plain English (e.g. 2 eggs on Vogels)"
-          onkeydown="if(event.key==='Enter') addFood()"
+          value="poached egg"
+          placeholder="Search NZ food (e.g. poached egg, vogels, pie)..."
+          oninput="onSearchInput(this.value)"
         />
+        <button id="btn-clear" class="btn-clear" style="display:none;" onclick="clearSearch()" title="Clear">×</button>
         <button class="pill" id="btn-time" onclick="cycleTime()" title="Tap to change time">Now</button>
-        <button class="btn-add" onclick="addFood()">Add</button>
       </div>
 
+      <!-- Ranked NZFCD Search Results (Most relevant -> Least relevant, 10 or 25 items) -->
+      <div id="matches-panel" class="matches-panel" style="display:none;">
+        <div class="matches-header">
+          <span id="matches-label">Closest NZFCD matches (most → least relevant)</span>
+          <button id="btn-limit" class="matches-limit-toggle" onclick="toggleMatchLimit()">Top 10</button>
+        </div>
+        <div id="matches-scroll" class="matches-scroll"></div>
+      </div>
+
+      <!-- 1-Tap Routines -->
       <div class="routines-row">
         <button class="routine-chip" onclick="quickRoutine('☕', 'Flat white', 11, 9, 3, 11, 0.3)">☕ Flat white</button>
         <button class="routine-chip" onclick="quickRoutine('🥣', 'Oats & gold kiwifruit', 45, 8, 4, 15, 0.1)">🥣 Morning oats</button>
@@ -385,24 +485,112 @@
       intakeExpanded: false,
       weightDrawerOpen: false,
       selectedEntryId: null,
+      searchQuery: 'poached egg',
+      matchLimit: 10, // Toggle between 10 and 25
       timeOptions: ['Now', '8:00 am', '12:30 pm', 'Yesterday'],
       timeIndex: 0,
       entries: [
-        { id: 1, icon: '☕', name: 'Flat white', time: '7:45 am', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+        { id: 1, icon: '☕', name: 'Flat white, standard milk', time: '7:45 am', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
         { id: 2, icon: '🥣', name: 'Oats & gold kiwifruit', time: '8:10 am', c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
         { id: 3, icon: '🌯', name: 'Chicken & avocado wrap', time: '12:40 pm', c: 38, p: 42, f: 18, su: 4, sa: 1.4 }
       ]
     };
 
+    // Representative New Zealand Food Composition Database (foodcomposition.co.nz) catalog
     const nzfcdCatalog = [
-      { match: ['egg', 'eggs'], icon: '🥚', name: '2 poached eggs', c: 1, p: 13, f: 10, su: 0, sa: 0.4 },
-      { match: ['vogel', 'toast', 'bread'], icon: '🍞', name: 'Vogels toast (2 slices)', c: 31, p: 8, f: 3, su: 2, sa: 0.7 },
-      { match: ['flat white', 'coffee', 'latte'], icon: '☕', name: 'Flat white', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
-      { match: ['pie', 'mince'], icon: '🥧', name: 'Mince & cheese pie', c: 42, p: 18, f: 25, su: 2, sa: 1.8 },
-      { match: ['kiwi', 'kiwifruit'], icon: '🥝', name: 'Gold kiwifruit', c: 15, p: 1, f: 0, su: 13, sa: 0.0 },
-      { match: ['salmon', 'fish'], icon: '🐟', name: 'King salmon fillet', c: 0, p: 32, f: 26, su: 0, sa: 0.2 },
-      { match: ['kumara', 'potato'], icon: '🍠', name: 'Baked kumara', c: 37, p: 2, f: 0, su: 10, sa: 0.1 }
+      { icon: '🥚', name: 'Egg, chicken, whole, poached (2 large)', cat: 'eggs breakfast', c: 1, p: 13, f: 10, su: 0, sa: 0.4 },
+      { icon: '🥚', name: 'Egg, chicken, whole, boiled (1 large)', cat: 'eggs breakfast', c: 0, p: 6, f: 5, su: 0, sa: 0.2 },
+      { icon: '🍳', name: 'Egg, chicken, scrambled with milk & butter', cat: 'eggs breakfast', c: 2, p: 14, f: 15, su: 2, sa: 0.6 },
+      { icon: '🍳', name: 'Egg, chicken, fried in oil', cat: 'eggs breakfast', c: 0, p: 7, f: 9, su: 0, sa: 0.2 },
+      { icon: '🍞', name: 'Bread, Vogels mixed grain, toasted (2 slices)', cat: 'bread toast breakfast', c: 31, p: 8, f: 3, su: 2, sa: 0.7 },
+      { icon: '🍞', name: 'Bread, Vogels soy & linseed, toasted (2 slices)', cat: 'bread toast breakfast', c: 26, p: 10, f: 6, su: 2, sa: 0.7 },
+      { icon: '🍞', name: 'Bread, white sliced, Tip Top Supersoft (2 slices)', cat: 'bread toast', c: 34, p: 6, f: 1, su: 2, sa: 0.8 },
+      { icon: '🍞', name: 'Bread, sourdough, white commercial (1 thick slice)', cat: 'bread toast', c: 32, p: 6, f: 1, su: 1, sa: 0.6 },
+      { icon: '🥐', name: 'Bagel, plain, toasted', cat: 'bread breakfast', c: 48, p: 10, f: 2, su: 5, sa: 1.1 },
+      { icon: '☕', name: 'Coffee, flat white, standard blue milk (240 mL)', cat: 'coffee milk drink', c: 11, p: 8, f: 8, su: 11, sa: 0.3 },
+      { icon: '☕', name: 'Coffee, flat white, trim green milk (240 mL)', cat: 'coffee milk drink', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+      { icon: '☕', name: 'Coffee, flat white, oat milk (240 mL)', cat: 'coffee oat drink', c: 16, p: 2, f: 4, su: 10, sa: 0.2 },
+      { icon: '☕', name: 'Coffee, latte, standard milk (280 mL)', cat: 'coffee milk drink', c: 13, p: 9, f: 9, su: 13, sa: 0.3 },
+      { icon: '☕', name: 'Coffee, long black, unsweetened', cat: 'coffee black drink', c: 0, p: 0, f: 0, su: 0, sa: 0.0 },
+      { icon: '🥛', name: 'Milk, Anchor Blue standard (1 cup, 250 mL)', cat: 'milk dairy drink', c: 12, p: 8, f: 9, su: 12, sa: 0.3 },
+      { icon: '🥛', name: 'Milk, Anchor Calci+ Trim (1 cup, 250 mL)', cat: 'milk dairy drink', c: 13, p: 10, f: 1, su: 13, sa: 0.3 },
+      { icon: '🧈', name: 'Butter, Anchor salted (1 tsp, 5g)', cat: 'butter dairy fat spread', c: 0, p: 0, f: 4, su: 0, sa: 0.1 },
+      { icon: '🫙', name: 'Spread, Sanitarium Marmite (1 tsp, 5g)', cat: 'spread toast breakfast', c: 1, p: 1, f: 0, su: 0, sa: 0.4 },
+      { icon: '🥜', name: 'Peanut butter, Pic’s crunchy salted (1 tbsp, 16g)', cat: 'spread nut toast', c: 2, p: 5, f: 8, su: 1, sa: 0.1 },
+      { icon: '🥣', name: 'Oats, rolled, cooked porridge with water (1 bowl)', cat: 'oats cereal breakfast', c: 30, p: 7, f: 4, su: 1, sa: 0.0 },
+      { icon: '🥣', name: 'Cereal, Sanitarium Weet-Bix (2 biscuits)', cat: 'cereal wheat breakfast', c: 20, p: 4, f: 0, su: 1, sa: 0.2 },
+      { icon: '🥝', name: 'Kiwifruit, Zespri SunGold, raw (1 large)', cat: 'fruit kiwifruit snack', c: 15, p: 1, f: 0, su: 13, sa: 0.0 },
+      { icon: '🥝', name: 'Kiwifruit, Zespri Green, raw (1 medium)', cat: 'fruit kiwifruit snack', c: 11, p: 1, f: 0, su: 8, sa: 0.0 },
+      { icon: '🍌', name: 'Banana, Cavendish, raw (1 medium)', cat: 'fruit snack', c: 24, p: 1, f: 0, su: 17, sa: 0.0 },
+      { icon: '🍎', name: 'Apple, Royal Gala, NZ raw with skin', cat: 'fruit snack', c: 17, p: 0, f: 0, su: 14, sa: 0.0 },
+      { icon: '🥑', name: 'Avocado, Hass, raw (half fruit, 80g)', cat: 'avocado vegetable fat', c: 1, p: 2, f: 18, su: 0, sa: 0.0 },
+      { icon: '🥧', name: 'Pie, mince & cheese, commercial baked (175g)', cat: 'pie bakery lunch beef', c: 42, p: 18, f: 25, su: 2, sa: 1.8 },
+      { icon: '🥧', name: 'Pie, steak & cheese, commercial baked (175g)', cat: 'pie bakery lunch beef', c: 40, p: 21, f: 23, su: 2, sa: 1.7 },
+      { icon: '🥧', name: 'Pie, potato top, commercial baked (180g)', cat: 'pie bakery lunch beef', c: 39, p: 16, f: 20, su: 2, sa: 1.6 },
+      { icon: '🥐', name: 'Sausage roll, commercial flaky pastry (130g)', cat: 'bakery lunch pork', c: 34, p: 12, f: 24, su: 2, sa: 1.5 },
+      { icon: '🍗', name: 'Chicken breast, skinless, grilled (150g)', cat: 'chicken meat dinner lunch', c: 0, p: 45, f: 5, su: 0, sa: 0.2 },
+      { icon: '🍗', name: 'Chicken thigh, boneless, roasted (150g)', cat: 'chicken meat dinner', c: 0, p: 38, f: 14, su: 0, sa: 0.3 },
+      { icon: '🌯', name: 'Chicken, avocado & salad wrap (1 wrap)', cat: 'chicken lunch wrap', c: 38, p: 42, f: 18, su: 4, sa: 1.4 },
+      { icon: '🍣', name: 'Sushi, salmon & avocado roll (6 pieces)', cat: 'salmon fish rice lunch', c: 46, p: 14, f: 9, su: 5, sa: 1.1 },
+      { icon: '🐟', name: 'Salmon, NZ King (Chinook), baked fillet (150g)', cat: 'salmon fish seafood dinner', c: 0, p: 32, f: 26, su: 0, sa: 0.2 },
+      { icon: '🐟', name: 'Fish, Hoki fillet, battered & deep fried (1 piece)', cat: 'fish takeaways dinner', c: 22, p: 24, f: 18, su: 1, sa: 0.9 },
+      { icon: '🍟', name: 'Potatoes, hot chips, takeaway salted (1 scoop)', cat: 'potatoes chips takeaways', c: 58, p: 6, f: 24, su: 1, sa: 1.2 },
+      { icon: '🥩', name: 'Beef, rump steak, lean grilled (180g)', cat: 'beef steak meat dinner', c: 0, p: 52, f: 11, su: 0, sa: 0.3 },
+      { icon: '🥩', name: 'Beef mince, prime, pan-fried drained (150g)', cat: 'beef mince meat dinner', c: 0, p: 39, f: 16, su: 0, sa: 0.3 },
+      { icon: '🍠', name: 'Kumara, red, peeled & baked (150g)', cat: 'kumara vegetable dinner', c: 35, p: 2, f: 0, su: 9, sa: 0.1 },
+      { icon: '🍠', name: 'Kumara, gold, roasted with oil (150g)', cat: 'kumara vegetable dinner', c: 33, p: 2, f: 6, su: 11, sa: 0.2 },
+      { icon: '🥦', name: 'Broccoli, steamed florets (1 cup)', cat: 'vegetable green dinner', c: 4, p: 4, f: 1, su: 2, sa: 0.0 },
+      { icon: '🧀', name: 'Cheese, Mainland Tasty cheddar (2 slices, 40g)', cat: 'cheese dairy snack', c: 0, p: 10, f: 15, su: 0, sa: 0.7 },
+      { icon: '🧀', name: 'Cheese, Mainland Edam (2 slices, 40g)', cat: 'cheese dairy snack', c: 0, p: 11, f: 11, su: 0, sa: 0.7 },
+      { icon: '🍫', name: 'Chocolate, Whittaker’s Creamy Milk (4 squares, 25g)', cat: 'chocolate sweet snack', c: 14, p: 2, f: 8, su: 13, sa: 0.0 },
+      { icon: '🍫', name: 'Chocolate, Whittaker’s 72% Dark Ghana (4 squares)', cat: 'chocolate sweet snack', c: 10, p: 2, f: 11, su: 7, sa: 0.0 },
+      { icon: '🥤', name: 'Protein shake, whey isolate with water (1 scoop)', cat: 'protein gym supplement drink', c: 3, p: 27, f: 1, su: 1, sa: 0.3 }
     ];
+
+    // Ranks NZFCD items from most relevant / closely matched to least relevant
+    function rankMatches(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) return [];
+
+      const stopWords = new Set(['a', 'an', 'the', 'with', 'and', 'on', 'of', 'in', 'plus', 'to']);
+      const tokens = q.split(/[\s,+&]+/).filter(t => t.length > 0 && !stopWords.has(t));
+
+      const scored = nzfcdCatalog.map((item, idx) => {
+        const nameLower = item.name.toLowerCase();
+        const haystack = nameLower + ' ' + item.cat;
+        let score = 0;
+
+        // 1. Exact substring in food name
+        if (nameLower.startsWith(q)) score += 120;
+        else if (nameLower.includes(q)) score += 85;
+
+        // 2. Per-token matching (word prefix, exact word, partial substring, category match)
+        tokens.forEach(tok => {
+          const words = nameLower.split(/[\s,()]+/);
+          if (words.includes(tok) || words.includes(tok + 's') || words.includes(tok.replace(/s$/, ''))) {
+            score += 50;
+          } else if (words.some(w => w.startsWith(tok))) {
+            score += 35;
+          } else if (nameLower.includes(tok)) {
+            score += 22;
+          } else if (item.cat.includes(tok)) {
+            score += 14;
+          } else {
+            // Character overlap / fuzzy similarity fallback so we always fill out the tail (up to 25 items)
+            let common = 0;
+            for (let ch of tok) {
+              if (haystack.includes(ch)) common++;
+            }
+            score += Math.round((common / Math.max(1, tok.length)) * 6);
+          }
+        });
+
+        return { item, score, idx };
+      });
+
+      scored.sort((a, b) => b.score - a.score || a.idx - b.idx);
+      return scored.slice(0, state.matchLimit);
+    }
 
     function getLimits() {
       const baseKcal = Math.max(1350, state.currentKg * 28 - (state.goalKg < state.currentKg ? 380 : 0));
@@ -432,6 +620,35 @@
         su: acc.su + e.su,
         sa: +(acc.sa + e.sa).toFixed(1)
       }), { c: 0, p: 0, f: 0, su: 0, sa: 0 });
+    }
+
+    function onSearchInput(val) {
+      state.searchQuery = val;
+      render();
+    }
+
+    function clearSearch() {
+      state.searchQuery = '';
+      document.getElementById('food-input').value = '';
+      render();
+    }
+
+    function toggleMatchLimit() {
+      state.matchLimit = state.matchLimit === 10 ? 25 : 10;
+      render();
+    }
+
+    function selectMatch(idx) {
+      const m = nzfcdCatalog[idx];
+      if (!m) return;
+      state.entries.unshift({
+        id: Date.now() + Math.random(),
+        icon: m.icon,
+        name: m.name,
+        time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
+        c: m.c, p: m.p, f: m.f, su: m.su, sa: m.sa
+      });
+      clearSearch();
     }
 
     function toggleIntake() {
@@ -475,39 +692,6 @@
         time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
         c, p, f, su, sa
       });
-      render();
-    }
-
-    function addFood() {
-      const input = document.getElementById('food-input');
-      const raw = input.value.trim();
-      if (!raw) return;
-
-      const lower = raw.toLowerCase();
-      const matched = nzfcdCatalog.filter(item => item.match.some(k => lower.includes(k)));
-      const timeStr = state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex];
-
-      if (matched.length > 0) {
-        matched.forEach((m, idx) => {
-          state.entries.unshift({
-            id: Date.now() + idx,
-            icon: m.icon,
-            name: m.name,
-            time: timeStr,
-            c: m.c, p: m.p, f: m.f, su: m.su, sa: m.sa
-          });
-        });
-      } else {
-        state.entries.unshift({
-          id: Date.now(),
-          icon: '🍽️',
-          name: raw,
-          time: timeStr,
-          c: 24, p: 14, f: 9, su: 5, sa: 0.6
-        });
-      }
-
-      input.value = '';
       render();
     }
 
@@ -562,7 +746,40 @@
         `).join('');
       }
 
-      // 2. Food List
+      // 2. Ranked Plain-English Search Results (Top 10 or Top 25)
+      const clearBtn = document.getElementById('btn-clear');
+      const matchesPanel = document.getElementById('matches-panel');
+      const matchesScroll = document.getElementById('matches-scroll');
+      const limitBtn = document.getElementById('btn-limit');
+
+      const ranked = rankMatches(state.searchQuery);
+      clearBtn.style.display = state.searchQuery ? 'inline-block' : 'none';
+      matchesPanel.style.display = ranked.length > 0 ? 'flex' : 'none';
+      limitBtn.textContent = state.matchLimit === 10 ? 'Showing 10 · Show 25' : 'Showing 25 · Show 10';
+
+      if (ranked.length > 0) {
+        matchesScroll.innerHTML = ranked.map((r, i) => {
+          const dotColor = r.score >= 45 ? 'var(--accent)' : (r.score >= 20 ? 'var(--carbs)' : '#4b5563');
+          return `
+            <div class="match-row" onclick="selectMatch(${r.idx})">
+              <div class="match-left">
+                <span class="match-rank">${i + 1}.</span>
+                <span>${escapeHtml(r.item.icon)}</span>
+                <div style="min-width:0;">
+                  <div class="match-title">${escapeHtml(r.item.name)}</div>
+                  <div class="match-sub">${r.item.c}C · ${r.item.p}P · ${r.item.f}F · ${r.item.su}Su · ${r.item.sa}Sa</div>
+                </div>
+              </div>
+              <div class="match-right">
+                <span class="score-dot" style="background:${dotColor};" title="Match score"></span>
+                <span style="color:var(--accent);font-weight:700;">+</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 3. Food List
       const listEl = document.getElementById('food-list');
       listEl.innerHTML = state.entries.map(e => {
         const isOpen = state.selectedEntryId === e.id;
@@ -591,7 +808,7 @@
         `;
       }).join('');
 
-      // 3. Bottom "I ate too much" button
+      // 4. Bottom "I ate too much" button
       const tmBtn = document.getElementById('btn-too-much');
       const tmText = document.getElementById('too-much-text');
       const tmAct = document.getElementById('too-much-action');
