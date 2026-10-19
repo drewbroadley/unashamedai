@@ -713,17 +713,17 @@
     ];
 
     const weeksRollup = [
-      { label: 'This Week (Oct 13–19)', weightKg: 85.4, delta: '-0.8 kg', c: 142, p: 138, f: 58, su: 31, sa: 3.6, note: '2× 🔥 Exercise · 1× Rebalanced' },
-      { label: 'Last Week (Oct 6–12)', weightKg: 86.2, delta: '-0.6 kg', c: 158, p: 144, f: 62, su: 34, sa: 4.1, note: '3× 🔥 Exercise' },
-      { label: 'Sep 29 – Oct 5', weightKg: 86.8, delta: '-0.5 kg', c: 165, p: 140, f: 65, su: 38, sa: 4.4, note: 'Steady week' },
-      { label: 'Sep 22 – Sep 28', weightKg: 87.3, delta: '-0.7 kg', c: 152, p: 146, f: 60, su: 33, sa: 3.9, note: '2× 🔥 Exercise' },
-      { label: 'Sep 15 – Sep 21', weightKg: 88.0, delta: '-0.4 kg', c: 174, p: 135, f: 68, su: 41, sa: 4.7, note: '1× Rebalanced' }
+      { label: 'This Week (Oct 13–19)', weightKg: 85.4, delta: '-0.8 kg', c: 142, p: 138, f: 58, su: 31, sa: 3.6, note: 'Daily avg · 2× 🔥 Exercise' },
+      { label: 'Last Week (Oct 6–12)', weightKg: 86.2, delta: '-0.6 kg', c: 158, p: 144, f: 60, su: 34, sa: 4.1, note: 'Daily avg · 3× 🔥 Exercise' },
+      { label: 'Sep 29 – Oct 5', weightKg: 86.8, delta: '-0.5 kg', c: 165, p: 140, f: 62, su: 38, sa: 4.3, note: 'Daily avg · Steady week' },
+      { label: 'Sep 22 – Sep 28', weightKg: 87.3, delta: '-0.7 kg', c: 152, p: 146, f: 59, su: 33, sa: 3.9, note: 'Daily avg · 2× 🔥 Exercise' },
+      { label: 'Sep 15 – Sep 21', weightKg: 88.0, delta: '-0.4 kg', c: 174, p: 135, f: 64, su: 41, sa: 4.5, note: 'Daily avg · 1× Rebalanced' }
     ];
 
     const yearsRollup = [
-      { label: '2026 (YTD · Oct)', weightKg: 85.4, delta: '-6.6 kg', c: 156, p: 142, f: 61, su: 34, sa: 4.0, note: 'Started at 92.0 kg → Goal 78.0 kg' },
-      { label: '2025 (Full Year Avg)', weightKg: 92.0, delta: '-2.1 kg', c: 195, p: 124, f: 76, su: 48, sa: 5.2, note: 'Baseline year' },
-      { label: '2024 (Full Year Avg)', weightKg: 94.1, delta: '—', c: 215, p: 118, f: 82, su: 54, sa: 5.6, note: 'Initial logs' }
+      { label: '2026 (Daily Avg · YTD)', weightKg: 85.4, delta: '-6.6 kg', c: 156, p: 142, f: 58, su: 34, sa: 3.9, note: 'Avg per day · Started 92.0 → Goal 78.0 kg' },
+      { label: '2025 (Daily Avg · Full Year)', weightKg: 92.0, delta: '-2.1 kg', c: 178, p: 128, f: 62, su: 40, sa: 4.4, note: 'Avg per day across 365 days' },
+      { label: '2024 (Daily Avg · Full Year)', weightKg: 94.1, delta: '—', c: 188, p: 120, f: 64, su: 42, sa: 4.6, note: 'Avg per day · Initial logs' }
     ];
 
     const state = {
@@ -984,13 +984,14 @@
       return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
     }
 
-    function renderNutrientFooter(vals, lim) {
+    function renderNutrientFooter(vals, lim, isAvg = false) {
+      const unit = isAvg ? 'g/d' : 'g';
       const items = [
-        { short: 'C', val: vals.c, max: lim.c, unit: 'g', col: 'var(--carbs)' },
-        { short: 'P', val: vals.p, max: lim.p, unit: 'g', col: 'var(--protein)' },
-        { short: 'F', val: vals.f, max: lim.f, unit: 'g', col: 'var(--fat)' },
-        { short: 'Su', val: vals.su, max: lim.su, unit: 'g', col: 'var(--sugar)' },
-        { short: 'Sa', val: vals.sa, max: lim.sa, unit: 'g', col: 'var(--salt)' }
+        { short: 'C', val: vals.c, max: lim.c, unit, col: 'var(--carbs)' },
+        { short: 'P', val: vals.p, max: lim.p, unit, col: 'var(--protein)' },
+        { short: 'F', val: vals.f, max: lim.f, unit, col: 'var(--fat)' },
+        { short: 'Su', val: vals.su, max: lim.su, unit, col: 'var(--sugar)' },
+        { short: 'Sa', val: vals.sa, max: lim.sa, unit, col: 'var(--salt)' }
       ];
       return `
         <div class="review-bars">
@@ -1003,7 +1004,7 @@
                   <span style="color:var(--muted);">${b.val}${b.unit}</span>
                 </div>
                 <div class="track">
-                  <div class="fill" style="width:${pct}%;background:${b.val > b.max ? '#ef4444' : b.col};"></div>
+                  <div class="fill" style="width:${pct}%;background:${b.col};"></div>
                 </div>
               </div>
             `;
@@ -1062,12 +1063,12 @@
                   <strong style="color:var(--accent);">${d.weightKg.toFixed(1)} kg</strong>
                 </div>
               </div>
-              ${renderNutrientFooter(t, lim)}
+              ${renderNutrientFooter(t, lim, false)}
             </div>
           `;
         }).join('');
       } else if (state.reviewPeriod === 'weeks') {
-        titleEl.textContent = 'Weekly Avg Intake vs Weight';
+        titleEl.textContent = 'Weekly Daily-Avg Intake vs Weight';
         deltaEl.textContent = `-2.6 kg in 5 wks · Goal ${state.goalKg.toFixed(1)} kg`;
         points = weeksRollup.slice().reverse().map(w => ({
           label: w.label.split(' ')[0],
@@ -1093,11 +1094,11 @@
                 <div style="color:var(--muted);font-size:12px;">${escapeHtml(w.delta)}</div>
               </div>
             </div>
-            ${renderNutrientFooter(w, stdLim)}
+            ${renderNutrientFooter(w, stdLim, true)}
           </div>
         `).join('');
       } else {
-        titleEl.textContent = 'Yearly Progress: Eating vs Weight';
+        titleEl.textContent = 'Yearly Daily-Avg Intake vs Weight';
         deltaEl.textContent = `-8.7 kg total · Goal ${state.goalKg.toFixed(1)} kg`;
         points = yearsRollup.slice().reverse().map(y => ({
           label: y.label.slice(0, 4),
@@ -1123,7 +1124,7 @@
                 <div style="color:var(--muted);font-size:12px;">${escapeHtml(y.delta)}</div>
               </div>
             </div>
-            ${renderNutrientFooter(y, stdLim)}
+            ${renderNutrientFooter(y, stdLim, true)}
           </div>
         `).join('');
       }
@@ -1219,7 +1220,7 @@
           <div class="mini-col">
             <div class="mini-label"><span>${n.short}</span></div>
             <div class="track">
-              <div class="fill" style="width:${pct}%;background:${n.val > n.max ? '#ef4444' : n.color};"></div>
+              <div class="fill" style="width:${pct}%;background:${n.color};"></div>
             </div>
           </div>
         `;
