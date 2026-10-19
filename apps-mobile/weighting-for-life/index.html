@@ -900,13 +900,15 @@
       </button>
     </div>
 
-    <!-- ==================== ONBOARDING / WEEK 1 SETUP VIEW ==================== -->
-    <div id="onboarding-view" style="display:none;flex-direction:column;gap:10px;flex:1;">
-      <div class="seg-bar" style="grid-template-columns:repeat(2, 1fr);">
-        <button class="seg-btn" id="seg-ob-week1" onclick="setOnboardingStage('week1')">Step 1: 7-Day Baseline</button>
-        <button class="seg-btn active" id="seg-ob-complete" onclick="setOnboardingStage('complete')">Step 2: Behaviours & Goal</button>
+    <!-- ==================== ONBOARDING / WEEK 1 SETUP VIEW (4 Clean Step Pages) ==================== -->
+    <div id="onboarding-view" style="display:none;flex-direction:column;gap:12px;flex:1;">
+      <div class="seg-bar" style="grid-template-columns:repeat(4, 1fr);">
+        <button class="seg-btn active" id="seg-ob-1" onclick="setOnboardingStep(1)">1 · Week 1</button>
+        <button class="seg-btn" id="seg-ob-2" onclick="setOnboardingStep(2)">2 · Habits</button>
+        <button class="seg-btn" id="seg-ob-3" onclick="setOnboardingStep(3)">3 · Goal</button>
+        <button class="seg-btn" id="seg-ob-4" onclick="setOnboardingStep(4)">4 · Routines</button>
       </div>
-      <div id="onboarding-content" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:515px;"></div>
+      <div id="onboarding-content" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;flex:1;"></div>
     </div>
 
     <!-- ==================== ROUTINES PAGE VIEW ==================== -->
@@ -1070,7 +1072,7 @@
       dayIndex: 0, // 0 = Today, 1 = Yesterday, etc.
       goalKg: 78.0,
       viewMode: 'log', // 'onboarding' | 'log' | 'routines' | 'review'
-      onboardingStage: 'complete', // 'week1' (recording 7 days) | 'complete' (behaviours + goal + routines)
+      onboardingStep: 1, // 1: Week 1 Baseline | 2: Eating Behaviours | 3: Goal Weight | 4: Suggested Routines
       reviewPeriod: 'days', // 'days' | 'weeks' | 'years'
       intakeExpanded: false,
       weightDrawerOpen: false,
@@ -1229,8 +1231,8 @@
       render();
     }
 
-    function setOnboardingStage(stage) {
-      state.onboardingStage = stage;
+    function setOnboardingStep(step) {
+      state.onboardingStep = Math.max(1, Math.min(4, step));
       render();
     }
 
@@ -1412,148 +1414,220 @@
     }
 
     function renderOnboarding() {
-      document.getElementById('seg-ob-week1').className = state.onboardingStage === 'week1' ? 'seg-btn active' : 'seg-btn';
-      document.getElementById('seg-ob-complete').className = state.onboardingStage === 'complete' ? 'seg-btn active' : 'seg-btn';
+      [1, 2, 3, 4].forEach(s => {
+        const btn = document.getElementById('seg-ob-' + s);
+        if (btn) btn.className = state.onboardingStep === s ? 'seg-btn active' : 'seg-btn';
+      });
 
       const container = document.getElementById('onboarding-content');
       const avg = getWeek1Average();
       const chronologicalDays = daysData.slice().reverse();
+      const targetLim = getLimitsForDay(0);
 
-      if (state.onboardingStage === 'week1') {
+      if (state.onboardingStep === 1) {
         container.innerHTML = `
-          <div class="card" style="background:var(--tint-peach);border-color:var(--tint-peach-border);display:flex;flex-direction:column;gap:9px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
-              <strong style="color:var(--accent-dark);">Week 1 Setup · Record Your Baseline</strong>
-              <span class="coral-summary-pill">7 / 7 days</span>
+          <div class="card" style="background:var(--tint-peach);border-color:var(--tint-peach-border);display:flex;flex-direction:column;gap:14px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:var(--accent-dark);letter-spacing:0.04em;text-transform:uppercase;">Step 1 of 4 · Week 1 Baseline</span>
+                <span class="coral-summary-pill">7 / 7 Days</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                Record 1 week of normal eating first
+              </div>
+              <div style="font-size:13px;color:#5f463d;line-height:1.5;">
+                Log what you normally eat plus your <strong>Current Weight</strong> each day. We wait until Day 7 before asking for a Goal Weight.
+              </div>
             </div>
-            <div style="font-size:12px;color:#5f463d;line-height:1.45;">
-              Before we ask for a <strong>Goal Weight</strong>, record <strong>1 week of normal eating</strong> and your <strong>current weight</strong> each day. We’ll learn your eating behaviours and suggest routines automatically.
-            </div>
+
             <div class="day-dots">
               ${chronologicalDays.map((d, idx) => {
                 const isToday = idx === chronologicalDays.length - 1;
                 return `
-                  <div class="day-dot ${isToday ? 'active-day' : 'done'}" onclick="jumpToDay(${daysData.length - 1 - idx})" style="cursor:pointer;" title="Tap to view ${escapeHtml(d.label)}">
-                    <span style="opacity:0.8;">${escapeHtml(d.shortDate.split(' ')[0])}</span>
-                    <strong>✓</strong>
+                  <div class="day-dot ${isToday ? 'active-day' : 'done'}" onclick="jumpToDay(${daysData.length - 1 - idx})" style="cursor:pointer;padding:10px 2px;" title="Tap to view ${escapeHtml(d.label)}">
+                    <span style="opacity:0.85;font-weight:700;">${escapeHtml(d.shortDate.split(' ')[0])}</span>
+                    <strong style="font-size:13px;">✓</strong>
                     <span style="font-weight:800;">${d.weightKg.toFixed(1)}</span>
                   </div>
                 `;
               }).join('')}
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding-top:4px;border-top:1px solid var(--tint-peach-border);color:#7c5b50;font-weight:600;">
-              <span>🔒 Goal Weight & Daily Limits</span>
-              <span>Unlocks after Day 7</span>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="background:#ffffff;border:1px solid var(--tint-peach-border);border-radius:16px;padding:12px;">
+                <div style="font-size:11px;color:var(--muted);font-weight:700;">⚖️ Current Weight</div>
+                <div style="font-size:16px;font-weight:800;margin-top:3px;">${chronologicalDays[0].weightKg.toFixed(1)} → ${daysData[0].weightKg.toFixed(1)} kg</div>
+                <div style="font-size:11px;color:#4d8a0b;font-weight:700;margin-top:2px;">7 days recorded</div>
+              </div>
+              <div style="background:#ffffff;border:1px solid var(--tint-peach-border);border-radius:16px;padding:12px;">
+                <div style="font-size:11px;color:var(--muted);font-weight:700;">🥣 Normal Eating</div>
+                <div style="font-size:16px;font-weight:800;margin-top:3px;">19 Meals</div>
+                <div style="font-size:11px;color:var(--accent-dark);font-weight:700;margin-top:2px;">🔒 Goal unlocks next</div>
+              </div>
             </div>
           </div>
 
-          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
-            <strong>What we’re learning this week</strong>
-            <div class="behaviour-item" style="background:var(--tint-cream);border-color:var(--tint-cream-border);">
-              <div>
-                <div style="font-weight:700;">⚖️ Daily Current Weight</div>
-                <div style="color:#8f6b32;font-size:11px;">Recorded alongside your food log (${chronologicalDays[0].weightKg.toFixed(1)} → ${daysData[0].weightKg.toFixed(1)} kg)</div>
-              </div>
-              <span style="color:#b4690e;font-weight:800;">7 logged</span>
-            </div>
-            <div class="behaviour-item" style="background:var(--tint-mint);border-color:var(--tint-mint-border);">
-              <div>
-                <div style="font-weight:700;">🥣 Repeated Meals & Times</div>
-                <div style="color:#4d8a0b;font-size:11px;">Spotting morning coffee, weekday breakfasts & staples</div>
-              </div>
-              <span style="color:#4d8a0b;font-weight:800;">19 items</span>
-            </div>
-          </div>
-
-          <button class="cta-btn" onclick="setOnboardingStage('complete')">
-            <span>✓ Finish Week 1 · See Behaviours & Set Goal</span>
-            <span>→</span>
+          <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setOnboardingStep(2)">
+            <span>Next: Your Eating Behaviours</span>
+            <span>Step 2 →</span>
           </button>
         `;
-      } else {
-        const targetLim = getLimitsForDay(0);
+      } else if (state.onboardingStep === 2) {
         container.innerHTML = `
-          <!-- 1. Behaviours Built from Week 1 Eating -->
-          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <strong style="color:var(--accent-dark);">1. Your Week 1 Eating Behaviours</strong>
-              <span class="coral-summary-pill">Avg ${avg.weightKg} kg</span>
-            </div>
-            <div style="font-size:11px;color:var(--muted);">
-              Your 7-day baseline average: <strong style="color:var(--carbs);">${avg.c}g C</strong> · <strong style="color:var(--protein);">${avg.p}g P</strong> · <strong style="color:var(--fat);">${avg.f}g F</strong> · <strong style="color:var(--sugar);">${avg.su}g Su</strong> · <strong style="color:var(--salt);">${avg.sa}g Sa</strong>
-            </div>
-            <div class="behaviour-item" style="background:var(--tint-peach);border-color:var(--tint-peach-border);">
-              <div>
-                <div style="font-weight:700;">☕ Morning Flat White Habit</div>
-                <div style="color:#7c5b50;font-size:11px;">Logged 6 of 7 mornings around 7:45 am</div>
+          <div class="card" style="display:flex;flex-direction:column;gap:12px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:var(--accent-dark);letter-spacing:0.04em;text-transform:uppercase;">Step 2 of 4 · Behaviours Learned</span>
+                <span class="coral-summary-pill">Avg ${avg.weightKg} kg</span>
               </div>
-              <span style="color:var(--accent-dark);font-weight:800;">Routine</span>
-            </div>
-            <div class="behaviour-item" style="background:var(--tint-mint);border-color:var(--tint-mint-border);">
-              <div>
-                <div style="font-weight:700;">🥚 High-Protein Weekday Breakfasts</div>
-                <div style="color:#4d8a0b;font-size:11px;">Oats or Poached Eggs on Vogels 5/7 days</div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                What we noticed in Week 1
               </div>
-              <span style="color:#4d8a0b;font-weight:800;">Keep</span>
-            </div>
-            <div class="behaviour-item" style="background:var(--tint-blush);border-color:var(--tint-blush-border);">
-              <div>
-                <div style="font-weight:700;">🍟 Saturday Takeaway Spike</div>
-                <div style="color:#9e356a;font-size:11px;">Pie + fish & chips pushed Salt to 5.3g & Fat to 77g</div>
+              <div style="font-size:12px;color:var(--muted);">
+                Daily avg: <strong style="color:var(--carbs);">${avg.c}g C</strong> · <strong style="color:var(--protein);">${avg.p}g P</strong> · <strong style="color:var(--fat);">${avg.f}g F</strong> · <strong style="color:var(--sugar);">${avg.su}g Su</strong> · <strong style="color:var(--salt);">${avg.sa}g Sa</strong>
               </div>
-              <span style="color:var(--accent-pink);font-weight:800;">Balance</span>
             </div>
-          </div>
 
-          <!-- 2. Ask Goal Weight Now That Baseline Is Known (Cream Weight Card) -->
-          <div class="card" style="background:var(--tint-cream);border-color:var(--tint-cream-border);display:flex;flex-direction:column;gap:8px;font-size:12px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <strong>2. Set Your Goal Weight</strong>
-              <span style="color:#8f6b32;font-weight:600;">Current: <strong style="color:var(--text);">${daysData[0].weightKg.toFixed(1)} kg</strong></span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-              <span style="color:#8f6b32;font-weight:700;">Target Goal Weight</span>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <button class="step-btn" onclick="nudgeGoalWeight(-0.5)">-0.5</button>
-                <strong style="font-size:15px;color:var(--text);min-width:60px;text-align:center;">${state.goalKg.toFixed(1)} kg</strong>
-                <button class="step-btn" onclick="nudgeGoalWeight(0.5)">+0.5</button>
-              </div>
-            </div>
-            <input type="range" min="55" max="115" step="0.5" value="${state.goalKg}" oninput="setGoalWeight(this.value)" style="width:100%;accent-color:var(--accent);" />
-            <div style="font-size:11px;color:#8f6b32;display:flex;justify-content:space-between;padding-top:4px;border-top:1px solid var(--tint-cream-border);">
-              <span>Daily limits from your baseline:</span>
-              <span style="color:var(--text);font-weight:800;">${targetLim.c}C · ${targetLim.p}P · ${targetLim.f}F · ${targetLim.su}Su · ${targetLim.sa}Sa</span>
-            </div>
-          </div>
-
-          <!-- 3. Suggested Routines & Offer Routines Page -->
-          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <strong>3. Suggested Routines from Week 1</strong>
-              <span style="color:var(--accent-dark);cursor:pointer;font-weight:800;" onclick="setViewMode('routines')">Routines Page →</span>
-            </div>
-            ${routinesList.slice(0, 3).map(r => `
-              <div class="behaviour-item" onclick="toggleRoutineActive('${r.id}')" style="cursor:pointer;">
-                <div style="display:flex;align-items:center;gap:8px;min-width:0;">
-                  <span class="food-icon-badge" style="width:30px;height:30px;font-size:15px;">${escapeHtml(r.icon)}</span>
-                  <div style="min-width:0;">
-                    <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
-                    <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.freq)} · ${escapeHtml(r.time)} (${escapeHtml(r.reason)})</div>
-                  </div>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <div class="behaviour-item" style="background:var(--tint-peach);border-color:var(--tint-peach-border);padding:12px 13px;">
+                <div>
+                  <div style="font-weight:800;font-size:13px;">☕ Morning Flat White Habit</div>
+                  <div style="color:#7c5b50;font-size:12px;margin-top:2px;">Logged 6 of 7 mornings around 7:45 am</div>
                 </div>
-                <span class="pill ${r.active ? 'active-exercise' : ''}" style="height:24px;min-height:24px;padding:0 8px;">
-                  ${r.active ? '✓ Active' : '+ Add'}
-                </span>
+                <span class="pill active-review" style="height:24px;min-height:24px;font-size:11px;">Routine</span>
               </div>
-            `).join('')}
+
+              <div class="behaviour-item" style="background:var(--tint-mint);border-color:var(--tint-mint-border);padding:12px 13px;">
+                <div>
+                  <div style="font-weight:800;font-size:13px;">🥚 High-Protein Breakfasts</div>
+                  <div style="color:#4d8a0b;font-size:12px;margin-top:2px;">Oats or Poached Eggs on Vogels 5/7 days</div>
+                </div>
+                <span class="pill active-exercise" style="height:24px;min-height:24px;font-size:11px;">Keep</span>
+              </div>
+
+              <div class="behaviour-item" style="background:var(--tint-blush);border-color:var(--tint-blush-border);padding:12px 13px;">
+                <div>
+                  <div style="font-weight:800;font-size:13px;">🍟 Saturday Takeaway Spike</div>
+                  <div style="color:#9e356a;font-size:12px;margin-top:2px;">Pie + fish & chips pushed Salt & Fat high</div>
+                </div>
+                <span class="pill" style="height:24px;min-height:24px;font-size:11px;color:var(--accent-pink);border-color:var(--tint-blush-border);">Balance</span>
+              </div>
+            </div>
           </div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button class="cta-btn" onclick="setViewMode('routines')" style="justify-content:center;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;">
-              <span>🔁 Open Routines</span>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;">
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;width:auto;" onclick="setOnboardingStep(1)">
+              <span>← Back</span>
             </button>
-            <button class="cta-btn" onclick="setViewMode('log')" style="justify-content:center;">
-              <span>Go to Daily Log →</span>
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setOnboardingStep(3)">
+              <span>Next: Set Goal Weight</span>
+              <span>Step 3 →</span>
+            </button>
+          </div>
+        `;
+      } else if (state.onboardingStep === 3) {
+        const goalRatio = Math.max(0.1, Math.min(1, (state.goalKg - 55) / 60));
+        const goalOffset = Math.round(100 - goalRatio * 100);
+        container.innerHTML = `
+          <div class="card" style="background:var(--tint-cream);border-color:var(--tint-cream-border);display:flex;flex-direction:column;gap:14px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:#b4690e;letter-spacing:0.04em;text-transform:uppercase;">Step 3 of 4 · Goal Unlocked</span>
+                <span style="font-size:12px;font-weight:700;color:#8f6b32;">Current: ${daysData[0].weightKg.toFixed(1)} kg</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                Set your Goal Weight
+              </div>
+              <div style="font-size:13px;color:#7a5b2b;line-height:1.45;">
+                Now that your Week 1 baseline is recorded, choose your target weight.
+              </div>
+            </div>
+
+            <!-- Centered Dribbble Semi-Circular Gauge + Stepper -->
+            <div style="background:#ffffff;border:1px solid var(--tint-cream-border);border-radius:20px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+              <svg viewBox="0 0 120 66" style="width:130px;height:70px;overflow:visible;">
+                <path d="M 12 56 A 48 48 0 0 1 108 56" fill="none" stroke="#f5dfab" stroke-width="10" stroke-linecap="round" />
+                <path d="M 12 56 A 48 48 0 0 1 108 56" fill="none" stroke="#f48265" stroke-width="10" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="${goalOffset}" />
+                <circle cx="60" cy="50" r="4.5" fill="#191c26" />
+              </svg>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <button class="step-btn" style="padding:7px 13px;font-size:13px;" onclick="nudgeGoalWeight(-0.5)">-0.5</button>
+                <div style="text-align:center;">
+                  <div style="font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--text);">${state.goalKg.toFixed(1)} kg</div>
+                  <div style="font-size:11px;color:var(--muted);font-weight:700;">${(state.goalKg - daysData[0].weightKg).toFixed(1)} kg from current</div>
+                </div>
+                <button class="step-btn" style="padding:7px 13px;font-size:13px;" onclick="nudgeGoalWeight(0.5)">+0.5</button>
+              </div>
+              <input type="range" min="55" max="115" step="0.5" value="${state.goalKg}" oninput="setGoalWeight(this.value)" style="width:100%;accent-color:var(--accent);" />
+            </div>
+
+            <div style="background:#ffffff;border:1px solid var(--tint-cream-border);border-radius:16px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+              <span style="color:#8f6b32;font-weight:700;">Daily Targets</span>
+              <span style="font-weight:800;">
+                <span style="color:var(--carbs);">${targetLim.c}C</span> ·
+                <span style="color:var(--protein);">${targetLim.p}P</span> ·
+                <span style="color:var(--fat);">${targetLim.f}F</span> ·
+                <span style="color:var(--sugar);">${targetLim.su}Su</span> ·
+                <span style="color:var(--salt);">${targetLim.sa}Sa</span>
+              </span>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;">
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;width:auto;" onclick="setOnboardingStep(2)">
+              <span>← Back</span>
+            </button>
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setOnboardingStep(4)">
+              <span>Next: Suggested Routines</span>
+              <span>Step 4 →</span>
+            </button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="card" style="display:flex;flex-direction:column;gap:12px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:#4d8a0b;letter-spacing:0.04em;text-transform:uppercase;">Step 4 of 4 · 1-Tap Shortcuts</span>
+                <span style="color:var(--accent-dark);cursor:pointer;font-weight:800;font-size:12px;" onclick="setViewMode('routines')">Routines Page →</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                Suggested Routines
+              </div>
+              <div style="font-size:12px;color:var(--muted);">
+                Tap to keep the repeated meals we spotted in Week 1 as 1-tap chips on your daily log:
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${routinesList.slice(0, 4).map(r => `
+                <div class="behaviour-item" onclick="toggleRoutineActive('${r.id}')" style="cursor:pointer;padding:10px 12px;background:${r.active ? 'var(--tint-mint)' : '#f9fafc'};border-color:${r.active ? 'var(--tint-mint-border)' : 'var(--border)'};">
+                  <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+                    <span class="food-icon-badge" style="background:#ffffff;width:32px;height:32px;font-size:16px;">${escapeHtml(r.icon)}</span>
+                    <div style="min-width:0;">
+                      <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                      <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.freq)} · ${escapeHtml(r.time)}</div>
+                    </div>
+                  </div>
+                  <span class="pill ${r.active ? 'active-exercise' : ''}" style="height:26px;min-height:26px;padding:0 10px;">
+                    ${r.active ? '✓ Active' : '+ Add'}
+                  </span>
+                </div>
+              `).join('')}
+            </div>
+
+            <button class="pill" style="width:100%;height:34px;min-height:34px;justify-content:center;background:var(--tint-peach);border-color:var(--tint-peach-border);color:var(--accent-dark);font-weight:800;" onclick="setViewMode('routines')">
+              🔁 Open Full Routines Page
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;">
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;width:auto;" onclick="setOnboardingStep(3)">
+              <span>← Back</span>
+            </button>
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setViewMode('log')">
+              <span>Finish Setup · Daily Log</span>
+              <span>✓</span>
             </button>
           </div>
         `;
@@ -1851,7 +1925,7 @@
       const d = currentDay();
       const limits = getLimitsForDay(state.dayIndex);
       const totals = getTotalsForEntries(d.entries);
-      const isBaselineWeek1 = state.onboardingStage === 'week1';
+      const isBaselineWeek1 = state.viewMode === 'onboarding' && state.onboardingStep < 3;
 
       // Top Mode Switcher Tabs + Bottom Floating Capsule Dock
       ['onboarding', 'log', 'routines', 'review'].forEach(m => {
