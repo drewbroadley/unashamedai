@@ -1,0 +1,2288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Weighting" />
+  <meta name="theme-color" content="#f7f8fb" />
+  <title>Weighting For Life</title>
+  <style>
+    :root {
+      /* Dribbble 19193291 Inspired Pastel & Light UI Palette */
+      --bg: #e4e7f1;
+      --phone-bg: #f7f8fb;
+      --card: #ffffff;
+      --card-hover: #fcfcfd;
+      --border: #eceef5;
+      --text: #191c26;
+      --muted: #7e8497;
+
+      /* Pastel Surface Tints */
+      --tint-peach: #fdece6;
+      --tint-peach-border: #f9d5c8;
+      --tint-cream: #fef7e6;
+      --tint-cream-border: #f9e6b8;
+      --tint-mint: #eaf8e6;
+      --tint-mint-border: #cdebc4;
+      --tint-blush: #fceaf2;
+      --tint-blush-border: #f7cde0;
+
+      /* Dedicated Nutrient Colors (Vibrant Fill + Pastel Track — Never turns red) */
+      --carbs: #e1308c;
+      --carbs-track: #fad6e8;
+      --protein: #7ac71f;
+      --protein-track: #e2f5c8;
+      --fat: #7000df;
+      --fat-track: #e5d1fa;
+      --sugar: #f48265;
+      --sugar-track: #fde2da;
+      --salt: #2b9af3;
+      --salt-track: #d6ecfd;
+
+      /* Brand Accents from Shot */
+      --accent: #f48265;       /* Warm Coral */
+      --accent-dark: #df6446;
+      --accent-green: #6eb818; /* Fresh Leaf Green */
+      --accent-pink: #e1308c;  /* Berry Pink */
+
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Text", "Helvetica Neue", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px 16px 48px;
+      background: radial-gradient(circle at 50% 10%, #eef0f8 0%, #dfe3ef 100%);
+      font-family: var(--font);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .caption {
+      max-width: 384px;
+      width: 100%;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 13px;
+      color: #646b80;
+    }
+    .caption strong {
+      color: #191c26;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .mode-switcher {
+      width: 100%;
+      max-width: 384px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      padding: 4px;
+      border-radius: 16px;
+      border: 1px solid #ffffff;
+      box-shadow: 0 8px 24px rgba(25, 28, 38, 0.06);
+      margin-bottom: 14px;
+    }
+    .mode-tab {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .mode-tab.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(244, 130, 101, 0.35);
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 384px;
+      background: var(--phone-bg);
+      color: var(--text);
+      border-radius: 46px;
+      padding: 14px 16px 18px;
+      box-shadow: 0 28px 65px rgba(28, 35, 58, 0.16), 0 0 0 8px #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      min-height: 750px;
+      position: relative;
+    }
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 10px 2px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Strict Single-Line Header — Never wraps or changes height on Yesterday / Dates */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      height: 30px;
+      min-height: 30px;
+      max-height: 30px;
+    }
+    .day-nav {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+      height: 28px;
+    }
+    .nav-arrow {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 9px;
+      width: 24px;
+      height: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+    .nav-arrow:hover { border-color: var(--accent); color: var(--accent-dark); }
+    .title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      padding: 0 2px;
+      white-space: nowrap;
+      width: 72px;
+      text-align: center;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pills {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      flex-shrink: 0;
+      height: 28px;
+    }
+    .pill {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      height: 28px;
+      min-height: 28px;
+      max-height: 28px;
+      padding: 0 9px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+    .pill:hover { border-color: #d5d9e6; color: var(--text); }
+    .pill.weight-pill {
+      background: var(--tint-cream);
+      border-color: var(--tint-cream-border);
+      color: #b4690e;
+    }
+    .pill.active-exercise {
+      background: var(--tint-mint);
+      border-color: var(--tint-mint-border);
+      color: #4d8a0b;
+    }
+    .pill.active-review {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 13px;
+      box-shadow: 0 6px 20px rgba(25, 28, 38, 0.04);
+    }
+
+    /* Dribbble-Inspired Butter-Cream Weight Card / Drawer with Arc Gauge */
+    .drawer {
+      background: var(--tint-cream);
+      border: 1px solid var(--tint-cream-border);
+      border-radius: 22px;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 12px;
+      box-shadow: 0 8px 22px rgba(245, 158, 11, 0.08);
+    }
+    .weight-gauge-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-btn {
+      background: #ffffff;
+      border: 1px solid var(--tint-cream-border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    }
+    .slider-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+
+    /* 1. Dribbble-Style Macro Cards / Indicative Daily Intake Strip */
+    .intake-strip {
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .intake-strip:hover {
+      box-shadow: 0 8px 24px rgba(25, 28, 38, 0.07);
+    }
+    .bars-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr) auto;
+      gap: 9px;
+      align-items: center;
+    }
+    .mini-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mini-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .mini-pct {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .track {
+      height: 7px;
+      background: #eef0f6;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .chevron {
+      font-size: 11px;
+      color: var(--muted);
+      background: #f3f4f8;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .expanded-details {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    /* 2. Soft Peach Meal Search & Routine Card (Inspired by Dribbble "Add Breakfast" Card) */
+    .input-box {
+      background: var(--tint-peach);
+      border: 1px solid var(--tint-peach-border);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .input-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .text-input {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      outline: none;
+      box-shadow: 0 2px 8px rgba(244, 130, 101, 0.08);
+    }
+    .text-input::placeholder { color: #9ca2b4; }
+    .text-input:focus { border-color: var(--accent); }
+    .btn-clear {
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
+      color: var(--muted);
+      border-radius: 999px;
+      width: 24px;
+      height: 24px;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .time-pill {
+      background: var(--accent);
+      border: none;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      height: 32px;
+      padding: 0 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(244, 130, 101, 0.35);
+    }
+    .routines-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .routines-row::-webkit-scrollbar { display: none; }
+    .routine-chip {
+      white-space: nowrap;
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
+      color: #4a4f62;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(244, 130, 101, 0.08);
+      transition: all 0.12s ease;
+    }
+    .routine-chip:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    /* Ranked NZFCD Matches Dropdown */
+    .matches-panel {
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
+      border-radius: 16px;
+      padding: 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .matches-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      padding: 0 2px;
+    }
+    .matches-limit-toggle {
+      background: var(--tint-peach);
+      border: 1px solid var(--tint-peach-border);
+      color: var(--accent-dark);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .matches-scroll {
+      max-height: 210px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 2px;
+    }
+    .matches-scroll::-webkit-scrollbar { width: 4px; }
+    .matches-scroll::-webkit-scrollbar-thumb { background: #d5d9e6; border-radius: 999px; }
+    .match-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 9px;
+      border-radius: 12px;
+      background: #f9fafc;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .match-row:hover {
+      background: var(--tint-peach);
+      border-color: var(--tint-peach-border);
+    }
+    .match-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .match-rank {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      width: 18px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .match-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .match-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .match-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .add-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+
+    /* 3. Clean Food + Weight Log List */
+    .food-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .weight-log-row {
+      background: var(--tint-cream);
+      border: 1px solid var(--tint-cream-border);
+      border-radius: 18px;
+      padding: 10px 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+    .weight-log-row:hover { transform: translateY(-1px); }
+    .food-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(25, 28, 38, 0.03);
+    }
+    .food-item:hover { border-color: #d8dce8; }
+    .food-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .food-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .food-icon-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: #f5f6fa;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .food-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .food-macros {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* 4. Bottom Balance Button */
+    .balance-btn {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 18px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(25, 28, 38, 0.03);
+    }
+    .balance-btn:hover { border-color: var(--tint-blush-border); color: var(--text); }
+    .balance-btn.active {
+      background: var(--tint-blush);
+      border-color: var(--tint-blush-border);
+      color: var(--accent-pink);
+    }
+
+    /* REVIEW VIEW (Days / Weeks / Years Eating vs Weight) */
+    .seg-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #eceff6;
+      border-radius: 14px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .seg-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 0;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .seg-btn.active {
+      background: #ffffff;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(25, 28, 38, 0.08);
+    }
+    .coral-summary-pill {
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(244, 130, 101, 0.3);
+    }
+    .review-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 11px 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(25, 28, 38, 0.03);
+    }
+    .review-row:hover { border-color: var(--tint-peach-border); }
+    .review-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .review-bars {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    /* Onboarding & Routines Elements */
+    .day-dots {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+    .day-dot {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 7px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+    }
+    .day-dot.done {
+      border-color: var(--tint-mint-border);
+      background: var(--tint-mint);
+    }
+    .day-dot.active-day {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(225, 48, 140, 0.3);
+    }
+    .behaviour-item {
+      background: #f9fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 9px 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .cta-btn {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 16px rgba(244, 130, 101, 0.3);
+      transition: transform 0.12s ease;
+    }
+    .cta-btn:hover { transform: translateY(-1px); }
+
+    /* Dribbble-Inspired Floating White Capsule Bottom Navigation Dock */
+    .bottom-dock {
+      margin-top: auto;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 6px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      box-shadow: 0 10px 28px rgba(25, 28, 38, 0.08);
+    }
+    .dock-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 7px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .dock-btn.active {
+      background: var(--tint-peach);
+      color: var(--accent-dark);
+    }
+
+    /* Native Full-Screen iPhone Mode when opened on a phone or added to iOS Home Screen */
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+        background: var(--phone-bg);
+      }
+      .caption,
+      .mode-switcher,
+      .statusbar {
+        display: none;
+      }
+      .phone {
+        max-width: 100%;
+        min-height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+        padding: max(12px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="caption">
+    <strong>Weighting For Life</strong>
+    <span>iOS Concept · Local iCloud · NZFCD</span>
+  </div>
+
+  <!-- Interactive Concept Screen Switcher -->
+  <div class="mode-switcher">
+    <button class="mode-tab" id="tab-onboarding" onclick="setViewMode('onboarding')">1. Setup (Wk 1)</button>
+    <button class="mode-tab active" id="tab-log" onclick="setViewMode('log')">2. Daily Log</button>
+    <button class="mode-tab" id="tab-routines" onclick="setViewMode('routines')">3. Routines</button>
+    <button class="mode-tab" id="tab-review" onclick="setViewMode('review')">4. Review</button>
+  </div>
+
+  <div class="phone">
+    <!-- iOS Status Bar -->
+    <div class="statusbar">
+      <span>9:41</span>
+      <span>☁️ iCloud · NZFCD</span>
+    </div>
+
+    <!-- 1. Header: Date Stepper + My Weight Today + Normal/Exercise + Review Toggle -->
+    <div class="header">
+      <div class="day-nav" id="day-nav-controls">
+        <button class="nav-arrow" onclick="stepDay(-1)" title="Previous day">‹</button>
+        <div class="title" id="day-title">Today</div>
+        <button class="nav-arrow" id="btn-next-day" onclick="stepDay(1)" title="Next day">›</button>
+      </div>
+
+      <div class="pills">
+        <!-- My Weight Today Pill (right beside Normal, locked single-line height) -->
+        <button class="pill weight-pill" id="btn-weight" onclick="toggleWeightDrawer()" title="Tap to record today's weight">
+          ⚖️ 85.4kg
+        </button>
+        <button class="pill" id="btn-exercise" onclick="toggleExercise()">Normal</button>
+        <button class="pill" id="btn-review" onclick="toggleReviewView()">Review</button>
+      </div>
+    </div>
+
+    <!-- Today's Weight Picker Drawer (Dribbble-style Cream Card + Semi-Circular Gauge + Current/Goal Sliders) -->
+    <div id="weight-drawer" class="drawer" style="display:none;">
+      <div class="weight-gauge-top">
+        <div>
+          <div style="color:#8f6b32;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;">
+            My Weight (<span id="lbl-weight-day">Today</span>)
+          </div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-top:2px;">
+            <strong id="lbl-cur" style="font-size:20px;font-weight:800;color:var(--text);">85.4 kg</strong>
+            <span id="lbl-gauge-sub" style="font-size:11px;color:#8f6b32;font-weight:600;">Goal 78.0 kg</span>
+          </div>
+        </div>
+        <!-- Semi-circular Weight Gauge inspired by Dribbble shot -->
+        <svg viewBox="0 0 80 46" style="width:74px;height:42px;overflow:visible;">
+          <path d="M 8 38 A 32 32 0 0 1 72 38" fill="none" stroke="#f5dfab" stroke-width="7" stroke-linecap="round" />
+          <path id="gauge-arc" d="M 8 38 A 32 32 0 0 1 72 38" fill="none" stroke="#f48265" stroke-width="7" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="28" />
+          <circle cx="40" cy="34" r="3.5" fill="#191c26" />
+        </svg>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <button class="step-btn" onclick="nudgeTodayWeight(-0.1)">-0.1</button>
+          <button class="step-btn" onclick="nudgeTodayWeight(0.1)">+0.1</button>
+        </div>
+      </div>
+
+      <div class="slider-row">
+        <span style="width:58px;color:#8f6b32;font-weight:700;">Current</span>
+        <input id="slider-cur" type="range" min="50" max="130" step="0.1" value="85.4" oninput="setTodayWeight(this.value)" />
+      </div>
+
+      <div class="slider-row" id="goal-slider-row" style="padding-top:6px;border-top:1px solid var(--tint-cream-border);">
+        <span style="width:58px;color:#8f6b32;font-weight:700;">Goal</span>
+        <input id="slider-goal" type="range" min="50" max="130" step="0.5" value="78.0" oninput="setGoalWeight(this.value)" />
+        <span id="lbl-goal" style="width:52px;text-align:right;color:#8f6b32;font-weight:700;">78.0 kg</span>
+      </div>
+
+      <div id="goal-locked-row" style="display:none;padding-top:6px;border-top:1px solid var(--tint-cream-border);color:#8f6b32;font-size:11px;justify-content:space-between;align-items:center;">
+        <span>🔒 Goal weight unlocks after Week 1 baseline</span>
+        <span style="color:var(--accent-dark);cursor:pointer;font-weight:800;" onclick="setViewMode('onboarding')">View Setup →</span>
+      </div>
+    </div>
+
+    <!-- ==================== DAILY LOG VIEW ==================== -->
+    <div id="log-view" style="display:flex;flex-direction:column;gap:10px;flex:1;">
+      <!-- 2. Dribbble-Inspired Daily Nutrient Strip (Vibrant fills on pastel tracks, tap to expand) -->
+      <div class="card intake-strip" onclick="toggleIntake()">
+        <div class="bars-row" id="bars-row"></div>
+        <div id="intake-details" class="expanded-details" style="display:none;"></div>
+      </div>
+
+      <!-- 3. Soft Peach Meal Search Card + Ranked NZFCD Matches + 1-Tap Routines -->
+      <div class="card input-box">
+        <div class="input-row">
+          <input
+            id="food-input"
+            class="text-input"
+            type="text"
+            placeholder="Add food (e.g. poached egg, vogels, pie)..."
+            oninput="onSearchInput(this.value)"
+          />
+          <button id="btn-clear" class="btn-clear" style="display:none;" onclick="clearSearch()" title="Clear">×</button>
+          <button class="time-pill" id="btn-time" onclick="cycleTime()" title="Tap to change time">Now</button>
+        </div>
+
+        <!-- Ranked NZFCD Search Results (Most relevant -> Least relevant, 10 or 25 items) -->
+        <div id="matches-panel" class="matches-panel" style="display:none;">
+          <div class="matches-header">
+            <span id="matches-label">Closest NZFCD matches (most → least relevant)</span>
+            <button id="btn-limit" class="matches-limit-toggle" onclick="toggleMatchLimit()">Top 10</button>
+          </div>
+          <div id="matches-scroll" class="matches-scroll"></div>
+        </div>
+
+        <!-- 1-Tap Active Routines + Link to Routines Page -->
+        <div class="routines-row" id="daily-routines-row"></div>
+      </div>
+
+      <!-- 4. Clean Today's Food + Recorded Weight List -->
+      <div class="food-list" id="food-list"></div>
+
+      <!-- 5. Single "I ate too much" Next-Day Rebalance Button -->
+      <button class="balance-btn" id="btn-too-much" onclick="toggleTooMuch()">
+        <span id="too-much-text">😮‍💨 I ate too much today</span>
+        <span id="too-much-action" style="color:var(--accent-dark);">Balance tomorrow</span>
+      </button>
+    </div>
+
+    <!-- ==================== ONBOARDING / WEEK 1 SETUP VIEW (4 Clean Step Pages) ==================== -->
+    <div id="onboarding-view" style="display:none;flex-direction:column;gap:12px;flex:1;">
+      <div class="seg-bar" style="grid-template-columns:repeat(4, 1fr);">
+        <button class="seg-btn active" id="seg-ob-1" onclick="setOnboardingStep(1)">1 · Week 1</button>
+        <button class="seg-btn" id="seg-ob-2" onclick="setOnboardingStep(2)">2 · Habits</button>
+        <button class="seg-btn" id="seg-ob-3" onclick="setOnboardingStep(3)">3 · Goal</button>
+        <button class="seg-btn" id="seg-ob-4" onclick="setOnboardingStep(4)">4 · Routines</button>
+      </div>
+      <div id="onboarding-content" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;flex:1;"></div>
+    </div>
+
+    <!-- ==================== ROUTINES PAGE VIEW ==================== -->
+    <div id="routines-view" style="display:none;flex-direction:column;gap:10px;flex:1;overflow-y:auto;max-height:550px;"></div>
+
+    <!-- ==================== REVIEW VIEW (Days / Weeks / Years: Eating vs Weight) ==================== -->
+    <div id="review-view" style="display:none;flex-direction:column;gap:10px;flex:1;">
+      <!-- Period Switcher: Days | Weeks | Years -->
+      <div class="seg-bar">
+        <button class="seg-btn active" id="seg-days" onclick="setReviewPeriod('days')">Days</button>
+        <button class="seg-btn" id="seg-weeks" onclick="setReviewPeriod('weeks')">Weeks</button>
+        <button class="seg-btn" id="seg-years" onclick="setReviewPeriod('years')">Years</button>
+      </div>
+
+      <!-- Dribbble "Activities" Inspired Chart Card -->
+      <div class="card" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+          <strong id="chart-title" style="font-size:13px;">Eating vs Weight (Past 7 Days)</strong>
+          <span class="coral-summary-pill" id="chart-delta">-1.0 kg · Goal 78.0 kg</span>
+        </div>
+        <div id="review-chart"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--muted);padding-top:2px;">
+          <span><span style="color:var(--accent);">●</span> Weight (kg)</span>
+          <span style="display:flex;gap:6px;">
+            <span><span style="color:var(--carbs);">●</span> Carbs</span>
+            <span><span style="color:var(--protein);">●</span> Protein</span>
+            <span><span style="color:var(--fat);">●</span> Fat</span>
+            <span><span style="color:var(--sugar);">●</span> Sugar</span>
+            <span><span style="color:var(--salt);">●</span> Salt</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Historical Comparison Rows (Tap any day to open its log) -->
+      <div id="review-list" style="display:flex;flex-direction:column;gap:7px;overflow-y:auto;max-height:325px;"></div>
+
+      <!-- Indexed Storage Inspector / JSON Export Bar (Version 1 Data Layer) -->
+      <div class="card" style="padding:9px 12px;display:flex;flex-direction:column;gap:6px;font-size:11px;background:#ffffff;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:var(--muted);font-weight:700;">🗄️ Indexed Store: <code style="color:var(--text);">daysByDate["YYYY-MM-DD"]</code></span>
+          <div style="display:flex;gap:4px;">
+            <button class="pill" style="height:22px;min-height:22px;padding:0 8px;font-size:11px;" onclick="toggleStorageInspector()">Inspect JSON</button>
+            <button class="pill active-exercise" style="height:22px;min-height:22px;padding:0 8px;font-size:11px;" onclick="copyExportedJSON(this)">Export</button>
+          </div>
+        </div>
+        <pre id="storage-inspector" style="display:none;margin:0;padding:8px;background:#f7f8fb;border:1px solid var(--border);border-radius:10px;font-size:10px;max-height:130px;overflow:auto;color:var(--text);"></pre>
+      </div>
+    </div>
+
+    <!-- Dribbble-Inspired Floating White Capsule Bottom Navigation Dock -->
+    <div class="bottom-dock">
+      <button class="dock-btn" id="dock-onboarding" onclick="setViewMode('onboarding')">✨ Setup</button>
+      <button class="dock-btn active" id="dock-log" onclick="setViewMode('log')">🍽️ Today</button>
+      <button class="dock-btn" id="dock-routines" onclick="setViewMode('routines')">🔁 Routines</button>
+      <button class="dock-btn" id="dock-review" onclick="setViewMode('review')">📊 Review</button>
+    </div>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'weighting-for-life:v1';
+
+    // Default 7-Day Seed Dataset keyed by canonical ISO-8601 dateKey ("YYYY-MM-DD")
+    const defaultDaysSeed = [
+      {
+        dateKey: '2026-10-19',
+        label: 'Today',
+        shortDate: 'Mon 19 Oct',
+        weightKg: 85.4,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 1, icon: '☕', name: 'Flat white, standard milk', time: '7:45 am', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+          { id: 2, icon: '🥣', name: 'Oats & gold kiwifruit', time: '8:10 am', c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
+          { id: 3, icon: '🌯', name: 'Chicken & avocado wrap', time: '12:40 pm', c: 38, p: 42, f: 18, su: 4, sa: 1.4 }
+        ]
+      },
+      {
+        dateKey: '2026-10-18',
+        label: 'Yesterday',
+        shortDate: 'Sun 18 Oct',
+        weightKg: 85.6,
+        heavyExercise: true,
+        ateTooMuch: false,
+        entries: [
+          { id: 11, icon: '🥚', name: '2 poached eggs on Vogels', time: '8:30 am', c: 32, p: 21, f: 13, su: 2, sa: 1.1 },
+          { id: 12, icon: '🍌', name: 'Banana & whey protein shake', time: '1:15 pm', c: 27, p: 28, f: 1, su: 18, sa: 0.3 },
+          { id: 13, icon: '🐟', name: 'King salmon, kumara & broccoli', time: '7:00 pm', c: 39, p: 38, f: 27, su: 11, sa: 0.3 }
+        ]
+      },
+      {
+        dateKey: '2026-10-17',
+        label: 'Sat 17 Oct',
+        shortDate: 'Sat 17 Oct',
+        weightKg: 85.9,
+        heavyExercise: false,
+        ateTooMuch: true,
+        entries: [
+          { id: 21, icon: '☕', name: 'Flat white & plain bagel', time: '9:00 am', c: 59, p: 18, f: 10, su: 16, sa: 1.4 },
+          { id: 22, icon: '🥧', name: 'Mince & cheese pie', time: '1:10 pm', c: 42, p: 18, f: 25, su: 2, sa: 1.8 },
+          { id: 23, icon: '🍟', name: 'Battered hoki & takeaway chips', time: '7:30 pm', c: 80, p: 30, f: 42, su: 2, sa: 2.1 }
+        ]
+      },
+      {
+        dateKey: '2026-10-16',
+        label: 'Fri 16 Oct',
+        shortDate: 'Fri 16 Oct',
+        weightKg: 85.7,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 31, icon: '🥣', name: 'Rolled oats & kiwifruit', time: '7:50 am', c: 45, p: 8, f: 4, su: 14, sa: 0.1 },
+          { id: 32, icon: '🍣', name: 'Salmon & avocado sushi (6 pcs)', time: '12:30 pm', c: 46, p: 14, f: 9, su: 5, sa: 1.1 },
+          { id: 33, icon: '🥩', name: 'Lean rump steak & kumara', time: '6:45 pm', c: 35, p: 54, f: 11, su: 9, sa: 0.4 }
+        ]
+      },
+      {
+        dateKey: '2026-10-15',
+        label: 'Thu 15 Oct',
+        shortDate: 'Thu 15 Oct',
+        weightKg: 86.0,
+        heavyExercise: true,
+        ateTooMuch: false,
+        entries: [
+          { id: 41, icon: '🍞', name: 'Vogels toast & Pic’s peanut butter', time: '8:00 am', c: 33, p: 13, f: 11, su: 3, sa: 0.8 },
+          { id: 42, icon: '🍗', name: 'Grilled chicken breast & salad', time: '1:00 pm', c: 12, p: 45, f: 7, su: 4, sa: 0.5 },
+          { id: 43, icon: '🥩', name: 'Prime beef mince & broccoli', time: '7:15 pm', c: 18, p: 43, f: 17, su: 3, sa: 0.5 }
+        ]
+      },
+      {
+        dateKey: '2026-10-14',
+        label: 'Wed 14 Oct',
+        shortDate: 'Wed 14 Oct',
+        weightKg: 86.2,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 51, icon: '☕', name: 'Flat white & Weet-Bix', time: '7:40 am', c: 31, p: 13, f: 4, su: 12, sa: 0.5 },
+          { id: 52, icon: '🌯', name: 'Chicken & avocado wrap', time: '12:50 pm', c: 38, p: 42, f: 18, su: 4, sa: 1.4 }
+        ]
+      },
+      {
+        dateKey: '2026-10-13',
+        label: 'Tue 13 Oct',
+        shortDate: 'Tue 13 Oct',
+        weightKg: 86.4,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 61, icon: '🥚', name: '2 poached eggs on Vogels', time: '8:00 am', c: 32, p: 21, f: 13, su: 2, sa: 1.1 },
+          { id: 62, icon: '🐟', name: 'King salmon & baked kumara', time: '6:50 pm', c: 35, p: 34, f: 26, su: 9, sa: 0.3 }
+        ]
+      }
+    ];
+
+    const defaultRoutinesSeed = [
+      { id: 'r1', icon: '☕', shortLabel: 'Flat white', name: 'Flat white, standard milk', freq: 'Every day', time: '7:45 am', reason: 'Spotted 6/7 mornings in Week 1', active: true, c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+      { id: 'r2', icon: '🥣', shortLabel: 'Morning oats', name: 'Oats & gold kiwifruit', freq: 'Weekdays', time: '8:10 am', reason: 'Spotted 4 weekday mornings in Week 1', active: true, c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
+      { id: 'r3', icon: '🥚', shortLabel: 'Eggs on Vogels', name: '2 poached eggs on Vogels', freq: 'Tue / Thu / Sun', time: '8:15 am', reason: 'Spotted 3 mornings in Week 1', active: true, c: 32, p: 21, f: 12, su: 3, sa: 1.1 },
+      { id: 'r4', icon: '🌯', shortLabel: 'Chicken wrap', name: 'Chicken & avocado wrap', freq: 'Weekdays', time: '12:40 pm', reason: 'Spotted 3 lunches in Week 1', active: false, c: 38, p: 42, f: 18, su: 4, sa: 1.4 },
+      { id: 'r5', icon: '🐟', shortLabel: 'Salmon & kumara', name: 'King salmon & baked kumara', freq: '2× / week', time: '6:50 pm', reason: 'Spotted 2 dinners in Week 1', active: false, c: 35, p: 34, f: 26, su: 9, sa: 0.3 }
+    ];
+
+    // Version 1 Indexed Storage Engine (O(1) lookup by "YYYY-MM-DD" + range/year queries + localStorage persistence)
+    const WFLStore = {
+      db: null,
+      init() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.schemaVersion === 1 && parsed.daysByDate && parsed.dateIndexDesc) {
+              this.db = parsed;
+              return;
+            }
+          }
+        } catch (_) {}
+        this.resetToDefault();
+      },
+      resetToDefault() {
+        const daysByDate = {};
+        const dateIndexDesc = [];
+        JSON.parse(JSON.stringify(defaultDaysSeed)).forEach(d => {
+          daysByDate[d.dateKey] = d;
+          dateIndexDesc.push(d.dateKey);
+        });
+        dateIndexDesc.sort((a, b) => b.localeCompare(a));
+        this.db = {
+          schemaVersion: 1,
+          updatedAtISO: new Date().toISOString(),
+          profile: { onboardingStep: 1, baselineCompleted: true, goalWeightKg: 78.0 },
+          daysByDate,
+          dateIndexDesc,
+          routines: JSON.parse(JSON.stringify(defaultRoutinesSeed))
+        };
+        this.save();
+      },
+      save() {
+        this.db.updatedAtISO = new Date().toISOString();
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(this.db));
+        } catch (_) {}
+      },
+      // Direct O(1) lookup of any past day by canonical ISO date ("YYYY-MM-DD")
+      getDay(dateKey) {
+        return this.db.daysByDate[dateKey] || null;
+      },
+      // All recorded days ordered newest -> oldest
+      allDaysDescending() {
+        return this.db.dateIndexDesc.map(k => this.db.daysByDate[k]).filter(Boolean);
+      },
+      // All recorded days within an inclusive ISO date range ("YYYY-MM-DD" .. "YYYY-MM-DD"), chronological
+      getDaysInRange(startDateKey, endDateKey) {
+        const lo = startDateKey < endDateKey ? startDateKey : endDateKey;
+        const hi = startDateKey < endDateKey ? endDateKey : startDateKey;
+        return this.db.dateIndexDesc
+          .filter(k => k >= lo && k <= hi)
+          .sort()
+          .map(k => this.db.daysByDate[k]);
+      },
+      // All recorded days in a specific calendar year (e.g. 2026)
+      getDaysInYear(year) {
+        const prefix = String(year) + '-';
+        return this.db.dateIndexDesc
+          .filter(k => k.startsWith(prefix))
+          .sort()
+          .map(k => this.db.daysByDate[k]);
+      },
+      exportJSON() {
+        return JSON.stringify(this.db, null, 2);
+      }
+    };
+    WFLStore.init();
+    window.WFLStore = WFLStore;
+
+    const daysData = WFLStore.allDaysDescending();
+    const routinesList = WFLStore.db.routines;
+
+    const weeksRollup = [
+      { label: 'This Week (Oct 13–19)', weightKg: 85.4, delta: '-0.8 kg', c: 142, p: 138, f: 58, su: 31, sa: 3.6, note: 'Daily avg · 2× 🔥 Exercise' },
+      { label: 'Last Week (Oct 6–12)', weightKg: 86.2, delta: '-0.6 kg', c: 158, p: 144, f: 60, su: 34, sa: 4.1, note: 'Daily avg · 3× 🔥 Exercise' },
+      { label: 'Sep 29 – Oct 5', weightKg: 86.8, delta: '-0.5 kg', c: 165, p: 140, f: 62, su: 38, sa: 4.3, note: 'Daily avg · Steady week' },
+      { label: 'Sep 22 – Sep 28', weightKg: 87.3, delta: '-0.7 kg', c: 152, p: 146, f: 59, su: 33, sa: 3.9, note: 'Daily avg · 2× 🔥 Exercise' },
+      { label: 'Sep 15 – Sep 21', weightKg: 88.0, delta: '-0.4 kg', c: 174, p: 135, f: 64, su: 41, sa: 4.5, note: 'Daily avg · 1× Rebalanced' }
+    ];
+
+    const yearsRollup = [
+      { label: '2026 (Daily Avg · YTD)', weightKg: 85.4, delta: '-6.6 kg', c: 156, p: 142, f: 58, su: 34, sa: 3.9, note: 'Avg per day · Started 92.0 → Goal 78.0 kg' },
+      { label: '2025 (Daily Avg · Full Year)', weightKg: 92.0, delta: '-2.1 kg', c: 178, p: 128, f: 62, su: 40, sa: 4.4, note: 'Avg per day across 365 days' },
+      { label: '2024 (Daily Avg · Full Year)', weightKg: 94.1, delta: '—', c: 188, p: 120, f: 64, su: 42, sa: 4.6, note: 'Avg per day · Initial logs' }
+    ];
+
+    const freqOptions = ['Every day', 'Weekdays', 'Weekends', '🔥 Exercise days', 'Tue / Thu / Sun', '2× / week'];
+    const routineTimes = ['7:45 am', '8:10 am', '12:40 pm', '6:50 pm'];
+
+    const state = {
+      dayIndex: 0, // 0 = Today, 1 = Yesterday, etc.
+      goalKg: WFLStore.db.profile.goalWeightKg || 78.0,
+      viewMode: 'log', // 'onboarding' | 'log' | 'routines' | 'review'
+      onboardingStep: WFLStore.db.profile.onboardingStep || 1, // 1: Week 1 Baseline | 2: Eating Behaviours | 3: Goal Weight | 4: Suggested Routines
+      reviewPeriod: 'days', // 'days' | 'weeks' | 'years'
+      intakeExpanded: false,
+      weightDrawerOpen: false,
+      storageInspectorOpen: false,
+      selectedEntryId: null,
+      searchQuery: '',
+      matchLimit: 10,
+      timeOptions: ['Now', '8:00 am', '12:30 pm'],
+      timeIndex: 0,
+      newRoutineFoodIdx: 9,
+      newRoutineFreqIdx: 0
+    };
+
+    const nzfcdCatalog = [
+      { icon: '🥚', name: 'Egg, chicken, whole, poached (2 large)', cat: 'eggs breakfast', c: 1, p: 13, f: 10, su: 0, sa: 0.4 },
+      { icon: '🥚', name: 'Egg, chicken, whole, boiled (1 large)', cat: 'eggs breakfast', c: 0, p: 6, f: 5, su: 0, sa: 0.2 },
+      { icon: '🍳', name: 'Egg, chicken, scrambled with milk & butter', cat: 'eggs breakfast', c: 2, p: 14, f: 15, su: 2, sa: 0.6 },
+      { icon: '🍳', name: 'Egg, chicken, fried in oil', cat: 'eggs breakfast', c: 0, p: 7, f: 9, su: 0, sa: 0.2 },
+      { icon: '🍞', name: 'Bread, Vogels mixed grain, toasted (2 slices)', cat: 'bread toast breakfast', c: 31, p: 8, f: 3, su: 2, sa: 0.7 },
+      { icon: '🍞', name: 'Bread, Vogels soy & linseed, toasted (2 slices)', cat: 'bread toast breakfast', c: 26, p: 10, f: 6, su: 2, sa: 0.7 },
+      { icon: '🍞', name: 'Bread, white sliced, Tip Top Supersoft (2 slices)', cat: 'bread toast', c: 34, p: 6, f: 1, su: 2, sa: 0.8 },
+      { icon: '🍞', name: 'Bread, sourdough, white commercial (1 thick slice)', cat: 'bread toast', c: 32, p: 6, f: 1, su: 1, sa: 0.6 },
+      { icon: '🥐', name: 'Bagel, plain, toasted', cat: 'bread breakfast', c: 48, p: 10, f: 2, su: 5, sa: 1.1 },
+      { icon: '☕', name: 'Coffee, flat white, standard blue milk (240 mL)', cat: 'coffee milk drink', c: 11, p: 8, f: 8, su: 11, sa: 0.3 },
+      { icon: '☕', name: 'Coffee, flat white, trim green milk (240 mL)', cat: 'coffee milk drink', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+      { icon: '☕', name: 'Coffee, flat white, oat milk (240 mL)', cat: 'coffee oat drink', c: 16, p: 2, f: 4, su: 10, sa: 0.2 },
+      { icon: '☕', name: 'Coffee, latte, standard milk (280 mL)', cat: 'coffee milk drink', c: 13, p: 9, f: 9, su: 13, sa: 0.3 },
+      { icon: '☕', name: 'Coffee, long black, unsweetened', cat: 'coffee black drink', c: 0, p: 0, f: 0, su: 0, sa: 0.0 },
+      { icon: '🥛', name: 'Milk, Anchor Blue standard (1 cup, 250 mL)', cat: 'milk dairy drink', c: 12, p: 8, f: 9, su: 12, sa: 0.3 },
+      { icon: '🥛', name: 'Milk, Anchor Calci+ Trim (1 cup, 250 mL)', cat: 'milk dairy drink', c: 13, p: 10, f: 1, su: 13, sa: 0.3 },
+      { icon: '🧈', name: 'Butter, Anchor salted (1 tsp, 5g)', cat: 'butter dairy fat spread', c: 0, p: 0, f: 4, su: 0, sa: 0.1 },
+      { icon: '🫙', name: 'Spread, Sanitarium Marmite (1 tsp, 5g)', cat: 'spread toast breakfast', c: 1, p: 1, f: 0, su: 0, sa: 0.4 },
+      { icon: '🥜', name: 'Peanut butter, Pic’s crunchy salted (1 tbsp, 16g)', cat: 'spread nut toast', c: 2, p: 5, f: 8, su: 1, sa: 0.1 },
+      { icon: '🥣', name: 'Oats, rolled, cooked porridge with water (1 bowl)', cat: 'oats cereal breakfast', c: 30, p: 7, f: 4, su: 1, sa: 0.0 },
+      { icon: '🥣', name: 'Cereal, Sanitarium Weet-Bix (2 biscuits)', cat: 'cereal wheat breakfast', c: 20, p: 4, f: 0, su: 1, sa: 0.2 },
+      { icon: '🥝', name: 'Kiwifruit, Zespri SunGold, raw (1 large)', cat: 'fruit kiwifruit snack', c: 15, p: 1, f: 0, su: 13, sa: 0.0 },
+      { icon: '🥝', name: 'Kiwifruit, Zespri Green, raw (1 medium)', cat: 'fruit kiwifruit snack', c: 11, p: 1, f: 0, su: 8, sa: 0.0 },
+      { icon: '🍌', name: 'Banana, Cavendish, raw (1 medium)', cat: 'fruit snack', c: 24, p: 1, f: 0, su: 17, sa: 0.0 },
+      { icon: '🍎', name: 'Apple, Royal Gala, NZ raw with skin', cat: 'fruit snack', c: 17, p: 0, f: 0, su: 14, sa: 0.0 },
+      { icon: '🥑', name: 'Avocado, Hass, raw (half fruit, 80g)', cat: 'avocado vegetable fat', c: 1, p: 2, f: 18, su: 0, sa: 0.0 },
+      { icon: '🥧', name: 'Pie, mince & cheese, commercial baked (175g)', cat: 'pie bakery lunch beef', c: 42, p: 18, f: 25, su: 2, sa: 1.8 },
+      { icon: '🥧', name: 'Pie, steak & cheese, commercial baked (175g)', cat: 'pie bakery lunch beef', c: 40, p: 21, f: 23, su: 2, sa: 1.7 },
+      { icon: '🥧', name: 'Pie, potato top, commercial baked (180g)', cat: 'pie bakery lunch beef', c: 39, p: 16, f: 20, su: 2, sa: 1.6 },
+      { icon: '🥐', name: 'Sausage roll, commercial flaky pastry (130g)', cat: 'bakery lunch pork', c: 34, p: 12, f: 24, su: 2, sa: 1.5 },
+      { icon: '🍗', name: 'Chicken breast, skinless, grilled (150g)', cat: 'chicken meat dinner lunch', c: 0, p: 45, f: 5, su: 0, sa: 0.2 },
+      { icon: '🍗', name: 'Chicken thigh, boneless, roasted (150g)', cat: 'chicken meat dinner', c: 0, p: 38, f: 14, su: 0, sa: 0.3 },
+      { icon: '🌯', name: 'Chicken, avocado & salad wrap (1 wrap)', cat: 'chicken lunch wrap', c: 38, p: 42, f: 18, su: 4, sa: 1.4 },
+      { icon: '🍣', name: 'Sushi, salmon & avocado roll (6 pieces)', cat: 'salmon fish rice lunch', c: 46, p: 14, f: 9, su: 5, sa: 1.1 },
+      { icon: '🐟', name: 'Salmon, NZ King (Chinook), baked fillet (150g)', cat: 'salmon fish seafood dinner', c: 0, p: 32, f: 26, su: 0, sa: 0.2 },
+      { icon: '🐟', name: 'Fish, Hoki fillet, battered & deep fried (1 piece)', cat: 'fish takeaways dinner', c: 22, p: 24, f: 18, su: 1, sa: 0.9 },
+      { icon: '🍟', name: 'Potatoes, hot chips, takeaway salted (1 scoop)', cat: 'potatoes chips takeaways', c: 58, p: 6, f: 24, su: 1, sa: 1.2 },
+      { icon: '🥩', name: 'Beef, rump steak, lean grilled (180g)', cat: 'beef steak meat dinner', c: 0, p: 52, f: 11, su: 0, sa: 0.3 },
+      { icon: '🥩', name: 'Beef mince, prime, pan-fried drained (150g)', cat: 'beef mince meat dinner', c: 0, p: 39, f: 16, su: 0, sa: 0.3 },
+      { icon: '🍠', name: 'Kumara, red, peeled & baked (150g)', cat: 'kumara vegetable dinner', c: 35, p: 2, f: 0, su: 9, sa: 0.1 },
+      { icon: '🍠', name: 'Kumara, gold, roasted with oil (150g)', cat: 'kumara vegetable dinner', c: 33, p: 2, f: 6, su: 11, sa: 0.2 },
+      { icon: '🥦', name: 'Broccoli, steamed florets (1 cup)', cat: 'vegetable green dinner', c: 4, p: 4, f: 1, su: 2, sa: 0.0 },
+      { icon: '🧀', name: 'Cheese, Mainland Tasty cheddar (2 slices, 40g)', cat: 'cheese dairy snack', c: 0, p: 10, f: 15, su: 0, sa: 0.7 },
+      { icon: '🧀', name: 'Cheese, Mainland Edam (2 slices, 40g)', cat: 'cheese dairy snack', c: 0, p: 11, f: 11, su: 0, sa: 0.7 },
+      { icon: '🍫', name: 'Chocolate, Whittaker’s Creamy Milk (4 squares, 25g)', cat: 'chocolate sweet snack', c: 14, p: 2, f: 8, su: 13, sa: 0.0 },
+      { icon: '🍫', name: 'Chocolate, Whittaker’s 72% Dark Ghana (4 squares)', cat: 'chocolate sweet snack', c: 10, p: 2, f: 11, su: 7, sa: 0.0 },
+      { icon: '🥤', name: 'Protein shake, whey isolate with water (1 scoop)', cat: 'protein gym supplement drink', c: 3, p: 27, f: 1, su: 1, sa: 0.3 }
+    ];
+
+    function currentDay() {
+      return daysData[state.dayIndex];
+    }
+
+    function rankMatches(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) return [];
+      const stopWords = new Set(['a', 'an', 'the', 'with', 'and', 'on', 'of', 'in', 'plus', 'to']);
+      const tokens = q.split(/[\s,+&]+/).filter(t => t.length > 0 && !stopWords.has(t));
+
+      const scored = nzfcdCatalog.map((item, idx) => {
+        const nameLower = item.name.toLowerCase();
+        const haystack = nameLower + ' ' + item.cat;
+        let score = 0;
+
+        if (nameLower.startsWith(q)) score += 120;
+        else if (nameLower.includes(q)) score += 85;
+
+        tokens.forEach(tok => {
+          const words = nameLower.split(/[\s,()]+/);
+          if (words.includes(tok) || words.includes(tok + 's') || words.includes(tok.replace(/s$/, ''))) {
+            score += 50;
+          } else if (words.some(w => w.startsWith(tok))) {
+            score += 35;
+          } else if (nameLower.includes(tok)) {
+            score += 22;
+          } else if (item.cat.includes(tok)) {
+            score += 14;
+          } else {
+            let common = 0;
+            for (let ch of tok) {
+              if (haystack.includes(ch)) common++;
+            }
+            score += Math.round((common / Math.max(1, tok.length)) * 6);
+          }
+        });
+
+        return { item, score, idx };
+      });
+
+      scored.sort((a, b) => b.score - a.score || a.idx - b.idx);
+      return scored.slice(0, state.matchLimit);
+    }
+
+    function getLimitsForDay(dayIdx) {
+      const d = daysData[dayIdx];
+      const prevDay = daysData[dayIdx + 1];
+      const baseKcal = Math.max(1350, d.weightKg * 28 - (state.goalKg < d.weightKg ? 380 : 0));
+      let c = Math.round((baseKcal * 0.40) / 4);
+      let p = Math.round(d.weightKg * 1.8);
+      let f = Math.round((baseKcal * 0.28) / 9);
+      let su = 45;
+      let sa = 5.0;
+
+      if (d.heavyExercise) {
+        c += 60; p += 15; f += 8; su += 15; sa = +(sa + 1.2).toFixed(1);
+      }
+      if (d.ateTooMuch || (prevDay && prevDay.ateTooMuch)) {
+        c = Math.round(c * 0.85);
+        f = Math.round(f * 0.85);
+        su = Math.round(su * 0.85);
+        sa = +(sa * 0.85).toFixed(1);
+      }
+      return { c, p, f, su, sa };
+    }
+
+    function getTotalsForEntries(entries) {
+      return entries.reduce((acc, e) => ({
+        c: acc.c + e.c,
+        p: acc.p + e.p,
+        f: acc.f + e.f,
+        su: acc.su + e.su,
+        sa: +(acc.sa + e.sa).toFixed(1)
+      }), { c: 0, p: 0, f: 0, su: 0, sa: 0 });
+    }
+
+    function stepDay(dir) {
+      const next = state.dayIndex - dir;
+      if (next >= 0 && next < daysData.length) {
+        state.dayIndex = next;
+        state.viewMode = 'log';
+        render();
+      }
+    }
+
+    function jumpToDay(idx) {
+      state.dayIndex = idx;
+      state.viewMode = 'log';
+      render();
+    }
+
+    function setViewMode(mode) {
+      state.viewMode = mode;
+      render();
+    }
+
+    function setOnboardingStep(step) {
+      state.onboardingStep = Math.max(1, Math.min(4, step));
+      WFLStore.db.profile.onboardingStep = state.onboardingStep;
+      WFLStore.save();
+      render();
+    }
+
+    function toggleStorageInspector() {
+      state.storageInspectorOpen = !state.storageInspectorOpen;
+      const el = document.getElementById('storage-inspector');
+      if (el) {
+        el.style.display = state.storageInspectorOpen ? 'block' : 'none';
+        if (state.storageInspectorOpen) el.textContent = WFLStore.exportJSON();
+      }
+    }
+
+    function copyExportedJSON(btn) {
+      const json = WFLStore.exportJSON();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(json).catch(() => {});
+      }
+      if (btn) {
+        const prev = btn.textContent;
+        btn.textContent = '✓ Copied';
+        setTimeout(() => { btn.textContent = prev; }, 1200);
+      }
+    }
+
+    function toggleReviewView() {
+      state.viewMode = state.viewMode === 'log' ? 'review' : 'log';
+      render();
+    }
+
+    function setReviewPeriod(period) {
+      state.reviewPeriod = period;
+      render();
+    }
+
+    function toggleWeightDrawer() {
+      state.weightDrawerOpen = !state.weightDrawerOpen;
+      document.getElementById('weight-drawer').style.display = state.weightDrawerOpen ? 'flex' : 'none';
+      render();
+    }
+
+    function nudgeTodayWeight(delta) {
+      const d = currentDay();
+      d.weightKg = +(d.weightKg + delta).toFixed(1);
+      WFLStore.save();
+      render();
+    }
+
+    function setTodayWeight(val) {
+      const d = currentDay();
+      d.weightKg = +Number(val).toFixed(1);
+      WFLStore.save();
+      render();
+    }
+
+    function setGoalWeight(val) {
+      state.goalKg = +Number(val).toFixed(1);
+      WFLStore.db.profile.goalWeightKg = state.goalKg;
+      WFLStore.save();
+      render();
+    }
+
+    function nudgeGoalWeight(delta) {
+      state.goalKg = +(state.goalKg + delta).toFixed(1);
+      WFLStore.db.profile.goalWeightKg = state.goalKg;
+      WFLStore.save();
+      render();
+    }
+
+    function onSearchInput(val) {
+      state.searchQuery = val;
+      render();
+    }
+
+    function clearSearch() {
+      state.searchQuery = '';
+      document.getElementById('food-input').value = '';
+      render();
+    }
+
+    function toggleMatchLimit() {
+      state.matchLimit = state.matchLimit === 10 ? 25 : 10;
+      render();
+    }
+
+    function selectMatch(idx) {
+      const m = nzfcdCatalog[idx];
+      if (!m) return;
+      currentDay().entries.unshift({
+        id: Date.now() + Math.random(),
+        icon: m.icon,
+        name: m.name,
+        time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
+        c: m.c, p: m.p, f: m.f, su: m.su, sa: m.sa
+      });
+      WFLStore.save();
+      clearSearch();
+    }
+
+    function toggleIntake() {
+      state.intakeExpanded = !state.intakeExpanded;
+      render();
+    }
+
+    function toggleExercise() {
+      currentDay().heavyExercise = !currentDay().heavyExercise;
+      WFLStore.save();
+      render();
+    }
+
+    function toggleTooMuch() {
+      currentDay().ateTooMuch = !currentDay().ateTooMuch;
+      WFLStore.save();
+      render();
+    }
+
+    function cycleTime() {
+      state.timeIndex = (state.timeIndex + 1) % state.timeOptions.length;
+      document.getElementById('btn-time').textContent = state.timeOptions[state.timeIndex];
+    }
+
+    function quickRoutine(icon, name, c, p, f, su, sa) {
+      currentDay().entries.unshift({
+        id: Date.now() + Math.random(),
+        icon, name,
+        time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
+        c, p, f, su, sa
+      });
+      WFLStore.save();
+      render();
+    }
+
+    function toggleRoutineActive(id) {
+      const r = routinesList.find(item => item.id === id);
+      if (r) {
+        r.active = !r.active;
+        WFLStore.save();
+        render();
+      }
+    }
+
+    function cycleRoutineFreq(id, ev) {
+      if (ev) ev.stopPropagation();
+      const r = routinesList.find(item => item.id === id);
+      if (!r) return;
+      const curIdx = freqOptions.indexOf(r.freq);
+      r.freq = freqOptions[(curIdx + 1) % freqOptions.length];
+      WFLStore.save();
+      render();
+    }
+
+    function cycleRoutineTime(id, ev) {
+      if (ev) ev.stopPropagation();
+      const r = routinesList.find(item => item.id === id);
+      if (!r) return;
+      const curIdx = routineTimes.indexOf(r.time);
+      r.time = routineTimes[(curIdx + 1) % routineTimes.length];
+      WFLStore.save();
+      render();
+    }
+
+    function addNewRoutine() {
+      const foodSel = document.getElementById('sel-routine-food');
+      const freqSel = document.getElementById('sel-routine-freq');
+      const fIdx = foodSel ? Number(foodSel.value) : state.newRoutineFoodIdx;
+      const freq = freqSel ? freqSel.value : 'Every day';
+      const item = nzfcdCatalog[fIdx] || nzfcdCatalog[0];
+      const shortWords = item.name.split(',')[0];
+      routinesList.unshift({
+        id: 'r' + Date.now(),
+        icon: item.icon,
+        shortLabel: shortWords,
+        name: item.name,
+        freq,
+        time: '8:00 am',
+        reason: 'Custom routine created by you',
+        active: true,
+        c: item.c, p: item.p, f: item.f, su: item.su, sa: item.sa
+      });
+      WFLStore.save();
+      render();
+    }
+
+    function removeEntry(id, ev) {
+      ev.stopPropagation();
+      currentDay().entries = currentDay().entries.filter(e => e.id !== id);
+      WFLStore.save();
+      render();
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+    }
+
+    function getWeek1Average() {
+      const n = daysData.length;
+      const sum = daysData.reduce((acc, d) => {
+        const t = getTotalsForEntries(d.entries);
+        return {
+          w: acc.w + d.weightKg,
+          c: acc.c + t.c,
+          p: acc.p + t.p,
+          f: acc.f + t.f,
+          su: acc.su + t.su,
+          sa: acc.sa + t.sa
+        };
+      }, { w: 0, c: 0, p: 0, f: 0, su: 0, sa: 0 });
+      return {
+        weightKg: +(sum.w / n).toFixed(1),
+        c: Math.round(sum.c / n),
+        p: Math.round(sum.p / n),
+        f: Math.round(sum.f / n),
+        su: Math.round(sum.su / n),
+        sa: +(sum.sa / n).toFixed(1)
+      };
+    }
+
+    function renderOnboarding() {
+      [1, 2, 3, 4].forEach(s => {
+        const btn = document.getElementById('seg-ob-' + s);
+        if (btn) btn.className = state.onboardingStep === s ? 'seg-btn active' : 'seg-btn';
+      });
+
+      const container = document.getElementById('onboarding-content');
+      const avg = getWeek1Average();
+      const chronologicalDays = daysData.slice().reverse();
+      const targetLim = getLimitsForDay(0);
+
+      if (state.onboardingStep === 1) {
+        container.innerHTML = `
+          <div class="card" style="background:var(--tint-peach);border-color:var(--tint-peach-border);display:flex;flex-direction:column;gap:14px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:var(--accent-dark);letter-spacing:0.04em;text-transform:uppercase;">Step 1 of 4 · Week 1 Baseline</span>
+                <span class="coral-summary-pill">7 / 7 Days</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                Record 1 week of normal eating first
+              </div>
+              <div style="font-size:13px;color:#5f463d;line-height:1.5;">
+                Log what you normally eat plus your <strong>Current Weight</strong> each day. We wait until Day 7 before asking for a Goal Weight.
+              </div>
+            </div>
+
+            <div class="day-dots">
+              ${chronologicalDays.map((d, idx) => {
+                const isToday = idx === chronologicalDays.length - 1;
+                return `
+                  <div class="day-dot ${isToday ? 'active-day' : 'done'}" onclick="jumpToDay(${daysData.length - 1 - idx})" style="cursor:pointer;padding:10px 2px;" title="Tap to view ${escapeHtml(d.label)}">
+                    <span style="opacity:0.85;font-weight:700;">${escapeHtml(d.shortDate.split(' ')[0])}</span>
+                    <strong style="font-size:13px;">✓</strong>
+                    <span style="font-weight:800;">${d.weightKg.toFixed(1)}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="background:#ffffff;border:1px solid var(--tint-peach-border);border-radius:16px;padding:12px;">
+                <div style="font-size:11px;color:var(--muted);font-weight:700;">⚖️ Current Weight</div>
+                <div style="font-size:16px;font-weight:800;margin-top:3px;">${chronologicalDays[0].weightKg.toFixed(1)} → ${daysData[0].weightKg.toFixed(1)} kg</div>
+                <div style="font-size:11px;color:#4d8a0b;font-weight:700;margin-top:2px;">7 days recorded</div>
+              </div>
+              <div style="background:#ffffff;border:1px solid var(--tint-peach-border);border-radius:16px;padding:12px;">
+                <div style="font-size:11px;color:var(--muted);font-weight:700;">🥣 Normal Eating</div>
+                <div style="font-size:16px;font-weight:800;margin-top:3px;">19 Meals</div>
+                <div style="font-size:11px;color:var(--accent-dark);font-weight:700;margin-top:2px;">🔒 Goal unlocks next</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setOnboardingStep(2)">
+            <span>Next: Your Eating Behaviours</span>
+            <span>Step 2 →</span>
+          </button>
+        `;
+      } else if (state.onboardingStep === 2) {
+        container.innerHTML = `
+          <div class="card" style="display:flex;flex-direction:column;gap:12px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:var(--accent-dark);letter-spacing:0.04em;text-transform:uppercase;">Step 2 of 4 · Behaviours Learned</span>
+                <span class="coral-summary-pill">Avg ${avg.weightKg} kg</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                What we noticed in Week 1
+              </div>
+              <div style="font-size:12px;color:var(--muted);">
+                Daily avg: <strong style="color:var(--carbs);">${avg.c}g C</strong> · <strong style="color:var(--protein);">${avg.p}g P</strong> · <strong style="color:var(--fat);">${avg.f}g F</strong> · <strong style="color:var(--sugar);">${avg.su}g Su</strong> · <strong style="color:var(--salt);">${avg.sa}g Sa</strong>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <div class="behaviour-item" style="background:var(--tint-peach);border-color:var(--tint-peach-border);padding:12px 13px;">
+                <div>
+                  <div style="font-weight:800;font-size:13px;">☕ Morning Flat White Habit</div>
+                  <div style="color:#7c5b50;font-size:12px;margin-top:2px;">Logged 6 of 7 mornings around 7:45 am</div>
+                </div>
+                <span class="pill active-review" style="height:24px;min-height:24px;font-size:11px;">Routine</span>
+              </div>
+
+              <div class="behaviour-item" style="background:var(--tint-mint);border-color:var(--tint-mint-border);padding:12px 13px;">
+                <div>
+                  <div style="font-weight:800;font-size:13px;">🥚 High-Protein Breakfasts</div>
+                  <div style="color:#4d8a0b;font-size:12px;margin-top:2px;">Oats or Poached Eggs on Vogels 5/7 days</div>
+                </div>
+                <span class="pill active-exercise" style="height:24px;min-height:24px;font-size:11px;">Keep</span>
+              </div>
+
+              <div class="behaviour-item" style="background:var(--tint-blush);border-color:var(--tint-blush-border);padding:12px 13px;">
+                <div>
+                  <div style="font-weight:800;font-size:13px;">🍟 Saturday Takeaway Spike</div>
+                  <div style="color:#9e356a;font-size:12px;margin-top:2px;">Pie + fish & chips pushed Salt & Fat high</div>
+                </div>
+                <span class="pill" style="height:24px;min-height:24px;font-size:11px;color:var(--accent-pink);border-color:var(--tint-blush-border);">Balance</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;">
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;width:auto;" onclick="setOnboardingStep(1)">
+              <span>← Back</span>
+            </button>
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setOnboardingStep(3)">
+              <span>Next: Set Goal Weight</span>
+              <span>Step 3 →</span>
+            </button>
+          </div>
+        `;
+      } else if (state.onboardingStep === 3) {
+        const goalRatio = Math.max(0.1, Math.min(1, (state.goalKg - 55) / 60));
+        const goalOffset = Math.round(100 - goalRatio * 100);
+        container.innerHTML = `
+          <div class="card" style="background:var(--tint-cream);border-color:var(--tint-cream-border);display:flex;flex-direction:column;gap:14px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:#b4690e;letter-spacing:0.04em;text-transform:uppercase;">Step 3 of 4 · Goal Unlocked</span>
+                <span style="font-size:12px;font-weight:700;color:#8f6b32;">Current: ${daysData[0].weightKg.toFixed(1)} kg</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                Set your Goal Weight
+              </div>
+              <div style="font-size:13px;color:#7a5b2b;line-height:1.45;">
+                Now that your Week 1 baseline is recorded, choose your target weight.
+              </div>
+            </div>
+
+            <!-- Centered Dribbble Semi-Circular Gauge + Stepper -->
+            <div style="background:#ffffff;border:1px solid var(--tint-cream-border);border-radius:20px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+              <svg viewBox="0 0 120 66" style="width:130px;height:70px;overflow:visible;">
+                <path d="M 12 56 A 48 48 0 0 1 108 56" fill="none" stroke="#f5dfab" stroke-width="10" stroke-linecap="round" />
+                <path d="M 12 56 A 48 48 0 0 1 108 56" fill="none" stroke="#f48265" stroke-width="10" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="${goalOffset}" />
+                <circle cx="60" cy="50" r="4.5" fill="#191c26" />
+              </svg>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <button class="step-btn" style="padding:7px 13px;font-size:13px;" onclick="nudgeGoalWeight(-0.5)">-0.5</button>
+                <div style="text-align:center;">
+                  <div style="font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--text);">${state.goalKg.toFixed(1)} kg</div>
+                  <div style="font-size:11px;color:var(--muted);font-weight:700;">${(state.goalKg - daysData[0].weightKg).toFixed(1)} kg from current</div>
+                </div>
+                <button class="step-btn" style="padding:7px 13px;font-size:13px;" onclick="nudgeGoalWeight(0.5)">+0.5</button>
+              </div>
+              <input type="range" min="55" max="115" step="0.5" value="${state.goalKg}" oninput="setGoalWeight(this.value)" style="width:100%;accent-color:var(--accent);" />
+            </div>
+
+            <div style="background:#ffffff;border:1px solid var(--tint-cream-border);border-radius:16px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+              <span style="color:#8f6b32;font-weight:700;">Daily Targets</span>
+              <span style="font-weight:800;">
+                <span style="color:var(--carbs);">${targetLim.c}C</span> ·
+                <span style="color:var(--protein);">${targetLim.p}P</span> ·
+                <span style="color:var(--fat);">${targetLim.f}F</span> ·
+                <span style="color:var(--sugar);">${targetLim.su}Su</span> ·
+                <span style="color:var(--salt);">${targetLim.sa}Sa</span>
+              </span>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;">
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;width:auto;" onclick="setOnboardingStep(2)">
+              <span>← Back</span>
+            </button>
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setOnboardingStep(4)">
+              <span>Next: Suggested Routines</span>
+              <span>Step 4 →</span>
+            </button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="card" style="display:flex;flex-direction:column;gap:12px;padding:18px 16px;flex:1;justify-content:space-between;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:800;color:#4d8a0b;letter-spacing:0.04em;text-transform:uppercase;">Step 4 of 4 · 1-Tap Shortcuts</span>
+                <span style="color:var(--accent-dark);cursor:pointer;font-weight:800;font-size:12px;" onclick="setViewMode('routines')">Routines Page →</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);">
+                Suggested Routines
+              </div>
+              <div style="font-size:12px;color:var(--muted);">
+                Tap to keep the repeated meals we spotted in Week 1 as 1-tap chips on your daily log:
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${routinesList.slice(0, 4).map(r => `
+                <div class="behaviour-item" onclick="toggleRoutineActive('${r.id}')" style="cursor:pointer;padding:10px 12px;background:${r.active ? 'var(--tint-mint)' : '#f9fafc'};border-color:${r.active ? 'var(--tint-mint-border)' : 'var(--border)'};">
+                  <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+                    <span class="food-icon-badge" style="background:#ffffff;width:32px;height:32px;font-size:16px;">${escapeHtml(r.icon)}</span>
+                    <div style="min-width:0;">
+                      <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                      <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.freq)} · ${escapeHtml(r.time)}</div>
+                    </div>
+                  </div>
+                  <span class="pill ${r.active ? 'active-exercise' : ''}" style="height:26px;min-height:26px;padding:0 10px;">
+                    ${r.active ? '✓ Active' : '+ Add'}
+                  </span>
+                </div>
+              `).join('')}
+            </div>
+
+            <button class="pill" style="width:100%;height:34px;min-height:34px;justify-content:center;background:var(--tint-peach);border-color:var(--tint-peach-border);color:var(--accent-dark);font-weight:800;" onclick="setViewMode('routines')">
+              🔁 Open Full Routines Page
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;">
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;width:auto;" onclick="setOnboardingStep(3)">
+              <span>← Back</span>
+            </button>
+            <button class="cta-btn" style="padding:13px 16px;font-size:13px;" onclick="setViewMode('log')">
+              <span>Finish Setup · Daily Log</span>
+              <span>✓</span>
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function renderRoutines() {
+      const el = document.getElementById('routines-view');
+      const activeRoutines = routinesList.filter(r => r.active);
+      const suggestedRoutines = routinesList.filter(r => !r.active);
+
+      el.innerHTML = `
+        <!-- Active Routines (Appear as 1-Tap Chips on Daily Log) -->
+        <div class="card" style="background:var(--tint-mint);border-color:var(--tint-mint-border);display:flex;flex-direction:column;gap:8px;font-size:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="color:#366306;">Your Active Routines (${activeRoutines.length})</strong>
+            <span style="color:#4d8a0b;font-size:11px;font-weight:600;">Tap schedule/time to edit</span>
+          </div>
+          ${activeRoutines.length === 0 ? `<div style="color:var(--muted);">No active routines yet. Add a suggested routine below.</div>` : ''}
+          ${activeRoutines.map(r => `
+            <div class="behaviour-item" style="background:#ffffff;border-color:var(--tint-mint-border);flex-direction:column;align-items:stretch;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                  <span class="food-icon-badge" style="background:var(--tint-mint);width:32px;height:32px;">${escapeHtml(r.icon)}</span>
+                  <div style="min-width:0;">
+                    <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                    <div style="color:var(--muted);font-size:11px;">${r.c}C · ${r.p}P · ${r.f}F · ${r.su}Su · ${r.sa}Sa</div>
+                  </div>
+                </div>
+                <button class="pill" style="height:24px;min-height:24px;padding:0 8px;" onclick="toggleRoutineActive('${r.id}')">Remove</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-top:5px;border-top:1px solid var(--border);font-size:11px;">
+                <div style="display:flex;gap:4px;align-items:center;">
+                  <button class="pill active-exercise" style="height:24px;min-height:24px;padding:0 8px;font-size:11px;" onclick="cycleRoutineFreq('${r.id}', event)" title="Tap to change schedule">
+                    📅 ${escapeHtml(r.freq)}
+                  </button>
+                  <button class="pill" style="height:24px;min-height:24px;padding:0 8px;font-size:11px;" onclick="cycleRoutineTime('${r.id}', event)" title="Tap to change default time">
+                    🕒 ${escapeHtml(r.time)}
+                  </button>
+                </div>
+                <button class="pill active-review" style="height:24px;min-height:24px;padding:0 9px;font-size:11px;" onclick="quickRoutine('${r.icon}', '${escapeHtml(r.shortLabel)}', ${r.c}, ${r.p}, ${r.f}, ${r.su}, ${r.sa}); setViewMode('log');">
+                  + Log now
+                </button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Suggested from Your Week 1 Eating -->
+        <div class="card" style="background:var(--tint-peach);border-color:var(--tint-peach-border);display:flex;flex-direction:column;gap:8px;font-size:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="color:var(--accent-dark);">Suggested from Your Week 1 Eating</strong>
+            <span style="color:#7c5b50;font-size:11px;font-weight:600;">1-tap add</span>
+          </div>
+          ${suggestedRoutines.length === 0 ? `<div style="color:#7c5b50;">All Week 1 suggested routines are active!</div>` : ''}
+          ${suggestedRoutines.map(r => `
+            <div class="behaviour-item" style="background:#ffffff;border-color:var(--tint-peach-border);cursor:pointer;" onclick="toggleRoutineActive('${r.id}')">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                <span class="food-icon-badge" style="background:var(--tint-peach);width:32px;height:32px;">${escapeHtml(r.icon)}</span>
+                <div style="min-width:0;">
+                  <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                  <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.reason)} · ${escapeHtml(r.freq)}</div>
+                </div>
+              </div>
+              <span class="pill active-review" style="height:24px;min-height:24px;padding:0 9px;">+ Add</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Create Custom Routine -->
+        <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+          <strong>Create a Routine</strong>
+          <select id="sel-routine-food" class="text-input" style="width:100%;border-color:var(--border);box-shadow:none;">
+            ${nzfcdCatalog.slice(0, 15).map((item, idx) => `
+              <option value="${idx}">${escapeHtml(item.icon)} ${escapeHtml(item.name)}</option>
+            `).join('')}
+          </select>
+          <div style="display:flex;gap:6px;">
+            <select id="sel-routine-freq" class="text-input" style="flex:1;border-color:var(--border);box-shadow:none;">
+              ${freqOptions.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('')}
+            </select>
+            <button class="time-pill" style="height:36px;padding:0 14px;" onclick="addNewRoutine()">+ Create</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderNutrientFooter(vals, lim, isAvg = false) {
+      const items = [
+        { short: 'C', val: vals.c, max: lim.c, unit: 'g', col: 'var(--carbs)', track: 'var(--carbs-track)' },
+        { short: 'P', val: vals.p, max: lim.p, unit: 'g', col: 'var(--protein)', track: 'var(--protein-track)' },
+        { short: 'F', val: vals.f, max: lim.f, unit: 'g', col: 'var(--fat)', track: 'var(--fat-track)' },
+        { short: 'Su', val: vals.su, max: lim.su, unit: 'g', col: 'var(--sugar)', track: 'var(--sugar-track)' },
+        { short: 'Sa', val: vals.sa, max: lim.sa, unit: 'g', col: 'var(--salt)', track: 'var(--salt-track)' }
+      ];
+      return `
+        ${isAvg ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);padding-top:6px;border-top:1px solid var(--border);">
+            <span style="font-weight:700;color:var(--text);">Daily Average Intake</span>
+            <span>Avg / day vs limit</span>
+          </div>
+        ` : ''}
+        <div class="review-bars" style="${isAvg ? 'border-top:none;padding-top:2px;' : ''}">
+          ${items.map(b => {
+            const pct = Math.min(100, Math.round((b.val / b.max) * 100));
+            return `
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;">
+                  <span style="color:${b.col};font-weight:800;">${b.short}</span>
+                  <span style="color:var(--text);font-weight:700;">${b.val}${b.unit}</span>
+                </div>
+                <div class="track" style="background:${b.track};height:6px;">
+                  <div class="fill" style="width:${pct}%;background:${b.col};"></div>
+                </div>
+                <div style="font-size:10px;color:var(--muted);font-weight:600;">
+                  ${isAvg ? `Avg · ${pct}%` : `${pct}% of ${b.max}g`}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderReview() {
+      ['days', 'weeks', 'years'].forEach(p => {
+        document.getElementById('seg-' + p).className = state.reviewPeriod === p ? 'seg-btn active' : 'seg-btn';
+      });
+
+      const chartEl = document.getElementById('review-chart');
+      const listEl = document.getElementById('review-list');
+      const titleEl = document.getElementById('chart-title');
+      const deltaEl = document.getElementById('chart-delta');
+      const stdLim = { c: 200, p: 155, f: 65, su: 45, sa: 5.0 };
+
+      let points = [];
+      if (state.reviewPeriod === 'days') {
+        titleEl.textContent = 'Eating vs Weight (Past 7 Days)';
+        const diff = (daysData[0].weightKg - daysData[daysData.length - 1].weightKg).toFixed(1);
+        deltaEl.textContent = `${diff > 0 ? '+' : ''}${diff} kg · Goal ${state.goalKg.toFixed(1)} kg`;
+        points = daysData.slice().reverse().map((d, i) => {
+          const t = getTotalsForEntries(d.entries);
+          const lim = getLimitsForDay(daysData.length - 1 - i);
+          return {
+            label: d.label.replace(' Oct', ''),
+            weight: d.weightKg,
+            pcts: [
+              Math.min(100, Math.round((t.c / lim.c) * 100)),
+              Math.min(100, Math.round((t.p / lim.p) * 100)),
+              Math.min(100, Math.round((t.f / lim.f) * 100)),
+              Math.min(100, Math.round((t.su / lim.su) * 100)),
+              Math.min(100, Math.round((t.sa / lim.sa) * 100))
+            ]
+          };
+        });
+
+        listEl.innerHTML = daysData.map((d, idx) => {
+          const t = getTotalsForEntries(d.entries);
+          const lim = getLimitsForDay(idx);
+          const prev = daysData[idx + 1];
+          const wDiff = prev ? (d.weightKg - prev.weightKg).toFixed(1) : '0.0';
+          return `
+            <div class="review-row" onclick="jumpToDay(${idx})" title="Tap to open ${escapeHtml(d.label)}">
+              <div class="review-top">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <strong style="font-size:13px;">${escapeHtml(d.label)}</strong>
+                  ${d.heavyExercise ? '<span style="background:var(--tint-mint);padding:1px 6px;border-radius:999px;font-size:11px;">🔥</span>' : ''}
+                  ${d.ateTooMuch ? '<span style="background:var(--tint-blush);padding:1px 6px;border-radius:999px;font-size:11px;">😮‍💨</span>' : ''}
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="color:var(--muted);font-weight:600;">${wDiff > 0 ? '+' + wDiff : wDiff} kg</span>
+                  <strong style="color:var(--accent-dark);background:var(--tint-peach);padding:2px 8px;border-radius:999px;">${d.weightKg.toFixed(1)} kg</strong>
+                </div>
+              </div>
+              ${renderNutrientFooter(t, lim, false)}
+            </div>
+          `;
+        }).join('');
+      } else if (state.reviewPeriod === 'weeks') {
+        titleEl.textContent = 'Weekly Average Intake vs Avg Weight';
+        deltaEl.textContent = `-2.6 kg in 5 wks · Goal ${state.goalKg.toFixed(1)} kg`;
+        points = weeksRollup.slice().reverse().map(w => ({
+          label: w.label.split(' ')[0],
+          weight: w.weightKg,
+          pcts: [
+            Math.min(100, Math.round((w.c / stdLim.c) * 100)),
+            Math.min(100, Math.round((w.p / stdLim.p) * 100)),
+            Math.min(100, Math.round((w.f / stdLim.f) * 100)),
+            Math.min(100, Math.round((w.su / stdLim.su) * 100)),
+            Math.min(100, Math.round((w.sa / stdLim.sa) * 100))
+          ]
+        }));
+
+        listEl.innerHTML = weeksRollup.map(w => `
+          <div class="review-row">
+            <div class="review-top">
+              <div>
+                <strong style="font-size:13px;">${escapeHtml(w.label)}</strong>
+                <div style="color:var(--muted);font-size:11px;font-weight:600;">${escapeHtml(w.note)}</div>
+              </div>
+              <div style="text-align:right;">
+                <strong style="color:var(--accent-dark);background:var(--tint-peach);padding:2px 8px;border-radius:999px;">Avg ${w.weightKg.toFixed(1)} kg</strong>
+                <div style="color:var(--muted);font-size:11px;margin-top:2px;font-weight:600;">${escapeHtml(w.delta)}</div>
+              </div>
+            </div>
+            ${renderNutrientFooter(w, stdLim, true)}
+          </div>
+        `).join('');
+      } else {
+        titleEl.textContent = 'Yearly Average Intake vs Avg Weight';
+        deltaEl.textContent = `-8.7 kg total · Goal ${state.goalKg.toFixed(1)} kg`;
+        points = yearsRollup.slice().reverse().map(y => ({
+          label: y.label.slice(0, 4),
+          weight: y.weightKg,
+          pcts: [
+            Math.min(100, Math.round((y.c / stdLim.c) * 100)),
+            Math.min(100, Math.round((y.p / stdLim.p) * 100)),
+            Math.min(100, Math.round((y.f / stdLim.f) * 100)),
+            Math.min(100, Math.round((y.su / stdLim.su) * 100)),
+            Math.min(100, Math.round((y.sa / stdLim.sa) * 100))
+          ]
+        }));
+
+        listEl.innerHTML = yearsRollup.map(y => `
+          <div class="review-row">
+            <div class="review-top">
+              <div>
+                <strong style="font-size:13px;">${escapeHtml(y.label)}</strong>
+                <div style="color:var(--muted);font-size:11px;font-weight:600;">${escapeHtml(y.note)}</div>
+              </div>
+              <div style="text-align:right;">
+                <strong style="color:var(--accent-dark);background:var(--tint-peach);padding:2px 8px;border-radius:999px;">Avg ${y.weightKg.toFixed(1)} kg</strong>
+                <div style="color:var(--muted);font-size:11px;margin-top:2px;font-weight:600;">${escapeHtml(y.delta)}</div>
+              </div>
+            </div>
+            ${renderNutrientFooter(y, stdLim, true)}
+          </div>
+        `).join('');
+      }
+
+      // Render Dribbble "Activities"-style SVG Chart: Soft Grid + 5 Nutrient Bars + Coral Area/Line Curve + Hollow Nodes
+      const w = 320, h = 116;
+      const weights = points.map(p => p.weight);
+      const minW = Math.min(...weights) - 0.5;
+      const maxW = Math.max(...weights) + 0.5;
+      const stepX = w / Math.max(1, points.length);
+      const barColors = ['#e1308c', '#7ac71f', '#7000df', '#f48265', '#2b9af3'];
+
+      const barsSvg = points.map((p, i) => {
+        const groupWidth = Math.min(28, stepX * 0.65);
+        const startX = i * stepX + (stepX - groupWidth) / 2;
+        const bw = groupWidth / 5;
+        return p.pcts.map((pct, bi) => {
+          const barH = Math.max(3, Math.round((pct / 100) * 56));
+          const x = startX + bi * bw;
+          return `<rect x="${x.toFixed(1)}" y="${h - 20 - barH}" width="${Math.max(2.2, bw - 1).toFixed(1)}" height="${barH}" rx="2" fill="${barColors[bi]}" opacity="0.38" />`;
+        }).join('');
+      }).join('');
+
+      const coords = points.map((p, i) => {
+        const x = i * stepX + stepX * 0.5;
+        const y = h - 26 - ((p.weight - minW) / Math.max(0.1, maxW - minW)) * 66;
+        return { x, y, weight: p.weight, label: p.label };
+      });
+
+      const polyPoints = coords.map(c => `${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+      const areaPoints = coords.length > 0
+        ? `${coords[0].x.toFixed(1)},${h - 20} ${polyPoints} ${coords[coords.length - 1].x.toFixed(1)},${h - 20}`
+        : '';
+
+      const dotsSvg = coords.map(c => `
+        <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="4" fill="#ffffff" stroke="#f48265" stroke-width="2.5" />
+        <text x="${c.x.toFixed(1)}" y="${(c.y - 8).toFixed(1)}" fill="#191c26" font-size="10.5" font-weight="800" text-anchor="middle">${c.weight.toFixed(1)}</text>
+        <text x="${c.x.toFixed(1)}" y="${h - 4}" fill="#7e8497" font-size="10.5" font-weight="600" text-anchor="middle">${escapeHtml(c.label.slice(0, 6))}</text>
+      `).join('');
+
+      chartEl.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:116px;overflow:visible;">
+          <defs>
+            <linearGradient id="coralArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f48265" stop-opacity="0.26" />
+              <stop offset="100%" stop-color="#f48265" stop-opacity="0.0" />
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="${h - 20}" x2="${w}" y2="${h - 20}" stroke="#eceef5" stroke-width="1" />
+          ${barsSvg}
+          <polygon points="${areaPoints}" fill="url(#coralArea)" />
+          <polyline fill="none" stroke="#f48265" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="${polyPoints}" />
+          ${dotsSvg}
+        </svg>
+      `;
+    }
+
+    function render() {
+      const d = currentDay();
+      const limits = getLimitsForDay(state.dayIndex);
+      const totals = getTotalsForEntries(d.entries);
+      const isBaselineWeek1 = state.viewMode === 'onboarding' && state.onboardingStep < 3;
+
+      // Top Mode Switcher Tabs + Bottom Floating Capsule Dock
+      ['onboarding', 'log', 'routines', 'review'].forEach(m => {
+        const tab = document.getElementById('tab-' + m);
+        if (tab) tab.className = state.viewMode === m ? 'mode-tab active' : 'mode-tab';
+        const dock = document.getElementById('dock-' + m);
+        if (dock) dock.className = state.viewMode === m ? 'dock-btn active' : 'dock-btn';
+      });
+
+      // Header Updates
+      document.getElementById('day-title').textContent = d.label;
+      document.getElementById('btn-next-day').style.opacity = state.dayIndex === 0 ? '0.3' : '1';
+      document.getElementById('btn-weight').textContent = `⚖️ ${d.weightKg.toFixed(1)}kg`;
+      document.getElementById('lbl-weight-day').textContent = d.label;
+      document.getElementById('lbl-cur').textContent = d.weightKg.toFixed(1) + ' kg';
+      document.getElementById('slider-cur').value = d.weightKg;
+      document.getElementById('lbl-goal').textContent = state.goalKg.toFixed(1) + ' kg';
+      document.getElementById('slider-goal').value = state.goalKg;
+      document.getElementById('lbl-gauge-sub').textContent = isBaselineWeek1 ? 'Wk 1 Baseline' : `Goal ${state.goalKg.toFixed(1)} kg`;
+
+      // Update Semi-Circular Weight Gauge Arc
+      const gaugeArc = document.getElementById('gauge-arc');
+      if (gaugeArc) {
+        const ratio = Math.max(0.1, Math.min(1, (d.weightKg - 50) / 80));
+        const offset = Math.round(100 - ratio * 100);
+        gaugeArc.setAttribute('stroke-dashoffset', String(offset));
+      }
+
+      // Hide Goal Weight slider during Week 1 Baseline recording
+      document.getElementById('goal-slider-row').style.display = isBaselineWeek1 ? 'none' : 'flex';
+      document.getElementById('goal-locked-row').style.display = isBaselineWeek1 ? 'flex' : 'none';
+
+      const exBtn = document.getElementById('btn-exercise');
+      exBtn.textContent = d.heavyExercise ? '🔥 Exercise' : 'Normal';
+      exBtn.className = d.heavyExercise ? 'pill active-exercise' : 'pill';
+
+      const revBtn = document.getElementById('btn-review');
+      revBtn.className = state.viewMode !== 'log' ? 'pill active-review' : 'pill';
+      revBtn.textContent = state.viewMode !== 'log' ? '← Log' : 'Review';
+
+      document.getElementById('log-view').style.display = state.viewMode === 'log' ? 'flex' : 'none';
+      document.getElementById('onboarding-view').style.display = state.viewMode === 'onboarding' ? 'flex' : 'none';
+      document.getElementById('routines-view').style.display = state.viewMode === 'routines' ? 'flex' : 'none';
+      document.getElementById('review-view').style.display = state.viewMode === 'review' ? 'flex' : 'none';
+
+      if (state.viewMode === 'onboarding') {
+        renderOnboarding();
+        return;
+      }
+      if (state.viewMode === 'routines') {
+        renderRoutines();
+        return;
+      }
+      if (state.viewMode === 'review') {
+        renderReview();
+        return;
+      }
+
+      const nutrients = [
+        { short: 'Carbs', val: totals.c, max: limits.c, unit: 'g', color: 'var(--carbs)', track: 'var(--carbs-track)' },
+        { short: 'Protein', val: totals.p, max: limits.p, unit: 'g', color: 'var(--protein)', track: 'var(--protein-track)' },
+        { short: 'Fat', val: totals.f, max: limits.f, unit: 'g', color: 'var(--fat)', track: 'var(--fat-track)' },
+        { short: 'Sugar', val: totals.su, max: limits.su, unit: 'g', color: 'var(--sugar)', track: 'var(--sugar-track)' },
+        { short: 'Salt', val: totals.sa, max: limits.sa, unit: 'g', color: 'var(--salt)', track: 'var(--salt-track)' }
+      ];
+
+      // 1. Dribbble-Style Macro Cards Strip (Label + Bold % + Pastel Track with Vibrant Fill)
+      const barsRow = document.getElementById('bars-row');
+      barsRow.innerHTML = nutrients.map(n => {
+        const pct = Math.min(100, Math.round((n.val / n.max) * 100));
+        return `
+          <div class="mini-col">
+            <div class="mini-label"><span>${n.short}</span></div>
+            <div class="mini-pct">${pct}%</div>
+            <div class="track" style="background:${n.track};">
+              <div class="fill" style="width:${pct}%;background:${n.color};"></div>
+            </div>
+          </div>
+        `;
+      }).join('') + `<span class="chevron">${state.intakeExpanded ? '▲' : '▼'}</span>`;
+
+      const details = document.getElementById('intake-details');
+      details.style.display = state.intakeExpanded ? 'flex' : 'none';
+      if (state.intakeExpanded) {
+        details.innerHTML = nutrients.map(n => `
+          <div class="detail-row">
+            <span style="color:${n.color};font-weight:800;">● ${n.short}</span>
+            <span style="font-weight:700;">${n.val}${n.unit} <span style="color:var(--muted);font-weight:500;">/ ${n.max}${n.unit}</span></span>
+          </div>
+        `).join('');
+      }
+
+      // 2. Ranked Plain-English Search Results (Top 10 or Top 25)
+      const clearBtn = document.getElementById('btn-clear');
+      const matchesPanel = document.getElementById('matches-panel');
+      const matchesScroll = document.getElementById('matches-scroll');
+      const limitBtn = document.getElementById('btn-limit');
+
+      const ranked = rankMatches(state.searchQuery);
+      clearBtn.style.display = state.searchQuery ? 'inline-flex' : 'none';
+      matchesPanel.style.display = ranked.length > 0 ? 'flex' : 'none';
+      limitBtn.textContent = state.matchLimit === 10 ? 'Showing 10 · Show 25' : 'Showing 25 · Show 10';
+
+      if (ranked.length > 0) {
+        matchesScroll.innerHTML = ranked.map((r, i) => {
+          const dotColor = r.score >= 45 ? 'var(--protein)' : (r.score >= 20 ? 'var(--sugar)' : '#cbd0de');
+          return `
+            <div class="match-row" onclick="selectMatch(${r.idx})">
+              <div class="match-left">
+                <span class="match-rank">${i + 1}.</span>
+                <span>${escapeHtml(r.item.icon)}</span>
+                <div style="min-width:0;">
+                  <div class="match-title">${escapeHtml(r.item.name)}</div>
+                  <div class="match-sub">${r.item.c}C · ${r.item.p}P · ${r.item.f}F · ${r.item.su}Su · ${r.item.sa}Sa</div>
+                </div>
+              </div>
+              <div class="match-right">
+                <span class="score-dot" style="background:${dotColor};" title="Match score"></span>
+                <span class="add-circle">+</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Dynamic 1-Tap Routine Chips + Routines Page link
+      const routinesRowEl = document.getElementById('daily-routines-row');
+      const activeRoutines = routinesList.filter(r => r.active);
+      routinesRowEl.innerHTML = activeRoutines.map(r => `
+        <button class="routine-chip" onclick="quickRoutine('${r.icon}', '${escapeHtml(r.shortLabel)}', ${r.c}, ${r.p}, ${r.f}, ${r.su}, ${r.sa})" title="${escapeHtml(r.freq)} · ${escapeHtml(r.time)}">
+          ${escapeHtml(r.icon)} ${escapeHtml(r.shortLabel)}
+        </button>
+      `).join('') + `
+        <button class="routine-chip" style="background:var(--tint-mint);border-color:var(--tint-mint-border);color:#4d8a0b;font-weight:700;" onclick="setViewMode('routines')">
+          🔁 Routines
+        </button>
+      `;
+
+      // 3. Recorded Weight Row + Food List
+      const listEl = document.getElementById('food-list');
+      const weightRowHtml = `
+        <div class="weight-log-row" onclick="toggleWeightDrawer()">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="food-icon-badge" style="background:#ffffff;width:30px;height:30px;font-size:15px;">⚖️</span>
+            <div>
+              <div style="font-weight:800;color:var(--text);">Recorded weight (${escapeHtml(d.label)}): ${d.weightKg.toFixed(1)} kg</div>
+              <div style="font-size:11px;color:#8f6b32;font-weight:600;">${isBaselineWeek1 ? 'Week 1 Baseline · Tap to edit' : `Goal ${state.goalKg.toFixed(1)} kg · Tap to edit`}</div>
+            </div>
+          </div>
+          <span style="color:#b4690e;font-weight:800;font-size:11px;background:#ffffff;padding:4px 9px;border-radius:999px;border:1px solid var(--tint-cream-border);">Edit</span>
+        </div>
+      `;
+
+      const iconTints = ['var(--tint-peach)', 'var(--tint-mint)', 'var(--tint-cream)', 'var(--tint-blush)'];
+      listEl.innerHTML = weightRowHtml + d.entries.map((e, idx) => {
+        const isOpen = state.selectedEntryId === e.id;
+        const badgeBg = iconTints[idx % iconTints.length];
+        return `
+          <div class="food-item" onclick="state.selectedEntryId = state.selectedEntryId === ${e.id} ? null : ${e.id}; render();">
+            <div class="food-main">
+              <div class="food-left">
+                <span class="food-icon-badge" style="background:${badgeBg};">${escapeHtml(e.icon)}</span>
+                <span>${escapeHtml(e.name)}</span>
+              </div>
+              <div class="food-right">
+                <span>${escapeHtml(e.time)}</span>
+                <span onclick="removeEntry(${e.id}, event)" style="padding:2px 6px;border-radius:999px;background:#f3f4f8;color:var(--muted);cursor:pointer;">×</span>
+              </div>
+            </div>
+            ${isOpen ? `
+              <div class="food-macros">
+                <span style="color:var(--carbs);">${e.c}g Carbs</span>
+                <span style="color:var(--protein);">${e.p}g Protein</span>
+                <span style="color:var(--fat);">${e.f}g Fat</span>
+                <span style="color:var(--sugar);">${e.su}g Sugar</span>
+                <span style="color:var(--salt);">${e.sa}g Salt</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // 4. Bottom "I ate too much" button
+      const tmBtn = document.getElementById('btn-too-much');
+      const tmText = document.getElementById('too-much-text');
+      const tmAct = document.getElementById('too-much-action');
+      if (d.ateTooMuch) {
+        tmBtn.className = 'balance-btn active';
+        tmText.textContent = '✓ Next day’s limits rebalanced (-15%)';
+        tmAct.textContent = 'Undo';
+      } else {
+        tmBtn.className = 'balance-btn';
+        tmText.textContent = '😮‍💨 I ate too much today';
+        tmAct.textContent = 'Balance tomorrow';
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
