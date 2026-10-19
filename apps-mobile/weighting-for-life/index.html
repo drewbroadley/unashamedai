@@ -74,36 +74,44 @@
       justify-content: space-between;
       align-items: center;
       gap: 6px;
+      min-height: 28px;
     }
     .day-nav {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
+      flex-shrink: 0;
     }
     .nav-arrow {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--muted);
-      border-radius: 8px;
-      width: 24px;
-      height: 24px;
+      border-radius: 7px;
+      width: 22px;
+      height: 22px;
       font-size: 12px;
+      line-height: 1;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
     .nav-arrow:hover { color: var(--text); border-color: #3f4656; }
     .title {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: -0.02em;
-      padding: 0 4px;
+      padding: 0 2px;
+      white-space: nowrap;
+      min-width: 68px;
+      text-align: center;
     }
     .pills {
       display: flex;
-      gap: 5px;
+      gap: 4px;
       align-items: center;
+      flex-shrink: 0;
     }
     .pill {
       background: var(--card);
@@ -111,11 +119,17 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 600;
-      padding: 5px 9px;
+      line-height: 1;
+      height: 26px;
+      padding: 0 8px;
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.15s ease;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
     .pill:hover { border-color: #3f4656; color: var(--text); }
     .pill.weight-pill {
@@ -1189,7 +1203,7 @@
       // Header Updates
       document.getElementById('day-title').textContent = d.label;
       document.getElementById('btn-next-day').style.opacity = state.dayIndex === 0 ? '0.3' : '1';
-      document.getElementById('btn-weight').textContent = `⚖️ ${d.weightKg.toFixed(1)} kg`;
+      document.getElementById('btn-weight').textContent = `⚖️ ${d.weightKg.toFixed(1)}kg`;
       document.getElementById('lbl-weight-day').textContent = d.label;
       document.getElementById('lbl-cur').textContent = d.weightKg.toFixed(1) + ' kg';
       document.getElementById('slider-cur').value = d.weightKg;
