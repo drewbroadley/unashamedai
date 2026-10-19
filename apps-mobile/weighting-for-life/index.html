@@ -58,7 +58,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      min-height: 720px;
+      min-height: 730px;
     }
     .statusbar {
       display: flex;
@@ -73,16 +73,37 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 2px;
+      gap: 6px;
     }
+    .day-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-arrow {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 8px;
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-arrow:hover { color: var(--text); border-color: #3f4656; }
     .title {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 700;
       letter-spacing: -0.02em;
+      padding: 0 4px;
     }
     .pills {
       display: flex;
-      gap: 6px;
+      gap: 5px;
+      align-items: center;
     }
     .pill {
       background: var(--card);
@@ -90,22 +111,70 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 600;
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.15s ease;
+      white-space: nowrap;
     }
     .pill:hover { border-color: #3f4656; color: var(--text); }
+    .pill.weight-pill {
+      color: var(--accent);
+      border-color: rgba(16, 185, 129, 0.35);
+      background: rgba(16, 185, 129, 0.1);
+    }
     .pill.active-exercise {
       background: rgba(245, 158, 11, 0.16);
       border-color: rgba(245, 158, 11, 0.45);
       color: #fbbf24;
+    }
+    .pill.active-review {
+      background: var(--text);
+      color: var(--phone-bg);
+      border-color: var(--text);
     }
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 12px;
+    }
+    /* Today's Weight Picker Drawer */
+    .drawer {
+      background: #14171d;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .weight-stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .step-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .slider-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
     }
     /* 1. Indicative Daily Intake Strip */
     .intake-strip {
@@ -161,27 +230,6 @@
       justify-content: space-between;
       font-size: 12px;
     }
-    /* Weight Drawer */
-    .drawer {
-      background: #14171d;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 12px;
-    }
-    .slider-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-    input[type="range"] {
-      flex: 1;
-      accent-color: var(--accent);
-    }
     /* 2. Plain English Log Input + Ranked NZFCD Matches */
     .input-box {
       display: flex;
@@ -232,8 +280,6 @@
       cursor: pointer;
     }
     .routine-chip:hover { color: var(--text); border-color: #3f4656; }
-
-    /* Ranked Search Matches List */
     .matches-panel {
       border-top: 1px solid var(--border);
       padding-top: 8px;
@@ -259,7 +305,7 @@
       cursor: pointer;
     }
     .matches-scroll {
-      max-height: 250px;
+      max-height: 220px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -322,13 +368,23 @@
       height: 6px;
       border-radius: 999px;
     }
-
-    /* 3. Clean Food List */
+    /* 3. Clean Food + Weight Log List */
     .food-list {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 6px;
+    }
+    .weight-log-row {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      border-radius: 14px;
+      padding: 9px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      cursor: pointer;
     }
     .food-item {
       background: var(--card);
@@ -389,6 +445,54 @@
       border-color: rgba(244, 63, 94, 0.45);
       color: #fda4af;
     }
+    /* REVIEW VIEW (Days / Weeks / Years Eating vs Weight) */
+    .seg-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #14171d;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .seg-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 0;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+    .seg-btn.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .review-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .review-row:hover { border-color: #384152; }
+    .review-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .review-bars {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
@@ -405,98 +509,237 @@
       <span>☁️ iCloud</span>
     </div>
 
-    <!-- 1. Minimal Header -->
+    <!-- 1. Header: Date Stepper + My Weight Today + Normal/Exercise + Review Toggle -->
     <div class="header">
-      <div class="title">Today</div>
+      <div class="day-nav" id="day-nav-controls">
+        <button class="nav-arrow" onclick="stepDay(-1)" title="Previous day">‹</button>
+        <div class="title" id="day-title">Today</div>
+        <button class="nav-arrow" id="btn-next-day" onclick="stepDay(1)" title="Next day">›</button>
+      </div>
+
       <div class="pills">
-        <button class="pill" id="btn-weight" onclick="toggleWeightDrawer()">86 → 78 kg</button>
+        <!-- My Weight Today Pill (right beside Normal) -->
+        <button class="pill weight-pill" id="btn-weight" onclick="toggleWeightDrawer()" title="Tap to record today's weight">
+          85.4 kg
+        </button>
         <button class="pill" id="btn-exercise" onclick="toggleExercise()">Normal</button>
+        <button class="pill" id="btn-review" onclick="toggleReviewView()">Review</button>
       </div>
     </div>
 
-    <!-- Optional Weight Goal Drawer (hidden unless tapped) -->
+    <!-- Today's Weight Picker Drawer (records weight alongside the day's food log) -->
     <div id="weight-drawer" class="drawer" style="display:none;">
-      <div class="slider-row">
-        <span style="width:70px;color:var(--muted);">Current</span>
-        <input type="range" min="50" max="130" value="86" oninput="updateWeight(this.value, null)" />
-        <strong id="lbl-cur" style="width:48px;text-align:right;">86 kg</strong>
-      </div>
-      <div class="slider-row">
-        <span style="width:70px;color:var(--muted);">Goal</span>
-        <input type="range" min="50" max="130" value="78" oninput="updateWeight(null, this.value)" />
-        <strong id="lbl-goal" style="width:48px;text-align:right;color:var(--accent);">78 kg</strong>
-      </div>
-    </div>
-
-    <!-- 2. Tiny Indicative Daily Intake Strip (Tap to expand) -->
-    <div class="card intake-strip" onclick="toggleIntake()">
-      <div class="bars-row" id="bars-row"></div>
-      <div id="intake-details" class="expanded-details" style="display:none;"></div>
-    </div>
-
-    <!-- 3. Plain-English Search + Ranked NZFCD Matches + Routines -->
-    <div class="card input-box">
-      <div class="input-row">
-        <input
-          id="food-input"
-          class="text-input"
-          type="text"
-          value="poached egg"
-          placeholder="Search NZ food (e.g. poached egg, vogels, pie)..."
-          oninput="onSearchInput(this.value)"
-        />
-        <button id="btn-clear" class="btn-clear" style="display:none;" onclick="clearSearch()" title="Clear">×</button>
-        <button class="pill" id="btn-time" onclick="cycleTime()" title="Tap to change time">Now</button>
-      </div>
-
-      <!-- Ranked NZFCD Search Results (Most relevant -> Least relevant, 10 or 25 items) -->
-      <div id="matches-panel" class="matches-panel" style="display:none;">
-        <div class="matches-header">
-          <span id="matches-label">Closest NZFCD matches (most → least relevant)</span>
-          <button id="btn-limit" class="matches-limit-toggle" onclick="toggleMatchLimit()">Top 10</button>
+      <div class="weight-stepper">
+        <span style="color:var(--muted);font-weight:600;">My weight (<span id="lbl-weight-day">Today</span>)</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="step-btn" onclick="nudgeTodayWeight(-0.1)">-0.1</button>
+          <strong id="lbl-cur" style="font-size:14px;color:var(--accent);min-width:58px;text-align:center;">85.4 kg</strong>
+          <button class="step-btn" onclick="nudgeTodayWeight(0.1)">+0.1</button>
         </div>
-        <div id="matches-scroll" class="matches-scroll"></div>
       </div>
-
-      <!-- 1-Tap Routines -->
-      <div class="routines-row">
-        <button class="routine-chip" onclick="quickRoutine('☕', 'Flat white', 11, 9, 3, 11, 0.3)">☕ Flat white</button>
-        <button class="routine-chip" onclick="quickRoutine('🥣', 'Oats & gold kiwifruit', 45, 8, 4, 15, 0.1)">🥣 Morning oats</button>
-        <button class="routine-chip" onclick="quickRoutine('🥚', '2 poached eggs on Vogels', 32, 21, 12, 3, 1.1)">🥚 Eggs on Vogels</button>
+      <div class="slider-row">
+        <span style="width:65px;color:var(--muted);">Slide</span>
+        <input id="slider-cur" type="range" min="50" max="130" step="0.1" value="85.4" oninput="setTodayWeight(this.value)" />
+      </div>
+      <div class="slider-row" style="padding-top:4px;border-top:1px solid var(--border);">
+        <span style="width:65px;color:var(--muted);">Goal</span>
+        <input id="slider-goal" type="range" min="50" max="130" step="0.5" value="78.0" oninput="setGoalWeight(this.value)" />
+        <span id="lbl-goal" style="width:52px;text-align:right;color:var(--muted);">78.0 kg</span>
       </div>
     </div>
 
-    <!-- 4. Clean Today's Food List (tap row to peek nutrients) -->
-    <div class="food-list" id="food-list"></div>
+    <!-- ==================== DAILY LOG VIEW ==================== -->
+    <div id="log-view" style="display:flex;flex-direction:column;gap:12px;flex:1;">
+      <!-- 2. Tiny Indicative Daily Intake Strip (Tap to expand) -->
+      <div class="card intake-strip" onclick="toggleIntake()">
+        <div class="bars-row" id="bars-row"></div>
+        <div id="intake-details" class="expanded-details" style="display:none;"></div>
+      </div>
 
-    <!-- 5. Single "I ate too much" Next-Day Rebalance Button -->
-    <button class="balance-btn" id="btn-too-much" onclick="toggleTooMuch()">
-      <span id="too-much-text">😮‍💨 I ate too much today</span>
-      <span id="too-much-action">Balance tomorrow</span>
-    </button>
+      <!-- 3. Plain-English Search + Ranked NZFCD Matches + Routines -->
+      <div class="card input-box">
+        <div class="input-row">
+          <input
+            id="food-input"
+            class="text-input"
+            type="text"
+            placeholder="Search NZ food (e.g. poached egg, vogels, pie)..."
+            oninput="onSearchInput(this.value)"
+          />
+          <button id="btn-clear" class="btn-clear" style="display:none;" onclick="clearSearch()" title="Clear">×</button>
+          <button class="pill" id="btn-time" onclick="cycleTime()" title="Tap to change time">Now</button>
+        </div>
+
+        <!-- Ranked NZFCD Search Results (Most relevant -> Least relevant, 10 or 25 items) -->
+        <div id="matches-panel" class="matches-panel" style="display:none;">
+          <div class="matches-header">
+            <span id="matches-label">Closest NZFCD matches (most → least relevant)</span>
+            <button id="btn-limit" class="matches-limit-toggle" onclick="toggleMatchLimit()">Top 10</button>
+          </div>
+          <div id="matches-scroll" class="matches-scroll"></div>
+        </div>
+
+        <!-- 1-Tap Routines -->
+        <div class="routines-row">
+          <button class="routine-chip" onclick="quickRoutine('☕', 'Flat white', 11, 9, 3, 11, 0.3)">☕ Flat white</button>
+          <button class="routine-chip" onclick="quickRoutine('🥣', 'Oats & gold kiwifruit', 45, 8, 4, 15, 0.1)">🥣 Morning oats</button>
+          <button class="routine-chip" onclick="quickRoutine('🥚', '2 poached eggs on Vogels', 32, 21, 12, 3, 1.1)">🥚 Eggs on Vogels</button>
+        </div>
+      </div>
+
+      <!-- 4. Clean Today's Food + Recorded Weight List -->
+      <div class="food-list" id="food-list"></div>
+
+      <!-- 5. Single "I ate too much" Next-Day Rebalance Button -->
+      <button class="balance-btn" id="btn-too-much" onclick="toggleTooMuch()">
+        <span id="too-much-text">😮‍💨 I ate too much today</span>
+        <span id="too-much-action">Balance tomorrow</span>
+      </button>
+    </div>
+
+    <!-- ==================== REVIEW VIEW (Days / Weeks / Years: Eating vs Weight) ==================== -->
+    <div id="review-view" style="display:none;flex-direction:column;gap:12px;flex:1;">
+      <!-- Period Switcher: Days | Weeks | Years -->
+      <div class="seg-bar">
+        <button class="seg-btn active" id="seg-days" onclick="setReviewPeriod('days')">Days</button>
+        <button class="seg-btn" id="seg-weeks" onclick="setReviewPeriod('weeks')">Weeks</button>
+        <button class="seg-btn" id="seg-years" onclick="setReviewPeriod('years')">Years</button>
+      </div>
+
+      <!-- Dual Eating vs Weight Trend Card -->
+      <div class="card" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;">
+          <strong id="chart-title">Eating vs Weight (Last 7 Days)</strong>
+          <span style="color:var(--accent);font-weight:600;" id="chart-delta">-1.0 kg · Goal 78.0 kg</span>
+        </div>
+        <div id="review-chart"></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);">
+          <span><span style="color:var(--accent);">●</span> Weight (kg)</span>
+          <span><span style="color:var(--carbs);">▮</span>C <span style="color:var(--protein);">▮</span>P <span style="color:var(--fat);">▮</span>F <span style="color:var(--sugar);">▮</span>Su <span style="color:var(--salt);">▮</span>Sa</span>
+        </div>
+      </div>
+
+      <!-- Historical Comparison Rows (Tap any day to open its log) -->
+      <div id="review-list" style="display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:390px;"></div>
+    </div>
+
   </div>
 
   <script>
+    // Historical + Today dataset (index 0 = Today, 1 = Yesterday, etc.)
+    const daysData = [
+      {
+        label: 'Today',
+        shortDate: 'Mon 19 Oct',
+        weightKg: 85.4,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 1, icon: '☕', name: 'Flat white, standard milk', time: '7:45 am', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+          { id: 2, icon: '🥣', name: 'Oats & gold kiwifruit', time: '8:10 am', c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
+          { id: 3, icon: '🌯', name: 'Chicken & avocado wrap', time: '12:40 pm', c: 38, p: 42, f: 18, su: 4, sa: 1.4 }
+        ]
+      },
+      {
+        label: 'Yesterday',
+        shortDate: 'Sun 18 Oct',
+        weightKg: 85.6,
+        heavyExercise: true,
+        ateTooMuch: false,
+        entries: [
+          { id: 11, icon: '🥚', name: '2 poached eggs on Vogels', time: '8:30 am', c: 32, p: 21, f: 13, su: 2, sa: 1.1 },
+          { id: 12, icon: '🍌', name: 'Banana & whey protein shake', time: '1:15 pm', c: 27, p: 28, f: 1, su: 18, sa: 0.3 },
+          { id: 13, icon: '🐟', name: 'King salmon, kumara & broccoli', time: '7:00 pm', c: 39, p: 38, f: 27, su: 11, sa: 0.3 }
+        ]
+      },
+      {
+        label: 'Sat 17 Oct',
+        shortDate: 'Sat 17 Oct',
+        weightKg: 85.9,
+        heavyExercise: false,
+        ateTooMuch: true,
+        entries: [
+          { id: 21, icon: '☕', name: 'Flat white & plain bagel', time: '9:00 am', c: 59, p: 18, f: 10, su: 16, sa: 1.4 },
+          { id: 22, icon: '🥧', name: 'Mince & cheese pie', time: '1:10 pm', c: 42, p: 18, f: 25, su: 2, sa: 1.8 },
+          { id: 23, icon: '🍟', name: 'Battered hoki & takeaway chips', time: '7:30 pm', c: 80, p: 30, f: 42, su: 2, sa: 2.1 }
+        ]
+      },
+      {
+        label: 'Fri 16 Oct',
+        shortDate: 'Fri 16 Oct',
+        weightKg: 85.7,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 31, icon: '🥣', name: 'Rolled oats & kiwifruit', time: '7:50 am', c: 45, p: 8, f: 4, su: 14, sa: 0.1 },
+          { id: 32, icon: '🍣', name: 'Salmon & avocado sushi (6 pcs)', time: '12:30 pm', c: 46, p: 14, f: 9, su: 5, sa: 1.1 },
+          { id: 33, icon: '🥩', name: 'Lean rump steak & kumara', time: '6:45 pm', c: 35, p: 54, f: 11, su: 9, sa: 0.4 }
+        ]
+      },
+      {
+        label: 'Thu 15 Oct',
+        shortDate: 'Thu 15 Oct',
+        weightKg: 86.0,
+        heavyExercise: true,
+        ateTooMuch: false,
+        entries: [
+          { id: 41, icon: '🍞', name: 'Vogels toast & Pic’s peanut butter', time: '8:00 am', c: 33, p: 13, f: 11, su: 3, sa: 0.8 },
+          { id: 42, icon: '🍗', name: 'Grilled chicken breast & salad', time: '1:00 pm', c: 12, p: 45, f: 7, su: 4, sa: 0.5 },
+          { id: 43, icon: '🥩', name: 'Prime beef mince & broccoli', time: '7:15 pm', c: 18, p: 43, f: 17, su: 3, sa: 0.5 }
+        ]
+      },
+      {
+        label: 'Wed 14 Oct',
+        shortDate: 'Wed 14 Oct',
+        weightKg: 86.2,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 51, icon: '☕', name: 'Flat white & Weet-Bix', time: '7:40 am', c: 31, p: 13, f: 4, su: 12, sa: 0.5 },
+          { id: 52, icon: '🌯', name: 'Chicken & avocado wrap', time: '12:50 pm', c: 38, p: 42, f: 18, su: 4, sa: 1.4 }
+        ]
+      },
+      {
+        label: 'Tue 13 Oct',
+        shortDate: 'Tue 13 Oct',
+        weightKg: 86.4,
+        heavyExercise: false,
+        ateTooMuch: false,
+        entries: [
+          { id: 61, icon: '🥚', name: '2 poached eggs on Vogels', time: '8:00 am', c: 32, p: 21, f: 13, su: 2, sa: 1.1 },
+          { id: 62, icon: '🐟', name: 'King salmon & baked kumara', time: '6:50 pm', c: 35, p: 34, f: 26, su: 9, sa: 0.3 }
+        ]
+      }
+    ];
+
+    const weeksRollup = [
+      { label: 'This Week (Oct 13–19)', weightKg: 85.4, delta: '-0.8 kg', c: 142, p: 138, f: 58, su: 31, sa: 3.6, note: '2× 🔥 Exercise · 1× Rebalanced' },
+      { label: 'Last Week (Oct 6–12)', weightKg: 86.2, delta: '-0.6 kg', c: 158, p: 144, f: 62, su: 34, sa: 4.1, note: '3× 🔥 Exercise' },
+      { label: 'Sep 29 – Oct 5', weightKg: 86.8, delta: '-0.5 kg', c: 165, p: 140, f: 65, su: 38, sa: 4.4, note: 'Steady week' },
+      { label: 'Sep 22 – Sep 28', weightKg: 87.3, delta: '-0.7 kg', c: 152, p: 146, f: 60, su: 33, sa: 3.9, note: '2× 🔥 Exercise' },
+      { label: 'Sep 15 – Sep 21', weightKg: 88.0, delta: '-0.4 kg', c: 174, p: 135, f: 68, su: 41, sa: 4.7, note: '1× Rebalanced' }
+    ];
+
+    const yearsRollup = [
+      { label: '2026 (YTD · Oct)', weightKg: 85.4, delta: '-6.6 kg', c: 156, p: 142, f: 61, su: 34, sa: 4.0, note: 'Started at 92.0 kg → Goal 78.0 kg' },
+      { label: '2025 (Full Year Avg)', weightKg: 92.0, delta: '-2.1 kg', c: 195, p: 124, f: 76, su: 48, sa: 5.2, note: 'Baseline year' },
+      { label: '2024 (Full Year Avg)', weightKg: 94.1, delta: '—', c: 215, p: 118, f: 82, su: 54, sa: 5.6, note: 'Initial logs' }
+    ];
+
     const state = {
-      currentKg: 86,
-      goalKg: 78,
-      heavyExercise: false,
-      ateTooMuch: false,
+      dayIndex: 0, // 0 = Today, 1 = Yesterday, etc.
+      goalKg: 78.0,
+      viewMode: 'log', // 'log' | 'review'
+      reviewPeriod: 'days', // 'days' | 'weeks' | 'years'
       intakeExpanded: false,
       weightDrawerOpen: false,
       selectedEntryId: null,
-      searchQuery: 'poached egg',
-      matchLimit: 10, // Toggle between 10 and 25
-      timeOptions: ['Now', '8:00 am', '12:30 pm', 'Yesterday'],
-      timeIndex: 0,
-      entries: [
-        { id: 1, icon: '☕', name: 'Flat white, standard milk', time: '7:45 am', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
-        { id: 2, icon: '🥣', name: 'Oats & gold kiwifruit', time: '8:10 am', c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
-        { id: 3, icon: '🌯', name: 'Chicken & avocado wrap', time: '12:40 pm', c: 38, p: 42, f: 18, su: 4, sa: 1.4 }
-      ]
+      searchQuery: '',
+      matchLimit: 10,
+      timeOptions: ['Now', '8:00 am', '12:30 pm'],
+      timeIndex: 0
     };
 
-    // Representative New Zealand Food Composition Database (foodcomposition.co.nz) catalog
     const nzfcdCatalog = [
       { icon: '🥚', name: 'Egg, chicken, whole, poached (2 large)', cat: 'eggs breakfast', c: 1, p: 13, f: 10, su: 0, sa: 0.4 },
       { icon: '🥚', name: 'Egg, chicken, whole, boiled (1 large)', cat: 'eggs breakfast', c: 0, p: 6, f: 5, su: 0, sa: 0.2 },
@@ -547,11 +790,13 @@
       { icon: '🥤', name: 'Protein shake, whey isolate with water (1 scoop)', cat: 'protein gym supplement drink', c: 3, p: 27, f: 1, su: 1, sa: 0.3 }
     ];
 
-    // Ranks NZFCD items from most relevant / closely matched to least relevant
+    function currentDay() {
+      return daysData[state.dayIndex];
+    }
+
     function rankMatches(query) {
       const q = query.toLowerCase().trim();
       if (!q) return [];
-
       const stopWords = new Set(['a', 'an', 'the', 'with', 'and', 'on', 'of', 'in', 'plus', 'to']);
       const tokens = q.split(/[\s,+&]+/).filter(t => t.length > 0 && !stopWords.has(t));
 
@@ -560,11 +805,9 @@
         const haystack = nameLower + ' ' + item.cat;
         let score = 0;
 
-        // 1. Exact substring in food name
         if (nameLower.startsWith(q)) score += 120;
         else if (nameLower.includes(q)) score += 85;
 
-        // 2. Per-token matching (word prefix, exact word, partial substring, category match)
         tokens.forEach(tok => {
           const words = nameLower.split(/[\s,()]+/);
           if (words.includes(tok) || words.includes(tok + 's') || words.includes(tok.replace(/s$/, ''))) {
@@ -576,7 +819,6 @@
           } else if (item.cat.includes(tok)) {
             score += 14;
           } else {
-            // Character overlap / fuzzy similarity fallback so we always fill out the tail (up to 25 items)
             let common = 0;
             for (let ch of tok) {
               if (haystack.includes(ch)) common++;
@@ -592,18 +834,20 @@
       return scored.slice(0, state.matchLimit);
     }
 
-    function getLimits() {
-      const baseKcal = Math.max(1350, state.currentKg * 28 - (state.goalKg < state.currentKg ? 380 : 0));
+    function getLimitsForDay(dayIdx) {
+      const d = daysData[dayIdx];
+      const prevDay = daysData[dayIdx + 1];
+      const baseKcal = Math.max(1350, d.weightKg * 28 - (state.goalKg < d.weightKg ? 380 : 0));
       let c = Math.round((baseKcal * 0.40) / 4);
-      let p = Math.round(state.currentKg * 1.8);
+      let p = Math.round(d.weightKg * 1.8);
       let f = Math.round((baseKcal * 0.28) / 9);
       let su = 45;
       let sa = 5.0;
 
-      if (state.heavyExercise) {
+      if (d.heavyExercise) {
         c += 60; p += 15; f += 8; su += 15; sa = +(sa + 1.2).toFixed(1);
       }
-      if (state.ateTooMuch) {
+      if (d.ateTooMuch || (prevDay && prevDay.ateTooMuch)) {
         c = Math.round(c * 0.85);
         f = Math.round(f * 0.85);
         su = Math.round(su * 0.85);
@@ -612,14 +856,63 @@
       return { c, p, f, su, sa };
     }
 
-    function getTotals() {
-      return state.entries.reduce((acc, e) => ({
+    function getTotalsForEntries(entries) {
+      return entries.reduce((acc, e) => ({
         c: acc.c + e.c,
         p: acc.p + e.p,
         f: acc.f + e.f,
         su: acc.su + e.su,
         sa: +(acc.sa + e.sa).toFixed(1)
       }), { c: 0, p: 0, f: 0, su: 0, sa: 0 });
+    }
+
+    function stepDay(dir) {
+      // dir = -1 means go back in time (increase dayIndex), +1 means go forward toward Today
+      const next = state.dayIndex - dir;
+      if (next >= 0 && next < daysData.length) {
+        state.dayIndex = next;
+        state.viewMode = 'log';
+        render();
+      }
+    }
+
+    function jumpToDay(idx) {
+      state.dayIndex = idx;
+      state.viewMode = 'log';
+      render();
+    }
+
+    function toggleReviewView() {
+      state.viewMode = state.viewMode === 'log' ? 'review' : 'log';
+      render();
+    }
+
+    function setReviewPeriod(period) {
+      state.reviewPeriod = period;
+      render();
+    }
+
+    function toggleWeightDrawer() {
+      state.weightDrawerOpen = !state.weightDrawerOpen;
+      document.getElementById('weight-drawer').style.display = state.weightDrawerOpen ? 'flex' : 'none';
+      render();
+    }
+
+    function nudgeTodayWeight(delta) {
+      const d = currentDay();
+      d.weightKg = +(d.weightKg + delta).toFixed(1);
+      render();
+    }
+
+    function setTodayWeight(val) {
+      const d = currentDay();
+      d.weightKg = +Number(val).toFixed(1);
+      render();
+    }
+
+    function setGoalWeight(val) {
+      state.goalKg = +Number(val).toFixed(1);
+      render();
     }
 
     function onSearchInput(val) {
@@ -641,7 +934,7 @@
     function selectMatch(idx) {
       const m = nzfcdCatalog[idx];
       if (!m) return;
-      state.entries.unshift({
+      currentDay().entries.unshift({
         id: Date.now() + Math.random(),
         icon: m.icon,
         name: m.name,
@@ -656,27 +949,13 @@
       render();
     }
 
-    function toggleWeightDrawer() {
-      state.weightDrawerOpen = !state.weightDrawerOpen;
-      document.getElementById('weight-drawer').style.display = state.weightDrawerOpen ? 'flex' : 'none';
-    }
-
-    function updateWeight(cur, goal) {
-      if (cur !== null) state.currentKg = Number(cur);
-      if (goal !== null) state.goalKg = Number(goal);
-      document.getElementById('lbl-cur').textContent = state.currentKg + ' kg';
-      document.getElementById('lbl-goal').textContent = state.goalKg + ' kg';
-      document.getElementById('btn-weight').textContent = state.currentKg + ' → ' + state.goalKg + ' kg';
-      render();
-    }
-
     function toggleExercise() {
-      state.heavyExercise = !state.heavyExercise;
+      currentDay().heavyExercise = !currentDay().heavyExercise;
       render();
     }
 
     function toggleTooMuch() {
-      state.ateTooMuch = !state.ateTooMuch;
+      currentDay().ateTooMuch = !currentDay().ateTooMuch;
       render();
     }
 
@@ -686,7 +965,7 @@
     }
 
     function quickRoutine(icon, name, c, p, f, su, sa) {
-      state.entries.unshift({
+      currentDay().entries.unshift({
         id: Date.now() + Math.random(),
         icon, name,
         time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
@@ -697,7 +976,7 @@
 
     function removeEntry(id, ev) {
       ev.stopPropagation();
-      state.entries = state.entries.filter(e => e.id !== id);
+      currentDay().entries = currentDay().entries.filter(e => e.id !== id);
       render();
     }
 
@@ -705,13 +984,185 @@
       return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
     }
 
+    function renderReview() {
+      ['days', 'weeks', 'years'].forEach(p => {
+        document.getElementById('seg-' + p).className = state.reviewPeriod === p ? 'seg-btn active' : 'seg-btn';
+      });
+
+      const chartEl = document.getElementById('review-chart');
+      const listEl = document.getElementById('review-list');
+      const titleEl = document.getElementById('chart-title');
+      const deltaEl = document.getElementById('chart-delta');
+
+      let points = [];
+      if (state.reviewPeriod === 'days') {
+        titleEl.textContent = 'Eating vs Weight (Past 7 Days)';
+        const diff = (daysData[0].weightKg - daysData[daysData.length - 1].weightKg).toFixed(1);
+        deltaEl.textContent = `${diff > 0 ? '+' : ''}${diff} kg · Goal ${state.goalKg.toFixed(1)} kg`;
+        points = daysData.slice().reverse().map((d, i) => {
+          const t = getTotalsForEntries(d.entries);
+          const lim = getLimitsForDay(daysData.length - 1 - i);
+          return { label: d.label.replace(' Oct', ''), weight: d.weightKg, cPct: Math.min(100, Math.round((t.c / lim.c) * 100)), pPct: Math.min(100, Math.round((t.p / lim.p) * 100)) };
+        });
+
+        listEl.innerHTML = daysData.map((d, idx) => {
+          const t = getTotalsForEntries(d.entries);
+          const lim = getLimitsForDay(idx);
+          const prev = daysData[idx + 1];
+          const wDiff = prev ? (d.weightKg - prev.weightKg).toFixed(1) : '0.0';
+          const bars = [
+            { val: t.c, max: lim.c, col: 'var(--carbs)' },
+            { val: t.p, max: lim.p, col: 'var(--protein)' },
+            { val: t.f, max: lim.f, col: 'var(--fat)' },
+            { val: t.su, max: lim.su, col: 'var(--sugar)' },
+            { val: t.sa, max: lim.sa, col: 'var(--salt)' }
+          ];
+          return `
+            <div class="review-row" onclick="jumpToDay(${idx})" title="Tap to open ${escapeHtml(d.label)}">
+              <div class="review-top">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <strong>${escapeHtml(d.label)}</strong>
+                  ${d.heavyExercise ? '<span style="color:#fbbf24;">🔥</span>' : ''}
+                  ${d.ateTooMuch ? '<span style="color:#fda4af;">😮‍💨</span>' : ''}
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="color:var(--muted);">${wDiff > 0 ? '+' + wDiff : wDiff} kg</span>
+                  <strong style="color:var(--accent);">${d.weightKg.toFixed(1)} kg</strong>
+                </div>
+              </div>
+              <div class="review-bars">
+                ${bars.map(b => {
+                  const pct = Math.min(100, Math.round((b.val / b.max) * 100));
+                  return `<div class="track"><div class="fill" style="width:${pct}%;background:${b.val > b.max ? '#ef4444' : b.col};"></div></div>`;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else if (state.reviewPeriod === 'weeks') {
+        titleEl.textContent = 'Weekly Avg Intake vs Weight';
+        deltaEl.textContent = `-2.6 kg in 5 wks · Goal ${state.goalKg.toFixed(1)} kg`;
+        points = weeksRollup.slice().reverse().map(w => ({
+          label: w.label.split(' ')[0],
+          weight: w.weightKg,
+          cPct: Math.min(100, Math.round((w.c / 200) * 100)),
+          pPct: Math.min(100, Math.round((w.p / 155) * 100))
+        }));
+
+        listEl.innerHTML = weeksRollup.map(w => `
+          <div class="review-row">
+            <div class="review-top">
+              <div>
+                <strong>${escapeHtml(w.label)}</strong>
+                <div style="color:var(--muted);font-size:12px;">${escapeHtml(w.note)}</div>
+              </div>
+              <div style="text-align:right;">
+                <strong style="color:var(--accent);">${w.weightKg.toFixed(1)} kg</strong>
+                <div style="color:var(--muted);font-size:12px;">${escapeHtml(w.delta)}</div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--muted);">
+              Avg/day: ${w.c}g C · ${w.p}g P · ${w.f}g F · ${w.su}g Su · ${w.sa}g Sa
+            </div>
+          </div>
+        `).join('');
+      } else {
+        titleEl.textContent = 'Yearly Progress: Eating vs Weight';
+        deltaEl.textContent = `-8.7 kg total · Goal ${state.goalKg.toFixed(1)} kg`;
+        points = yearsRollup.slice().reverse().map(y => ({
+          label: y.label.slice(0, 4),
+          weight: y.weightKg,
+          cPct: Math.min(100, Math.round((y.c / 220) * 100)),
+          pPct: Math.min(100, Math.round((y.p / 155) * 100))
+        }));
+
+        listEl.innerHTML = yearsRollup.map(y => `
+          <div class="review-row">
+            <div class="review-top">
+              <div>
+                <strong>${escapeHtml(y.label)}</strong>
+                <div style="color:var(--muted);font-size:12px;">${escapeHtml(y.note)}</div>
+              </div>
+              <div style="text-align:right;">
+                <strong style="color:var(--accent);">${y.weightKg.toFixed(1)} kg</strong>
+                <div style="color:var(--muted);font-size:12px;">${escapeHtml(y.delta)}</div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--muted);">
+              Avg/day: ${y.c}g C · ${y.p}g P · ${y.f}g F · ${y.su}g Su · ${y.sa}g Sa
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render SVG Chart combining Intake Bars + Weight Line
+      const w = 320, h = 110;
+      const weights = points.map(p => p.weight);
+      const minW = Math.min(...weights) - 0.5;
+      const maxW = Math.max(...weights) + 0.5;
+      const stepX = w / Math.max(1, points.length);
+
+      const barsSvg = points.map((p, i) => {
+        const x = i * stepX + stepX * 0.25;
+        const barH = Math.round((p.cPct / 100) * 65);
+        return `<rect x="${x}" y="${h - 18 - barH}" width="${stepX * 0.5}" height="${barH}" rx="3" fill="#262b36" />`;
+      }).join('');
+
+      const polyPoints = points.map((p, i) => {
+        const x = i * stepX + stepX * 0.5;
+        const y = h - 24 - ((p.weight - minW) / Math.max(0.1, maxW - minW)) * 68;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+
+      const dotsSvg = points.map((p, i) => {
+        const x = i * stepX + stepX * 0.5;
+        const y = h - 24 - ((p.weight - minW) / Math.max(0.1, maxW - minW)) * 68;
+        return `
+          <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="var(--accent)" />
+          <text x="${x.toFixed(1)}" y="${(y - 7).toFixed(1)}" fill="#f3f4f6" font-size="10" text-anchor="middle">${p.weight.toFixed(1)}</text>
+          <text x="${x.toFixed(1)}" y="${h - 4}" fill="#8e95a5" font-size="10" text-anchor="middle">${escapeHtml(p.label.slice(0, 6))}</text>
+        `;
+      }).join('');
+
+      chartEl.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:110px;overflow:visible;">
+          ${barsSvg}
+          <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${polyPoints}" />
+          ${dotsSvg}
+        </svg>
+      `;
+    }
+
     function render() {
-      const limits = getLimits();
-      const totals = getTotals();
+      const d = currentDay();
+      const limits = getLimitsForDay(state.dayIndex);
+      const totals = getTotalsForEntries(d.entries);
+
+      // Header Updates
+      document.getElementById('day-title').textContent = d.label;
+      document.getElementById('btn-next-day').style.opacity = state.dayIndex === 0 ? '0.3' : '1';
+      document.getElementById('btn-weight').textContent = `⚖️ ${d.weightKg.toFixed(1)} kg`;
+      document.getElementById('lbl-weight-day').textContent = d.label;
+      document.getElementById('lbl-cur').textContent = d.weightKg.toFixed(1) + ' kg';
+      document.getElementById('slider-cur').value = d.weightKg;
+      document.getElementById('lbl-goal').textContent = state.goalKg.toFixed(1) + ' kg';
+      document.getElementById('slider-goal').value = state.goalKg;
 
       const exBtn = document.getElementById('btn-exercise');
-      exBtn.textContent = state.heavyExercise ? '🔥 Exercise' : 'Normal';
-      exBtn.className = state.heavyExercise ? 'pill active-exercise' : 'pill';
+      exBtn.textContent = d.heavyExercise ? '🔥 Exercise' : 'Normal';
+      exBtn.className = d.heavyExercise ? 'pill active-exercise' : 'pill';
+
+      const revBtn = document.getElementById('btn-review');
+      revBtn.className = state.viewMode === 'review' ? 'pill active-review' : 'pill';
+      revBtn.textContent = state.viewMode === 'review' ? '← Log' : 'Review';
+
+      document.getElementById('log-view').style.display = state.viewMode === 'log' ? 'flex' : 'none';
+      document.getElementById('review-view').style.display = state.viewMode === 'review' ? 'flex' : 'none';
+
+      if (state.viewMode === 'review') {
+        renderReview();
+        return;
+      }
 
       const nutrients = [
         { short: 'Carbs', val: totals.c, max: limits.c, unit: 'g', color: 'var(--carbs)' },
@@ -741,7 +1192,7 @@
         details.innerHTML = nutrients.map(n => `
           <div class="detail-row">
             <span style="color:${n.color};font-weight:600;">${n.short}</span>
-            <span>${n.val}${n.unit} <span style="color:var(--muted);">/ ${n.max}${n.unit}${state.ateTooMuch ? ' (tmrw -15%)' : ''}</span></span>
+            <span>${n.val}${n.unit} <span style="color:var(--muted);">/ ${n.max}${n.unit}</span></span>
           </div>
         `).join('');
       }
@@ -779,9 +1230,19 @@
         }).join('');
       }
 
-      // 3. Food List
+      // 3. Recorded Weight Row + Food List
       const listEl = document.getElementById('food-list');
-      listEl.innerHTML = state.entries.map(e => {
+      const weightRowHtml = `
+        <div class="weight-log-row" onclick="toggleWeightDrawer()">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>⚖️</span>
+            <span style="font-weight:600;color:var(--accent);">Recorded weight (${escapeHtml(d.label)}): ${d.weightKg.toFixed(1)} kg</span>
+          </div>
+          <span style="color:var(--muted);">Goal ${state.goalKg.toFixed(1)} kg · Edit</span>
+        </div>
+      `;
+
+      listEl.innerHTML = weightRowHtml + d.entries.map(e => {
         const isOpen = state.selectedEntryId === e.id;
         return `
           <div class="food-item" onclick="state.selectedEntryId = state.selectedEntryId === ${e.id} ? null : ${e.id}; render();">
@@ -812,9 +1273,9 @@
       const tmBtn = document.getElementById('btn-too-much');
       const tmText = document.getElementById('too-much-text');
       const tmAct = document.getElementById('too-much-action');
-      if (state.ateTooMuch) {
+      if (d.ateTooMuch) {
         tmBtn.className = 'balance-btn active';
-        tmText.textContent = '✓ Tomorrow’s limits rebalanced (-15%)';
+        tmText.textContent = '✓ Next day’s limits rebalanced (-15%)';
         tmAct.textContent = 'Undo';
       } else {
         tmBtn.className = 'balance-btn';
