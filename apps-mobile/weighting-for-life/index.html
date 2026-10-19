@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weighting For Life — iOS Visual Concept</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Weighting" />
+  <meta name="theme-color" content="#f7f8fb" />
+  <title>Weighting For Life</title>
   <style>
     :root {
       /* Dribbble 19193291 Inspired Pastel & Light UI Palette */
@@ -772,6 +776,26 @@
       background: var(--tint-peach);
       color: var(--accent-dark);
     }
+
+    /* Native Full-Screen iPhone Mode when opened on a phone or added to iOS Home Screen */
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+        background: var(--phone-bg);
+      }
+      .caption,
+      .mode-switcher,
+      .statusbar {
+        display: none;
+      }
+      .phone {
+        max-width: 100%;
+        min-height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+        padding: max(12px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+      }
+    }
   </style>
 </head>
 <body>
@@ -943,7 +967,19 @@
       </div>
 
       <!-- Historical Comparison Rows (Tap any day to open its log) -->
-      <div id="review-list" style="display:flex;flex-direction:column;gap:7px;overflow-y:auto;max-height:365px;"></div>
+      <div id="review-list" style="display:flex;flex-direction:column;gap:7px;overflow-y:auto;max-height:325px;"></div>
+
+      <!-- Indexed Storage Inspector / JSON Export Bar (Version 1 Data Layer) -->
+      <div class="card" style="padding:9px 12px;display:flex;flex-direction:column;gap:6px;font-size:11px;background:#ffffff;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:var(--muted);font-weight:700;">🗄️ Indexed Store: <code style="color:var(--text);">daysByDate["YYYY-MM-DD"]</code></span>
+          <div style="display:flex;gap:4px;">
+            <button class="pill" style="height:22px;min-height:22px;padding:0 8px;font-size:11px;" onclick="toggleStorageInspector()">Inspect JSON</button>
+            <button class="pill active-exercise" style="height:22px;min-height:22px;padding:0 8px;font-size:11px;" onclick="copyExportedJSON(this)">Export</button>
+          </div>
+        </div>
+        <pre id="storage-inspector" style="display:none;margin:0;padding:8px;background:#f7f8fb;border:1px solid var(--border);border-radius:10px;font-size:10px;max-height:130px;overflow:auto;color:var(--text);"></pre>
+      </div>
     </div>
 
     <!-- Dribbble-Inspired Floating White Capsule Bottom Navigation Dock -->
@@ -957,9 +993,12 @@
   </div>
 
   <script>
-    // Historical + Today dataset (index 0 = Today, 1 = Yesterday, etc.)
-    const daysData = [
+    const STORAGE_KEY = 'weighting-for-life:v1';
+
+    // Default 7-Day Seed Dataset keyed by canonical ISO-8601 dateKey ("YYYY-MM-DD")
+    const defaultDaysSeed = [
       {
+        dateKey: '2026-10-19',
         label: 'Today',
         shortDate: 'Mon 19 Oct',
         weightKg: 85.4,
@@ -972,6 +1011,7 @@
         ]
       },
       {
+        dateKey: '2026-10-18',
         label: 'Yesterday',
         shortDate: 'Sun 18 Oct',
         weightKg: 85.6,
@@ -984,6 +1024,7 @@
         ]
       },
       {
+        dateKey: '2026-10-17',
         label: 'Sat 17 Oct',
         shortDate: 'Sat 17 Oct',
         weightKg: 85.9,
@@ -996,6 +1037,7 @@
         ]
       },
       {
+        dateKey: '2026-10-16',
         label: 'Fri 16 Oct',
         shortDate: 'Fri 16 Oct',
         weightKg: 85.7,
@@ -1008,6 +1050,7 @@
         ]
       },
       {
+        dateKey: '2026-10-15',
         label: 'Thu 15 Oct',
         shortDate: 'Thu 15 Oct',
         weightKg: 86.0,
@@ -1020,6 +1063,7 @@
         ]
       },
       {
+        dateKey: '2026-10-14',
         label: 'Wed 14 Oct',
         shortDate: 'Wed 14 Oct',
         weightKg: 86.2,
@@ -1031,6 +1075,7 @@
         ]
       },
       {
+        dateKey: '2026-10-13',
         label: 'Tue 13 Oct',
         shortDate: 'Tue 13 Oct',
         weightKg: 86.4,
@@ -1042,6 +1087,89 @@
         ]
       }
     ];
+
+    const defaultRoutinesSeed = [
+      { id: 'r1', icon: '☕', shortLabel: 'Flat white', name: 'Flat white, standard milk', freq: 'Every day', time: '7:45 am', reason: 'Spotted 6/7 mornings in Week 1', active: true, c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+      { id: 'r2', icon: '🥣', shortLabel: 'Morning oats', name: 'Oats & gold kiwifruit', freq: 'Weekdays', time: '8:10 am', reason: 'Spotted 4 weekday mornings in Week 1', active: true, c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
+      { id: 'r3', icon: '🥚', shortLabel: 'Eggs on Vogels', name: '2 poached eggs on Vogels', freq: 'Tue / Thu / Sun', time: '8:15 am', reason: 'Spotted 3 mornings in Week 1', active: true, c: 32, p: 21, f: 12, su: 3, sa: 1.1 },
+      { id: 'r4', icon: '🌯', shortLabel: 'Chicken wrap', name: 'Chicken & avocado wrap', freq: 'Weekdays', time: '12:40 pm', reason: 'Spotted 3 lunches in Week 1', active: false, c: 38, p: 42, f: 18, su: 4, sa: 1.4 },
+      { id: 'r5', icon: '🐟', shortLabel: 'Salmon & kumara', name: 'King salmon & baked kumara', freq: '2× / week', time: '6:50 pm', reason: 'Spotted 2 dinners in Week 1', active: false, c: 35, p: 34, f: 26, su: 9, sa: 0.3 }
+    ];
+
+    // Version 1 Indexed Storage Engine (O(1) lookup by "YYYY-MM-DD" + range/year queries + localStorage persistence)
+    const WFLStore = {
+      db: null,
+      init() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.schemaVersion === 1 && parsed.daysByDate && parsed.dateIndexDesc) {
+              this.db = parsed;
+              return;
+            }
+          }
+        } catch (_) {}
+        this.resetToDefault();
+      },
+      resetToDefault() {
+        const daysByDate = {};
+        const dateIndexDesc = [];
+        JSON.parse(JSON.stringify(defaultDaysSeed)).forEach(d => {
+          daysByDate[d.dateKey] = d;
+          dateIndexDesc.push(d.dateKey);
+        });
+        dateIndexDesc.sort((a, b) => b.localeCompare(a));
+        this.db = {
+          schemaVersion: 1,
+          updatedAtISO: new Date().toISOString(),
+          profile: { onboardingStep: 1, baselineCompleted: true, goalWeightKg: 78.0 },
+          daysByDate,
+          dateIndexDesc,
+          routines: JSON.parse(JSON.stringify(defaultRoutinesSeed))
+        };
+        this.save();
+      },
+      save() {
+        this.db.updatedAtISO = new Date().toISOString();
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(this.db));
+        } catch (_) {}
+      },
+      // Direct O(1) lookup of any past day by canonical ISO date ("YYYY-MM-DD")
+      getDay(dateKey) {
+        return this.db.daysByDate[dateKey] || null;
+      },
+      // All recorded days ordered newest -> oldest
+      allDaysDescending() {
+        return this.db.dateIndexDesc.map(k => this.db.daysByDate[k]).filter(Boolean);
+      },
+      // All recorded days within an inclusive ISO date range ("YYYY-MM-DD" .. "YYYY-MM-DD"), chronological
+      getDaysInRange(startDateKey, endDateKey) {
+        const lo = startDateKey < endDateKey ? startDateKey : endDateKey;
+        const hi = startDateKey < endDateKey ? endDateKey : startDateKey;
+        return this.db.dateIndexDesc
+          .filter(k => k >= lo && k <= hi)
+          .sort()
+          .map(k => this.db.daysByDate[k]);
+      },
+      // All recorded days in a specific calendar year (e.g. 2026)
+      getDaysInYear(year) {
+        const prefix = String(year) + '-';
+        return this.db.dateIndexDesc
+          .filter(k => k.startsWith(prefix))
+          .sort()
+          .map(k => this.db.daysByDate[k]);
+      },
+      exportJSON() {
+        return JSON.stringify(this.db, null, 2);
+      }
+    };
+    WFLStore.init();
+    window.WFLStore = WFLStore;
+
+    const daysData = WFLStore.allDaysDescending();
+    const routinesList = WFLStore.db.routines;
 
     const weeksRollup = [
       { label: 'This Week (Oct 13–19)', weightKg: 85.4, delta: '-0.8 kg', c: 142, p: 138, f: 58, su: 31, sa: 3.6, note: 'Daily avg · 2× 🔥 Exercise' },
@@ -1057,25 +1185,18 @@
       { label: '2024 (Daily Avg · Full Year)', weightKg: 94.1, delta: '—', c: 188, p: 120, f: 64, su: 42, sa: 4.6, note: 'Avg per day · Initial logs' }
     ];
 
-    const routinesList = [
-      { id: 'r1', icon: '☕', shortLabel: 'Flat white', name: 'Flat white, standard milk', freq: 'Every day', time: '7:45 am', reason: 'Spotted 6/7 mornings in Week 1', active: true, c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
-      { id: 'r2', icon: '🥣', shortLabel: 'Morning oats', name: 'Oats & gold kiwifruit', freq: 'Weekdays', time: '8:10 am', reason: 'Spotted 4 weekday mornings in Week 1', active: true, c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
-      { id: 'r3', icon: '🥚', shortLabel: 'Eggs on Vogels', name: '2 poached eggs on Vogels', freq: 'Tue / Thu / Sun', time: '8:15 am', reason: 'Spotted 3 mornings in Week 1', active: true, c: 32, p: 21, f: 12, su: 3, sa: 1.1 },
-      { id: 'r4', icon: '🌯', shortLabel: 'Chicken wrap', name: 'Chicken & avocado wrap', freq: 'Weekdays', time: '12:40 pm', reason: 'Spotted 3 lunches in Week 1', active: false, c: 38, p: 42, f: 18, su: 4, sa: 1.4 },
-      { id: 'r5', icon: '🐟', shortLabel: 'Salmon & kumara', name: 'King salmon & baked kumara', freq: '2× / week', time: '6:50 pm', reason: 'Spotted 2 dinners in Week 1', active: false, c: 35, p: 34, f: 26, su: 9, sa: 0.3 }
-    ];
-
     const freqOptions = ['Every day', 'Weekdays', 'Weekends', '🔥 Exercise days', 'Tue / Thu / Sun', '2× / week'];
     const routineTimes = ['7:45 am', '8:10 am', '12:40 pm', '6:50 pm'];
 
     const state = {
       dayIndex: 0, // 0 = Today, 1 = Yesterday, etc.
-      goalKg: 78.0,
+      goalKg: WFLStore.db.profile.goalWeightKg || 78.0,
       viewMode: 'log', // 'onboarding' | 'log' | 'routines' | 'review'
-      onboardingStep: 1, // 1: Week 1 Baseline | 2: Eating Behaviours | 3: Goal Weight | 4: Suggested Routines
+      onboardingStep: WFLStore.db.profile.onboardingStep || 1, // 1: Week 1 Baseline | 2: Eating Behaviours | 3: Goal Weight | 4: Suggested Routines
       reviewPeriod: 'days', // 'days' | 'weeks' | 'years'
       intakeExpanded: false,
       weightDrawerOpen: false,
+      storageInspectorOpen: false,
       selectedEntryId: null,
       searchQuery: '',
       matchLimit: 10,
@@ -1233,7 +1354,30 @@
 
     function setOnboardingStep(step) {
       state.onboardingStep = Math.max(1, Math.min(4, step));
+      WFLStore.db.profile.onboardingStep = state.onboardingStep;
+      WFLStore.save();
       render();
+    }
+
+    function toggleStorageInspector() {
+      state.storageInspectorOpen = !state.storageInspectorOpen;
+      const el = document.getElementById('storage-inspector');
+      if (el) {
+        el.style.display = state.storageInspectorOpen ? 'block' : 'none';
+        if (state.storageInspectorOpen) el.textContent = WFLStore.exportJSON();
+      }
+    }
+
+    function copyExportedJSON(btn) {
+      const json = WFLStore.exportJSON();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(json).catch(() => {});
+      }
+      if (btn) {
+        const prev = btn.textContent;
+        btn.textContent = '✓ Copied';
+        setTimeout(() => { btn.textContent = prev; }, 1200);
+      }
     }
 
     function toggleReviewView() {
@@ -1255,22 +1399,28 @@
     function nudgeTodayWeight(delta) {
       const d = currentDay();
       d.weightKg = +(d.weightKg + delta).toFixed(1);
+      WFLStore.save();
       render();
     }
 
     function setTodayWeight(val) {
       const d = currentDay();
       d.weightKg = +Number(val).toFixed(1);
+      WFLStore.save();
       render();
     }
 
     function setGoalWeight(val) {
       state.goalKg = +Number(val).toFixed(1);
+      WFLStore.db.profile.goalWeightKg = state.goalKg;
+      WFLStore.save();
       render();
     }
 
     function nudgeGoalWeight(delta) {
       state.goalKg = +(state.goalKg + delta).toFixed(1);
+      WFLStore.db.profile.goalWeightKg = state.goalKg;
+      WFLStore.save();
       render();
     }
 
@@ -1300,6 +1450,7 @@
         time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
         c: m.c, p: m.p, f: m.f, su: m.su, sa: m.sa
       });
+      WFLStore.save();
       clearSearch();
     }
 
@@ -1310,11 +1461,13 @@
 
     function toggleExercise() {
       currentDay().heavyExercise = !currentDay().heavyExercise;
+      WFLStore.save();
       render();
     }
 
     function toggleTooMuch() {
       currentDay().ateTooMuch = !currentDay().ateTooMuch;
+      WFLStore.save();
       render();
     }
 
@@ -1330,6 +1483,7 @@
         time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
         c, p, f, su, sa
       });
+      WFLStore.save();
       render();
     }
 
@@ -1337,6 +1491,7 @@
       const r = routinesList.find(item => item.id === id);
       if (r) {
         r.active = !r.active;
+        WFLStore.save();
         render();
       }
     }
@@ -1347,6 +1502,7 @@
       if (!r) return;
       const curIdx = freqOptions.indexOf(r.freq);
       r.freq = freqOptions[(curIdx + 1) % freqOptions.length];
+      WFLStore.save();
       render();
     }
 
@@ -1356,6 +1512,7 @@
       if (!r) return;
       const curIdx = routineTimes.indexOf(r.time);
       r.time = routineTimes[(curIdx + 1) % routineTimes.length];
+      WFLStore.save();
       render();
     }
 
@@ -1377,12 +1534,14 @@
         active: true,
         c: item.c, p: item.p, f: item.f, su: item.su, sa: item.sa
       });
+      WFLStore.save();
       render();
     }
 
     function removeEntry(id, ev) {
       ev.stopPropagation();
       currentDay().entries = currentDay().entries.filter(e => e.id !== id);
+      WFLStore.save();
       render();
     }
 
