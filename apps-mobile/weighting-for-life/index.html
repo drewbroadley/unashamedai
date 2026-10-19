@@ -985,26 +985,34 @@
     }
 
     function renderNutrientFooter(vals, lim, isAvg = false) {
-      const unit = isAvg ? 'g/d' : 'g';
       const items = [
-        { short: 'C', val: vals.c, max: lim.c, unit, col: 'var(--carbs)' },
-        { short: 'P', val: vals.p, max: lim.p, unit, col: 'var(--protein)' },
-        { short: 'F', val: vals.f, max: lim.f, unit, col: 'var(--fat)' },
-        { short: 'Su', val: vals.su, max: lim.su, unit, col: 'var(--sugar)' },
-        { short: 'Sa', val: vals.sa, max: lim.sa, unit, col: 'var(--salt)' }
+        { short: 'C', val: vals.c, max: lim.c, unit: 'g', col: 'var(--carbs)' },
+        { short: 'P', val: vals.p, max: lim.p, unit: 'g', col: 'var(--protein)' },
+        { short: 'F', val: vals.f, max: lim.f, unit: 'g', col: 'var(--fat)' },
+        { short: 'Su', val: vals.su, max: lim.su, unit: 'g', col: 'var(--sugar)' },
+        { short: 'Sa', val: vals.sa, max: lim.sa, unit: 'g', col: 'var(--salt)' }
       ];
       return `
-        <div class="review-bars">
+        ${isAvg ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);padding-top:6px;border-top:1px solid var(--border);">
+            <span style="font-weight:600;color:var(--text);">Daily Average Intake</span>
+            <span>Avg / day vs limit</span>
+          </div>
+        ` : ''}
+        <div class="review-bars" style="${isAvg ? 'border-top:none;padding-top:2px;' : ''}">
           ${items.map(b => {
             const pct = Math.min(100, Math.round((b.val / b.max) * 100));
             return `
-              <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;flex-direction:column;gap:3px;">
                 <div style="display:flex;justify-content:space-between;font-size:12px;">
                   <span style="color:${b.col};font-weight:700;">${b.short}</span>
-                  <span style="color:var(--muted);">${b.val}${b.unit}</span>
+                  <span style="color:var(--text);font-weight:600;">${b.val}${b.unit}</span>
                 </div>
                 <div class="track">
                   <div class="fill" style="width:${pct}%;background:${b.col};"></div>
+                </div>
+                <div style="font-size:11px;color:var(--muted);">
+                  ${isAvg ? `Avg · ${pct}%` : `${pct}% of ${b.max}g`}
                 </div>
               </div>
             `;
@@ -1068,7 +1076,7 @@
           `;
         }).join('');
       } else if (state.reviewPeriod === 'weeks') {
-        titleEl.textContent = 'Weekly Daily-Avg Intake vs Weight';
+        titleEl.textContent = 'Weekly Average Intake vs Avg Weight';
         deltaEl.textContent = `-2.6 kg in 5 wks · Goal ${state.goalKg.toFixed(1)} kg`;
         points = weeksRollup.slice().reverse().map(w => ({
           label: w.label.split(' ')[0],
@@ -1090,7 +1098,7 @@
                 <div style="color:var(--muted);font-size:12px;">${escapeHtml(w.note)}</div>
               </div>
               <div style="text-align:right;">
-                <strong style="color:var(--accent);">${w.weightKg.toFixed(1)} kg</strong>
+                <strong style="color:var(--accent);">Avg ${w.weightKg.toFixed(1)} kg</strong>
                 <div style="color:var(--muted);font-size:12px;">${escapeHtml(w.delta)}</div>
               </div>
             </div>
@@ -1098,7 +1106,7 @@
           </div>
         `).join('');
       } else {
-        titleEl.textContent = 'Yearly Daily-Avg Intake vs Weight';
+        titleEl.textContent = 'Yearly Average Intake vs Avg Weight';
         deltaEl.textContent = `-8.7 kg total · Goal ${state.goalKg.toFixed(1)} kg`;
         points = yearsRollup.slice().reverse().map(y => ({
           label: y.label.slice(0, 4),
@@ -1120,7 +1128,7 @@
                 <div style="color:var(--muted);font-size:12px;">${escapeHtml(y.note)}</div>
               </div>
               <div style="text-align:right;">
-                <strong style="color:var(--accent);">${y.weightKg.toFixed(1)} kg</strong>
+                <strong style="color:var(--accent);">Avg ${y.weightKg.toFixed(1)} kg</strong>
                 <div style="color:var(--muted);font-size:12px;">${escapeHtml(y.delta)}</div>
               </div>
             </div>
