@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weighting For Life — iOS Visual Concept</title>
+  <style>
+    :root {
+      --bg: #f4f4f6;
+      --phone-bg: #0f1115;
+      --card: #181b22;
+      --card-hover: #1f232c;
+      --border: #262b36;
+      --text: #f3f4f6;
+      --muted: #8e95a5;
+      --carbs: #f59e0b;
+      --protein: #f43f5e;
+      --fat: #6366f1;
+      --sugar: #ec4899;
+      --salt: #06b6d4;
+      --accent: #10b981;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px 16px 48px;
+      background: var(--bg);
+      font-family: var(--font);
+      color: #1f2937;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .caption {
+      max-width: 390px;
+      width: 100%;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .caption strong {
+      color: #111827;
+      font-size: 15px;
+    }
+    .phone {
+      width: 100%;
+      max-width: 380px;
+      background: var(--phone-bg);
+      color: var(--text);
+      border-radius: 44px;
+      padding: 14px 16px 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 0 0 8px #262930;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 700px;
+    }
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 10px 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2px;
+    }
+    .title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .pills {
+      display: flex;
+      gap: 6px;
+    }
+    .pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pill:hover { border-color: #3f4656; color: var(--text); }
+    .pill.active-exercise {
+      background: rgba(245, 158, 11, 0.16);
+      border-color: rgba(245, 158, 11, 0.45);
+      color: #fbbf24;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    /* 1. Indicative Daily Intake Strip */
+    .intake-strip {
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.15s ease;
+    }
+    .intake-strip:hover { border-color: #384152; }
+    .bars-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .mini-col {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .mini-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .track {
+      height: 5px;
+      background: #262b36;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .chevron {
+      font-size: 12px;
+      color: var(--muted);
+      padding-left: 2px;
+    }
+    .expanded-details {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    /* Weight Drawer */
+    .drawer {
+      background: #14171d;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .slider-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+    /* 2. Plain English Log Input */
+    .input-box {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .text-input {
+      flex: 1;
+      background: #111318;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+    .text-input:focus { border-color: var(--accent); }
+    .btn-add {
+      background: var(--accent);
+      color: #052e16;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .routines-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .routines-row::-webkit-scrollbar { display: none; }
+    .routine-chip {
+      white-space: nowrap;
+      background: #14171d;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .routine-chip:hover { color: var(--text); border-color: #3f4656; }
+    /* 3. Clean Food List */
+    .food-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .food-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .food-item:hover { background: var(--card-hover); }
+    .food-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .food-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .food-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .food-macros {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    /* 4. Bottom Balance Button */
+    .balance-btn {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .balance-btn.active {
+      background: rgba(244, 63, 94, 0.14);
+      border-color: rgba(244, 63, 94, 0.45);
+      color: #fda4af;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="caption">
+    <strong>Weighting For Life</strong>
+    <span>iOS Concept · Local iCloud · NZFCD</span>
+  </div>
+
+  <div class="phone">
+    <!-- iOS Status Bar -->
+    <div class="statusbar">
+      <span>9:41</span>
+      <span>☁️ iCloud</span>
+    </div>
+
+    <!-- 1. Minimal Header -->
+    <div class="header">
+      <div class="title">Today</div>
+      <div class="pills">
+        <button class="pill" id="btn-weight" onclick="toggleWeightDrawer()">86 → 78 kg</button>
+        <button class="pill" id="btn-exercise" onclick="toggleExercise()">Normal</button>
+      </div>
+    </div>
+
+    <!-- Optional Weight Goal Drawer (hidden unless tapped) -->
+    <div id="weight-drawer" class="drawer" style="display:none;">
+      <div class="slider-row">
+        <span style="width:70px;color:var(--muted);">Current</span>
+        <input type="range" min="50" max="130" value="86" oninput="updateWeight(this.value, null)" />
+        <strong id="lbl-cur" style="width:48px;text-align:right;">86 kg</strong>
+      </div>
+      <div class="slider-row">
+        <span style="width:70px;color:var(--muted);">Goal</span>
+        <input type="range" min="50" max="130" value="78" oninput="updateWeight(null, this.value)" />
+        <strong id="lbl-goal" style="width:48px;text-align:right;color:var(--accent);">78 kg</strong>
+      </div>
+    </div>
+
+    <!-- 2. Tiny Indicative Daily Intake Strip (Tap to expand) -->
+    <div class="card intake-strip" onclick="toggleIntake()">
+      <div class="bars-row" id="bars-row"></div>
+      <div id="intake-details" class="expanded-details" style="display:none;"></div>
+    </div>
+
+    <!-- 3. Plain-English Quick Log + 1-Tap Routines -->
+    <div class="card input-box">
+      <div class="input-row">
+        <input
+          id="food-input"
+          class="text-input"
+          type="text"
+          placeholder="Plain English (e.g. 2 eggs on Vogels)"
+          onkeydown="if(event.key==='Enter') addFood()"
+        />
+        <button class="pill" id="btn-time" onclick="cycleTime()" title="Tap to change time">Now</button>
+        <button class="btn-add" onclick="addFood()">Add</button>
+      </div>
+
+      <div class="routines-row">
+        <button class="routine-chip" onclick="quickRoutine('☕', 'Flat white', 11, 9, 3, 11, 0.3)">☕ Flat white</button>
+        <button class="routine-chip" onclick="quickRoutine('🥣', 'Oats & gold kiwifruit', 45, 8, 4, 15, 0.1)">🥣 Morning oats</button>
+        <button class="routine-chip" onclick="quickRoutine('🥚', '2 poached eggs on Vogels', 32, 21, 12, 3, 1.1)">🥚 Eggs on Vogels</button>
+      </div>
+    </div>
+
+    <!-- 4. Clean Today's Food List (tap row to peek nutrients) -->
+    <div class="food-list" id="food-list"></div>
+
+    <!-- 5. Single "I ate too much" Next-Day Rebalance Button -->
+    <button class="balance-btn" id="btn-too-much" onclick="toggleTooMuch()">
+      <span id="too-much-text">😮‍💨 I ate too much today</span>
+      <span id="too-much-action">Balance tomorrow</span>
+    </button>
+  </div>
+
+  <script>
+    const state = {
+      currentKg: 86,
+      goalKg: 78,
+      heavyExercise: false,
+      ateTooMuch: false,
+      intakeExpanded: false,
+      weightDrawerOpen: false,
+      selectedEntryId: null,
+      timeOptions: ['Now', '8:00 am', '12:30 pm', 'Yesterday'],
+      timeIndex: 0,
+      entries: [
+        { id: 1, icon: '☕', name: 'Flat white', time: '7:45 am', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+        { id: 2, icon: '🥣', name: 'Oats & gold kiwifruit', time: '8:10 am', c: 45, p: 8, f: 4, su: 15, sa: 0.1 },
+        { id: 3, icon: '🌯', name: 'Chicken & avocado wrap', time: '12:40 pm', c: 38, p: 42, f: 18, su: 4, sa: 1.4 }
+      ]
+    };
+
+    const nzfcdCatalog = [
+      { match: ['egg', 'eggs'], icon: '🥚', name: '2 poached eggs', c: 1, p: 13, f: 10, su: 0, sa: 0.4 },
+      { match: ['vogel', 'toast', 'bread'], icon: '🍞', name: 'Vogels toast (2 slices)', c: 31, p: 8, f: 3, su: 2, sa: 0.7 },
+      { match: ['flat white', 'coffee', 'latte'], icon: '☕', name: 'Flat white', c: 11, p: 9, f: 3, su: 11, sa: 0.3 },
+      { match: ['pie', 'mince'], icon: '🥧', name: 'Mince & cheese pie', c: 42, p: 18, f: 25, su: 2, sa: 1.8 },
+      { match: ['kiwi', 'kiwifruit'], icon: '🥝', name: 'Gold kiwifruit', c: 15, p: 1, f: 0, su: 13, sa: 0.0 },
+      { match: ['salmon', 'fish'], icon: '🐟', name: 'King salmon fillet', c: 0, p: 32, f: 26, su: 0, sa: 0.2 },
+      { match: ['kumara', 'potato'], icon: '🍠', name: 'Baked kumara', c: 37, p: 2, f: 0, su: 10, sa: 0.1 }
+    ];
+
+    function getLimits() {
+      const baseKcal = Math.max(1350, state.currentKg * 28 - (state.goalKg < state.currentKg ? 380 : 0));
+      let c = Math.round((baseKcal * 0.40) / 4);
+      let p = Math.round(state.currentKg * 1.8);
+      let f = Math.round((baseKcal * 0.28) / 9);
+      let su = 45;
+      let sa = 5.0;
+
+      if (state.heavyExercise) {
+        c += 60; p += 15; f += 8; su += 15; sa = +(sa + 1.2).toFixed(1);
+      }
+      if (state.ateTooMuch) {
+        c = Math.round(c * 0.85);
+        f = Math.round(f * 0.85);
+        su = Math.round(su * 0.85);
+        sa = +(sa * 0.85).toFixed(1);
+      }
+      return { c, p, f, su, sa };
+    }
+
+    function getTotals() {
+      return state.entries.reduce((acc, e) => ({
+        c: acc.c + e.c,
+        p: acc.p + e.p,
+        f: acc.f + e.f,
+        su: acc.su + e.su,
+        sa: +(acc.sa + e.sa).toFixed(1)
+      }), { c: 0, p: 0, f: 0, su: 0, sa: 0 });
+    }
+
+    function toggleIntake() {
+      state.intakeExpanded = !state.intakeExpanded;
+      render();
+    }
+
+    function toggleWeightDrawer() {
+      state.weightDrawerOpen = !state.weightDrawerOpen;
+      document.getElementById('weight-drawer').style.display = state.weightDrawerOpen ? 'flex' : 'none';
+    }
+
+    function updateWeight(cur, goal) {
+      if (cur !== null) state.currentKg = Number(cur);
+      if (goal !== null) state.goalKg = Number(goal);
+      document.getElementById('lbl-cur').textContent = state.currentKg + ' kg';
+      document.getElementById('lbl-goal').textContent = state.goalKg + ' kg';
+      document.getElementById('btn-weight').textContent = state.currentKg + ' → ' + state.goalKg + ' kg';
+      render();
+    }
+
+    function toggleExercise() {
+      state.heavyExercise = !state.heavyExercise;
+      render();
+    }
+
+    function toggleTooMuch() {
+      state.ateTooMuch = !state.ateTooMuch;
+      render();
+    }
+
+    function cycleTime() {
+      state.timeIndex = (state.timeIndex + 1) % state.timeOptions.length;
+      document.getElementById('btn-time').textContent = state.timeOptions[state.timeIndex];
+    }
+
+    function quickRoutine(icon, name, c, p, f, su, sa) {
+      state.entries.unshift({
+        id: Date.now() + Math.random(),
+        icon, name,
+        time: state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex],
+        c, p, f, su, sa
+      });
+      render();
+    }
+
+    function addFood() {
+      const input = document.getElementById('food-input');
+      const raw = input.value.trim();
+      if (!raw) return;
+
+      const lower = raw.toLowerCase();
+      const matched = nzfcdCatalog.filter(item => item.match.some(k => lower.includes(k)));
+      const timeStr = state.timeOptions[state.timeIndex] === 'Now' ? '2:24 pm' : state.timeOptions[state.timeIndex];
+
+      if (matched.length > 0) {
+        matched.forEach((m, idx) => {
+          state.entries.unshift({
+            id: Date.now() + idx,
+            icon: m.icon,
+            name: m.name,
+            time: timeStr,
+            c: m.c, p: m.p, f: m.f, su: m.su, sa: m.sa
+          });
+        });
+      } else {
+        state.entries.unshift({
+          id: Date.now(),
+          icon: '🍽️',
+          name: raw,
+          time: timeStr,
+          c: 24, p: 14, f: 9, su: 5, sa: 0.6
+        });
+      }
+
+      input.value = '';
+      render();
+    }
+
+    function removeEntry(id, ev) {
+      ev.stopPropagation();
+      state.entries = state.entries.filter(e => e.id !== id);
+      render();
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+    }
+
+    function render() {
+      const limits = getLimits();
+      const totals = getTotals();
+
+      const exBtn = document.getElementById('btn-exercise');
+      exBtn.textContent = state.heavyExercise ? '🔥 Exercise' : 'Normal';
+      exBtn.className = state.heavyExercise ? 'pill active-exercise' : 'pill';
+
+      const nutrients = [
+        { short: 'Carbs', val: totals.c, max: limits.c, unit: 'g', color: 'var(--carbs)' },
+        { short: 'Protein', val: totals.p, max: limits.p, unit: 'g', color: 'var(--protein)' },
+        { short: 'Fat', val: totals.f, max: limits.f, unit: 'g', color: 'var(--fat)' },
+        { short: 'Sugar', val: totals.su, max: limits.su, unit: 'g', color: 'var(--sugar)' },
+        { short: 'Salt', val: totals.sa, max: limits.sa, unit: 'g', color: 'var(--salt)' }
+      ];
+
+      // 1. Indicative Strip
+      const barsRow = document.getElementById('bars-row');
+      barsRow.innerHTML = nutrients.map(n => {
+        const pct = Math.min(100, Math.round((n.val / n.max) * 100));
+        return `
+          <div class="mini-col">
+            <div class="mini-label"><span>${n.short}</span></div>
+            <div class="track">
+              <div class="fill" style="width:${pct}%;background:${n.val > n.max ? '#ef4444' : n.color};"></div>
+            </div>
+          </div>
+        `;
+      }).join('') + `<span class="chevron">${state.intakeExpanded ? '▲' : '▼'}</span>`;
+
+      const details = document.getElementById('intake-details');
+      details.style.display = state.intakeExpanded ? 'flex' : 'none';
+      if (state.intakeExpanded) {
+        details.innerHTML = nutrients.map(n => `
+          <div class="detail-row">
+            <span style="color:${n.color};font-weight:600;">${n.short}</span>
+            <span>${n.val}${n.unit} <span style="color:var(--muted);">/ ${n.max}${n.unit}${state.ateTooMuch ? ' (tmrw -15%)' : ''}</span></span>
+          </div>
+        `).join('');
+      }
+
+      // 2. Food List
+      const listEl = document.getElementById('food-list');
+      listEl.innerHTML = state.entries.map(e => {
+        const isOpen = state.selectedEntryId === e.id;
+        return `
+          <div class="food-item" onclick="state.selectedEntryId = state.selectedEntryId === ${e.id} ? null : ${e.id}; render();">
+            <div class="food-main">
+              <div class="food-left">
+                <span>${escapeHtml(e.icon)}</span>
+                <span>${escapeHtml(e.name)}</span>
+              </div>
+              <div class="food-right">
+                <span>${escapeHtml(e.time)}</span>
+                <span onclick="removeEntry(${e.id}, event)" style="padding:0 4px;cursor:pointer;">×</span>
+              </div>
+            </div>
+            ${isOpen ? `
+              <div class="food-macros">
+                <span>${e.c}g Carbs</span>
+                <span>${e.p}g Protein</span>
+                <span>${e.f}g Fat</span>
+                <span>${e.su}g Sugar</span>
+                <span>${e.sa}g Salt</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // 3. Bottom "I ate too much" button
+      const tmBtn = document.getElementById('btn-too-much');
+      const tmText = document.getElementById('too-much-text');
+      const tmAct = document.getElementById('too-much-action');
+      if (state.ateTooMuch) {
+        tmBtn.className = 'balance-btn active';
+        tmText.textContent = '✓ Tomorrow’s limits rebalanced (-15%)';
+        tmAct.textContent = 'Undo';
+      } else {
+        tmBtn.className = 'balance-btn';
+        tmText.textContent = '😮‍💨 I ate too much today';
+        tmAct.textContent = 'Balance tomorrow';
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
