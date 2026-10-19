@@ -6,122 +6,195 @@
   <title>Weighting For Life — iOS Visual Concept</title>
   <style>
     :root {
-      --bg: #f4f4f6;
-      --phone-bg: #0f1115;
-      --card: #181b22;
-      --card-hover: #1f232c;
-      --border: #262b36;
-      --text: #f3f4f6;
-      --muted: #8e95a5;
-      --carbs: #f59e0b;
-      --protein: #f43f5e;
-      --fat: #6366f1;
-      --sugar: #ec4899;
-      --salt: #06b6d4;
-      --accent: #10b981;
-      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      /* Dribbble 19193291 Inspired Pastel & Light UI Palette */
+      --bg: #e4e7f1;
+      --phone-bg: #f7f8fb;
+      --card: #ffffff;
+      --card-hover: #fcfcfd;
+      --border: #eceef5;
+      --text: #191c26;
+      --muted: #7e8497;
+
+      /* Pastel Surface Tints */
+      --tint-peach: #fdece6;
+      --tint-peach-border: #f9d5c8;
+      --tint-cream: #fef7e6;
+      --tint-cream-border: #f9e6b8;
+      --tint-mint: #eaf8e6;
+      --tint-mint-border: #cdebc4;
+      --tint-blush: #fceaf2;
+      --tint-blush-border: #f7cde0;
+
+      /* Dedicated Nutrient Colors (Vibrant Fill + Pastel Track — Never turns red) */
+      --carbs: #e1308c;
+      --carbs-track: #fad6e8;
+      --protein: #7ac71f;
+      --protein-track: #e2f5c8;
+      --fat: #7000df;
+      --fat-track: #e5d1fa;
+      --sugar: #f48265;
+      --sugar-track: #fde2da;
+      --salt: #2b9af3;
+      --salt-track: #d6ecfd;
+
+      /* Brand Accents from Shot */
+      --accent: #f48265;       /* Warm Coral */
+      --accent-dark: #df6446;
+      --accent-green: #6eb818; /* Fresh Leaf Green */
+      --accent-pink: #e1308c;  /* Berry Pink */
+
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Text", "Helvetica Neue", sans-serif;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 24px 16px 48px;
-      background: var(--bg);
+      padding: 20px 16px 48px;
+      background: radial-gradient(circle at 50% 10%, #eef0f8 0%, #dfe3ef 100%);
       font-family: var(--font);
-      color: #1f2937;
+      color: var(--text);
       -webkit-font-smoothing: antialiased;
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
     }
     .caption {
-      max-width: 390px;
+      max-width: 384px;
       width: 100%;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       font-size: 13px;
-      color: #6b7280;
+      color: #646b80;
     }
     .caption strong {
-      color: #111827;
+      color: #191c26;
       font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
+    .mode-switcher {
+      width: 100%;
+      max-width: 384px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      padding: 4px;
+      border-radius: 16px;
+      border: 1px solid #ffffff;
+      box-shadow: 0 8px 24px rgba(25, 28, 38, 0.06);
+      margin-bottom: 14px;
+    }
+    .mode-tab {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .mode-tab.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(244, 130, 101, 0.35);
+    }
+
     .phone {
       width: 100%;
-      max-width: 380px;
+      max-width: 384px;
       background: var(--phone-bg);
       color: var(--text);
-      border-radius: 44px;
-      padding: 14px 16px 24px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 0 0 8px #262930;
+      border-radius: 46px;
+      padding: 14px 16px 18px;
+      box-shadow: 0 28px 65px rgba(28, 35, 58, 0.16), 0 0 0 8px #ffffff;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      min-height: 730px;
+      gap: 11px;
+      min-height: 750px;
+      position: relative;
     }
     .statusbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 2px 10px 4px;
+      padding: 2px 10px 2px;
       font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
+      font-weight: 700;
+      color: var(--text);
     }
+
+    /* Strict Single-Line Header — Never wraps or changes height on Yesterday / Dates */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 6px;
-      min-height: 28px;
+      height: 30px;
+      min-height: 30px;
+      max-height: 30px;
     }
     .day-nav {
       display: flex;
       align-items: center;
       gap: 3px;
       flex-shrink: 0;
+      height: 28px;
     }
     .nav-arrow {
-      background: transparent;
+      background: #ffffff;
       border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 7px;
-      width: 22px;
-      height: 22px;
-      font-size: 12px;
+      color: var(--text);
+      border-radius: 9px;
+      width: 24px;
+      height: 24px;
+      font-size: 13px;
+      font-weight: 700;
       line-height: 1;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     }
-    .nav-arrow:hover { color: var(--text); border-color: #3f4656; }
+    .nav-arrow:hover { border-color: var(--accent); color: var(--accent-dark); }
     .title {
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: -0.02em;
       padding: 0 2px;
       white-space: nowrap;
-      min-width: 68px;
+      width: 72px;
       text-align: center;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .pills {
       display: flex;
       gap: 4px;
       align-items: center;
       flex-shrink: 0;
+      height: 28px;
     }
     .pill {
-      background: var(--card);
+      background: #ffffff;
       border: 1px solid var(--border);
       color: var(--muted);
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       line-height: 1;
-      height: 26px;
-      padding: 0 8px;
+      height: 28px;
+      min-height: 28px;
+      max-height: 28px;
+      padding: 0 9px;
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -130,55 +203,61 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     }
-    .pill:hover { border-color: #3f4656; color: var(--text); }
+    .pill:hover { border-color: #d5d9e6; color: var(--text); }
     .pill.weight-pill {
-      color: var(--accent);
-      border-color: rgba(16, 185, 129, 0.35);
-      background: rgba(16, 185, 129, 0.1);
+      background: var(--tint-cream);
+      border-color: var(--tint-cream-border);
+      color: #b4690e;
     }
     .pill.active-exercise {
-      background: rgba(245, 158, 11, 0.16);
-      border-color: rgba(245, 158, 11, 0.45);
-      color: #fbbf24;
+      background: var(--tint-mint);
+      border-color: var(--tint-mint-border);
+      color: #4d8a0b;
     }
     .pill.active-review {
-      background: var(--text);
-      color: var(--phone-bg);
-      border-color: var(--text);
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
     }
+
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px;
+      border-radius: 22px;
+      padding: 13px;
+      box-shadow: 0 6px 20px rgba(25, 28, 38, 0.04);
     }
-    /* Today's Weight Picker Drawer */
+
+    /* Dribbble-Inspired Butter-Cream Weight Card / Drawer with Arc Gauge */
     .drawer {
-      background: #14171d;
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      border-radius: 14px;
-      padding: 12px;
+      background: var(--tint-cream);
+      border: 1px solid var(--tint-cream-border);
+      border-radius: 22px;
+      padding: 13px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
       font-size: 12px;
+      box-shadow: 0 8px 22px rgba(245, 158, 11, 0.08);
     }
-    .weight-stepper {
+    .weight-gauge-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .step-btn {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: #ffffff;
+      border: 1px solid var(--tint-cream-border);
       color: var(--text);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 5px 10px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
     }
     .slider-row {
       display: flex;
@@ -190,34 +269,44 @@
       flex: 1;
       accent-color: var(--accent);
     }
-    /* 1. Indicative Daily Intake Strip */
+
+    /* 1. Dribbble-Style Macro Cards / Indicative Daily Intake Strip */
     .intake-strip {
       cursor: pointer;
       user-select: none;
-      transition: border-color 0.15s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-    .intake-strip:hover { border-color: #384152; }
+    .intake-strip:hover {
+      box-shadow: 0 8px 24px rgba(25, 28, 38, 0.07);
+    }
     .bars-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr) auto;
-      gap: 10px;
+      gap: 9px;
       align-items: center;
     }
     .mini-col {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
     }
     .mini-label {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--muted);
       display: flex;
       justify-content: space-between;
+      align-items: baseline;
+    }
+    .mini-pct {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
     }
     .track {
-      height: 5px;
-      background: #262b36;
+      height: 7px;
+      background: #eef0f6;
       border-radius: 999px;
       overflow: hidden;
     }
@@ -227,9 +316,15 @@
       transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .chevron {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
-      padding-left: 2px;
+      background: #f3f4f8;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .expanded-details {
       margin-top: 12px;
@@ -242,13 +337,17 @@
     .detail-row {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 12px;
     }
-    /* 2. Plain English Log Input + Ranked NZFCD Matches */
+
+    /* 2. Soft Peach Meal Search & Routine Card (Inspired by Dribbble "Add Breakfast" Card) */
     .input-box {
+      background: var(--tint-peach);
+      border: 1px solid var(--tint-peach-border);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
     }
     .input-row {
       display: flex;
@@ -257,23 +356,44 @@
     }
     .text-input {
       flex: 1;
-      background: #111318;
-      border: 1px solid var(--border);
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
       color: var(--text);
-      border-radius: 10px;
-      padding: 8px 10px;
+      border-radius: 14px;
+      padding: 9px 12px;
       font-size: 13px;
+      font-weight: 500;
       font-family: inherit;
       outline: none;
+      box-shadow: 0 2px 8px rgba(244, 130, 101, 0.08);
     }
+    .text-input::placeholder { color: #9ca2b4; }
     .text-input:focus { border-color: var(--accent); }
     .btn-clear {
-      background: transparent;
-      border: none;
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
       color: var(--muted);
+      border-radius: 999px;
+      width: 24px;
+      height: 24px;
       font-size: 14px;
       cursor: pointer;
-      padding: 0 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .time-pill {
+      background: var(--accent);
+      border: none;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      height: 32px;
+      padding: 0 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(244, 130, 101, 0.35);
     }
     .routines-row {
       display: flex;
@@ -285,18 +405,29 @@
     .routines-row::-webkit-scrollbar { display: none; }
     .routine-chip {
       white-space: nowrap;
-      background: #14171d;
-      border: 1px solid var(--border);
-      color: var(--muted);
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
+      color: #4a4f62;
       font-size: 12px;
+      font-weight: 600;
       padding: 5px 10px;
       border-radius: 999px;
       cursor: pointer;
+      box-shadow: 0 2px 5px rgba(244, 130, 101, 0.08);
+      transition: all 0.12s ease;
     }
-    .routine-chip:hover { color: var(--text); border-color: #3f4656; }
+    .routine-chip:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    /* Ranked NZFCD Matches Dropdown */
     .matches-panel {
-      border-top: 1px solid var(--border);
-      padding-top: 8px;
+      background: #ffffff;
+      border: 1px solid #f5cfc0;
+      border-radius: 16px;
+      padding: 9px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -305,21 +436,23 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 600;
       color: var(--muted);
       padding: 0 2px;
     }
     .matches-limit-toggle {
-      background: #111318;
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 6px;
-      padding: 2px 7px;
-      font-size: 12px;
+      background: var(--tint-peach);
+      border: 1px solid var(--tint-peach-border);
+      color: var(--accent-dark);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 700;
       cursor: pointer;
     }
     .matches-scroll {
-      max-height: 220px;
+      max-height: 210px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -327,22 +460,22 @@
       padding-right: 2px;
     }
     .matches-scroll::-webkit-scrollbar { width: 4px; }
-    .matches-scroll::-webkit-scrollbar-thumb { background: #2e3442; border-radius: 999px; }
+    .matches-scroll::-webkit-scrollbar-thumb { background: #d5d9e6; border-radius: 999px; }
     .match-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
       padding: 7px 9px;
-      border-radius: 10px;
-      background: #12151b;
+      border-radius: 12px;
+      background: #f9fafc;
       border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.12s ease;
     }
     .match-row:hover {
-      background: var(--card-hover);
-      border-color: #363d4d;
+      background: var(--tint-peach);
+      border-color: var(--tint-peach-border);
     }
     .match-left {
       display: flex;
@@ -351,8 +484,8 @@
       min-width: 0;
     }
     .match-rank {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--muted);
       width: 18px;
       text-align: right;
@@ -360,14 +493,14 @@
     }
     .match-title {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .match-sub {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
     }
     .match-right {
@@ -377,38 +510,54 @@
       flex-shrink: 0;
       font-size: 12px;
     }
+    .add-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
     .score-dot {
       width: 6px;
       height: 6px;
       border-radius: 999px;
     }
+
     /* 3. Clean Food + Weight Log List */
     .food-list {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 7px;
     }
     .weight-log-row {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.28);
-      border-radius: 14px;
-      padding: 9px 12px;
+      background: var(--tint-cream);
+      border: 1px solid var(--tint-cream-border);
+      border-radius: 18px;
+      padding: 10px 13px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
       cursor: pointer;
+      transition: transform 0.12s ease;
     }
+    .weight-log-row:hover { transform: translateY(-1px); }
     .food-item {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 12px;
+      border-radius: 18px;
+      padding: 9px 12px;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(25, 28, 38, 0.03);
     }
-    .food-item:hover { background: var(--card-hover); }
+    .food-item:hover { border-color: #d8dce8; }
     .food-main {
       display: flex;
       justify-content: space-between;
@@ -420,13 +569,26 @@
       align-items: center;
       gap: 10px;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .food-icon-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: #f5f6fa;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
     }
     .food-right {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 12px;
+      font-weight: 600;
       color: var(--muted);
     }
     .food-macros {
@@ -435,37 +597,40 @@
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
     }
+
     /* 4. Bottom Balance Button */
     .balance-btn {
       width: 100%;
-      background: var(--card);
+      background: #ffffff;
       border: 1px solid var(--border);
       color: var(--muted);
-      border-radius: 14px;
-      padding: 11px 14px;
+      border-radius: 18px;
+      padding: 10px 14px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
       transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(25, 28, 38, 0.03);
     }
+    .balance-btn:hover { border-color: var(--tint-blush-border); color: var(--text); }
     .balance-btn.active {
-      background: rgba(244, 63, 94, 0.14);
-      border-color: rgba(244, 63, 94, 0.45);
-      color: #fda4af;
+      background: var(--tint-blush);
+      border-color: var(--tint-blush-border);
+      color: var(--accent-pink);
     }
+
     /* REVIEW VIEW (Days / Weeks / Years Eating vs Weight) */
     .seg-bar {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      background: #14171d;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      background: #eceff6;
+      border-radius: 14px;
       padding: 3px;
       gap: 4px;
     }
@@ -474,28 +639,39 @@
       border: none;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       padding: 6px 0;
-      border-radius: 9px;
+      border-radius: 11px;
       cursor: pointer;
+      transition: all 0.15s ease;
     }
     .seg-btn.active {
-      background: var(--card);
+      background: #ffffff;
       color: var(--text);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 8px rgba(25, 28, 38, 0.08);
+    }
+    .coral-summary-pill {
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(244, 130, 101, 0.3);
     }
     .review-row {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 12px;
+      border-radius: 18px;
+      padding: 11px 13px;
       display: flex;
       flex-direction: column;
       gap: 7px;
       cursor: pointer;
-      transition: border-color 0.15s ease;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(25, 28, 38, 0.03);
     }
-    .review-row:hover { border-color: #384152; }
+    .review-row:hover { border-color: var(--tint-peach-border); }
     .review-top {
       display: flex;
       justify-content: space-between;
@@ -507,57 +683,39 @@
       grid-template-columns: repeat(5, 1fr);
       gap: 6px;
     }
-    .mode-switcher {
-      width: 375px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
-      background: #14171d;
-      padding: 4px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-    .mode-tab {
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 4px;
-      border-radius: 8px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .mode-tab.active {
-      background: var(--card);
-      color: var(--accent);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.35);
-    }
+
+    /* Onboarding & Routines Elements */
     .day-dots {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      gap: 5px;
     }
     .day-dot {
-      background: #14171d;
+      background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 6px 2px;
+      border-radius: 14px;
+      padding: 7px 2px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 3px;
       font-size: 11px;
     }
     .day-dot.done {
-      border-color: rgba(16, 185, 129, 0.45);
-      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--tint-mint-border);
+      background: var(--tint-mint);
+    }
+    .day-dot.active-day {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(225, 48, 140, 0.3);
     }
     .behaviour-item {
-      background: #14171d;
+      background: #f9fafc;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 10px;
+      border-radius: 16px;
+      padding: 9px 11px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -566,20 +724,53 @@
     }
     .cta-btn {
       width: 100%;
-      background: rgba(16, 185, 129, 0.16);
-      border: 1px solid rgba(16, 185, 129, 0.45);
-      color: var(--accent);
-      border-radius: 12px;
-      padding: 9px 12px;
+      background: var(--accent);
+      border: none;
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 10px 14px;
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 6px 16px rgba(244, 130, 101, 0.3);
+      transition: transform 0.12s ease;
     }
-    .cta-btn:hover {
-      background: rgba(16, 185, 129, 0.24);
+    .cta-btn:hover { transform: translateY(-1px); }
+
+    /* Dribbble-Inspired Floating White Capsule Bottom Navigation Dock */
+    .bottom-dock {
+      margin-top: auto;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 6px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      box-shadow: 0 10px 28px rgba(25, 28, 38, 0.08);
+    }
+    .dock-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 7px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .dock-btn.active {
+      background: var(--tint-peach);
+      color: var(--accent-dark);
     }
   </style>
 </head>
@@ -602,7 +793,7 @@
     <!-- iOS Status Bar -->
     <div class="statusbar">
       <span>9:41</span>
-      <span>☁️ iCloud</span>
+      <span>☁️ iCloud · NZFCD</span>
     </div>
 
     <!-- 1. Header: Date Stepper + My Weight Today + Normal/Exercise + Review Toggle -->
@@ -614,7 +805,7 @@
       </div>
 
       <div class="pills">
-        <!-- My Weight Today Pill (right beside Normal) -->
+        <!-- My Weight Today Pill (right beside Normal, locked single-line height) -->
         <button class="pill weight-pill" id="btn-weight" onclick="toggleWeightDrawer()" title="Tap to record today's weight">
           ⚖️ 85.4kg
         </button>
@@ -623,51 +814,67 @@
       </div>
     </div>
 
-    <!-- Today's Weight Picker Drawer (records weight alongside the day's food log) -->
+    <!-- Today's Weight Picker Drawer (Dribbble-style Cream Card + Semi-Circular Gauge + Current/Goal Sliders) -->
     <div id="weight-drawer" class="drawer" style="display:none;">
-      <div class="weight-stepper">
-        <span style="color:var(--muted);font-weight:600;">My weight (<span id="lbl-weight-day">Today</span>)</span>
-        <div style="display:flex;align-items:center;gap:6px;">
+      <div class="weight-gauge-top">
+        <div>
+          <div style="color:#8f6b32;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;">
+            My Weight (<span id="lbl-weight-day">Today</span>)
+          </div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-top:2px;">
+            <strong id="lbl-cur" style="font-size:20px;font-weight:800;color:var(--text);">85.4 kg</strong>
+            <span id="lbl-gauge-sub" style="font-size:11px;color:#8f6b32;font-weight:600;">Goal 78.0 kg</span>
+          </div>
+        </div>
+        <!-- Semi-circular Weight Gauge inspired by Dribbble shot -->
+        <svg viewBox="0 0 80 46" style="width:74px;height:42px;overflow:visible;">
+          <path d="M 8 38 A 32 32 0 0 1 72 38" fill="none" stroke="#f5dfab" stroke-width="7" stroke-linecap="round" />
+          <path id="gauge-arc" d="M 8 38 A 32 32 0 0 1 72 38" fill="none" stroke="#f48265" stroke-width="7" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="28" />
+          <circle cx="40" cy="34" r="3.5" fill="#191c26" />
+        </svg>
+        <div style="display:flex;align-items:center;gap:4px;">
           <button class="step-btn" onclick="nudgeTodayWeight(-0.1)">-0.1</button>
-          <strong id="lbl-cur" style="font-size:14px;color:var(--accent);min-width:58px;text-align:center;">85.4 kg</strong>
           <button class="step-btn" onclick="nudgeTodayWeight(0.1)">+0.1</button>
         </div>
       </div>
+
       <div class="slider-row">
-        <span style="width:65px;color:var(--muted);">Current</span>
+        <span style="width:58px;color:#8f6b32;font-weight:700;">Current</span>
         <input id="slider-cur" type="range" min="50" max="130" step="0.1" value="85.4" oninput="setTodayWeight(this.value)" />
       </div>
-      <div class="slider-row" id="goal-slider-row" style="padding-top:4px;border-top:1px solid var(--border);">
-        <span style="width:65px;color:var(--muted);">Goal</span>
+
+      <div class="slider-row" id="goal-slider-row" style="padding-top:6px;border-top:1px solid var(--tint-cream-border);">
+        <span style="width:58px;color:#8f6b32;font-weight:700;">Goal</span>
         <input id="slider-goal" type="range" min="50" max="130" step="0.5" value="78.0" oninput="setGoalWeight(this.value)" />
-        <span id="lbl-goal" style="width:52px;text-align:right;color:var(--muted);">78.0 kg</span>
+        <span id="lbl-goal" style="width:52px;text-align:right;color:#8f6b32;font-weight:700;">78.0 kg</span>
       </div>
-      <div id="goal-locked-row" style="display:none;padding-top:6px;border-top:1px solid var(--border);color:var(--muted);font-size:11px;justify-content:space-between;align-items:center;">
+
+      <div id="goal-locked-row" style="display:none;padding-top:6px;border-top:1px solid var(--tint-cream-border);color:#8f6b32;font-size:11px;justify-content:space-between;align-items:center;">
         <span>🔒 Goal weight unlocks after Week 1 baseline</span>
-        <span style="color:var(--accent);cursor:pointer;font-weight:600;" onclick="setViewMode('onboarding')">View Setup →</span>
+        <span style="color:var(--accent-dark);cursor:pointer;font-weight:800;" onclick="setViewMode('onboarding')">View Setup →</span>
       </div>
     </div>
 
     <!-- ==================== DAILY LOG VIEW ==================== -->
-    <div id="log-view" style="display:flex;flex-direction:column;gap:12px;flex:1;">
-      <!-- 2. Tiny Indicative Daily Intake Strip (Tap to expand) -->
+    <div id="log-view" style="display:flex;flex-direction:column;gap:10px;flex:1;">
+      <!-- 2. Dribbble-Inspired Daily Nutrient Strip (Vibrant fills on pastel tracks, tap to expand) -->
       <div class="card intake-strip" onclick="toggleIntake()">
         <div class="bars-row" id="bars-row"></div>
         <div id="intake-details" class="expanded-details" style="display:none;"></div>
       </div>
 
-      <!-- 3. Plain-English Search + Ranked NZFCD Matches + Routines -->
+      <!-- 3. Soft Peach Meal Search Card + Ranked NZFCD Matches + 1-Tap Routines -->
       <div class="card input-box">
         <div class="input-row">
           <input
             id="food-input"
             class="text-input"
             type="text"
-            placeholder="Search NZ food (e.g. poached egg, vogels, pie)..."
+            placeholder="Add food (e.g. poached egg, vogels, pie)..."
             oninput="onSearchInput(this.value)"
           />
           <button id="btn-clear" class="btn-clear" style="display:none;" onclick="clearSearch()" title="Clear">×</button>
-          <button class="pill" id="btn-time" onclick="cycleTime()" title="Tap to change time">Now</button>
+          <button class="time-pill" id="btn-time" onclick="cycleTime()" title="Tap to change time">Now</button>
         </div>
 
         <!-- Ranked NZFCD Search Results (Most relevant -> Least relevant, 10 or 25 items) -->
@@ -689,7 +896,7 @@
       <!-- 5. Single "I ate too much" Next-Day Rebalance Button -->
       <button class="balance-btn" id="btn-too-much" onclick="toggleTooMuch()">
         <span id="too-much-text">😮‍💨 I ate too much today</span>
-        <span id="too-much-action">Balance tomorrow</span>
+        <span id="too-much-action" style="color:var(--accent-dark);">Balance tomorrow</span>
       </button>
     </div>
 
@@ -699,14 +906,14 @@
         <button class="seg-btn" id="seg-ob-week1" onclick="setOnboardingStage('week1')">Step 1: 7-Day Baseline</button>
         <button class="seg-btn active" id="seg-ob-complete" onclick="setOnboardingStage('complete')">Step 2: Behaviours & Goal</button>
       </div>
-      <div id="onboarding-content" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:520px;"></div>
+      <div id="onboarding-content" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:515px;"></div>
     </div>
 
     <!-- ==================== ROUTINES PAGE VIEW ==================== -->
-    <div id="routines-view" style="display:none;flex-direction:column;gap:10px;flex:1;overflow-y:auto;max-height:560px;"></div>
+    <div id="routines-view" style="display:none;flex-direction:column;gap:10px;flex:1;overflow-y:auto;max-height:550px;"></div>
 
     <!-- ==================== REVIEW VIEW (Days / Weeks / Years: Eating vs Weight) ==================== -->
-    <div id="review-view" style="display:none;flex-direction:column;gap:12px;flex:1;">
+    <div id="review-view" style="display:none;flex-direction:column;gap:10px;flex:1;">
       <!-- Period Switcher: Days | Weeks | Years -->
       <div class="seg-bar">
         <button class="seg-btn active" id="seg-days" onclick="setReviewPeriod('days')">Days</button>
@@ -714,21 +921,35 @@
         <button class="seg-btn" id="seg-years" onclick="setReviewPeriod('years')">Years</button>
       </div>
 
-      <!-- Dual Eating vs Weight Trend Card -->
+      <!-- Dribbble "Activities" Inspired Chart Card -->
       <div class="card" style="display:flex;flex-direction:column;gap:8px;">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;">
-          <strong id="chart-title">Eating vs Weight (Last 7 Days)</strong>
-          <span style="color:var(--accent);font-weight:600;" id="chart-delta">-1.0 kg · Goal 78.0 kg</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+          <strong id="chart-title" style="font-size:13px;">Eating vs Weight (Past 7 Days)</strong>
+          <span class="coral-summary-pill" id="chart-delta">-1.0 kg · Goal 78.0 kg</span>
         </div>
         <div id="review-chart"></div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--muted);padding-top:2px;">
           <span><span style="color:var(--accent);">●</span> Weight (kg)</span>
-          <span><span style="color:var(--carbs);">▮</span>C <span style="color:var(--protein);">▮</span>P <span style="color:var(--fat);">▮</span>F <span style="color:var(--sugar);">▮</span>Su <span style="color:var(--salt);">▮</span>Sa</span>
+          <span style="display:flex;gap:6px;">
+            <span><span style="color:var(--carbs);">●</span> Carbs</span>
+            <span><span style="color:var(--protein);">●</span> Protein</span>
+            <span><span style="color:var(--fat);">●</span> Fat</span>
+            <span><span style="color:var(--sugar);">●</span> Sugar</span>
+            <span><span style="color:var(--salt);">●</span> Salt</span>
+          </span>
         </div>
       </div>
 
       <!-- Historical Comparison Rows (Tap any day to open its log) -->
-      <div id="review-list" style="display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:390px;"></div>
+      <div id="review-list" style="display:flex;flex-direction:column;gap:7px;overflow-y:auto;max-height:365px;"></div>
+    </div>
+
+    <!-- Dribbble-Inspired Floating White Capsule Bottom Navigation Dock -->
+    <div class="bottom-dock">
+      <button class="dock-btn" id="dock-onboarding" onclick="setViewMode('onboarding')">✨ Setup</button>
+      <button class="dock-btn active" id="dock-log" onclick="setViewMode('log')">🍽️ Today</button>
+      <button class="dock-btn" id="dock-routines" onclick="setViewMode('routines')">🔁 Routines</button>
+      <button class="dock-btn" id="dock-review" onclick="setViewMode('review')">📊 Review</button>
     </div>
 
   </div>
@@ -989,7 +1210,6 @@
     }
 
     function stepDay(dir) {
-      // dir = -1 means go back in time (increase dayIndex), +1 means go forward toward Today
       const next = state.dayIndex - dir;
       if (next >= 0 && next < daysData.length) {
         state.dayIndex = next;
@@ -1201,24 +1421,27 @@
 
       if (state.onboardingStage === 'week1') {
         container.innerHTML = `
-          <div class="card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="card" style="background:var(--tint-peach);border-color:var(--tint-peach-border);display:flex;flex-direction:column;gap:9px;">
             <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
-              <strong style="color:var(--accent);">Week 1 Setup · Record Your Baseline</strong>
-              <span style="color:var(--muted);">7 / 7 days</span>
+              <strong style="color:var(--accent-dark);">Week 1 Setup · Record Your Baseline</strong>
+              <span class="coral-summary-pill">7 / 7 days</span>
             </div>
-            <div style="font-size:12px;color:var(--muted);line-height:1.45;">
-              Before we ask for a <strong style="color:var(--text);">Goal Weight</strong>, record <strong style="color:var(--text);">1 week of normal eating</strong> and your <strong style="color:var(--text);">current weight</strong> each day. We’ll learn your eating behaviours and suggest routines automatically.
+            <div style="font-size:12px;color:#5f463d;line-height:1.45;">
+              Before we ask for a <strong>Goal Weight</strong>, record <strong>1 week of normal eating</strong> and your <strong>current weight</strong> each day. We’ll learn your eating behaviours and suggest routines automatically.
             </div>
             <div class="day-dots">
-              ${chronologicalDays.map((d, idx) => `
-                <div class="day-dot done" onclick="jumpToDay(${daysData.length - 1 - idx})" style="cursor:pointer;" title="Tap to view ${escapeHtml(d.label)}">
-                  <span style="color:var(--muted);">${escapeHtml(d.shortDate.split(' ')[0])}</span>
-                  <strong style="color:var(--accent);">✓</strong>
-                  <span style="color:var(--text);font-weight:600;">${d.weightKg.toFixed(1)}</span>
-                </div>
-              `).join('')}
+              ${chronologicalDays.map((d, idx) => {
+                const isToday = idx === chronologicalDays.length - 1;
+                return `
+                  <div class="day-dot ${isToday ? 'active-day' : 'done'}" onclick="jumpToDay(${daysData.length - 1 - idx})" style="cursor:pointer;" title="Tap to view ${escapeHtml(d.label)}">
+                    <span style="opacity:0.8;">${escapeHtml(d.shortDate.split(' ')[0])}</span>
+                    <strong>✓</strong>
+                    <span style="font-weight:800;">${d.weightKg.toFixed(1)}</span>
+                  </div>
+                `;
+              }).join('')}
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding-top:4px;border-top:1px solid var(--border);color:var(--muted);">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding-top:4px;border-top:1px solid var(--tint-peach-border);color:#7c5b50;font-weight:600;">
               <span>🔒 Goal Weight & Daily Limits</span>
               <span>Unlocks after Day 7</span>
             </div>
@@ -1226,19 +1449,19 @@
 
           <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
             <strong>What we’re learning this week</strong>
-            <div class="behaviour-item">
+            <div class="behaviour-item" style="background:var(--tint-cream);border-color:var(--tint-cream-border);">
               <div>
-                <div style="font-weight:600;">⚖️ Daily Current Weight</div>
-                <div style="color:var(--muted);">Recorded alongside your food log (${chronologicalDays[0].weightKg.toFixed(1)} → ${daysData[0].weightKg.toFixed(1)} kg)</div>
+                <div style="font-weight:700;">⚖️ Daily Current Weight</div>
+                <div style="color:#8f6b32;font-size:11px;">Recorded alongside your food log (${chronologicalDays[0].weightKg.toFixed(1)} → ${daysData[0].weightKg.toFixed(1)} kg)</div>
               </div>
-              <span style="color:var(--accent);font-weight:700;">7 logged</span>
+              <span style="color:#b4690e;font-weight:800;">7 logged</span>
             </div>
-            <div class="behaviour-item">
+            <div class="behaviour-item" style="background:var(--tint-mint);border-color:var(--tint-mint-border);">
               <div>
-                <div style="font-weight:600;">🥣 Repeated Meals & Times</div>
-                <div style="color:var(--muted);">Spotting morning coffee, weekday breakfasts & staples</div>
+                <div style="font-weight:700;">🥣 Repeated Meals & Times</div>
+                <div style="color:#4d8a0b;font-size:11px;">Spotting morning coffee, weekday breakfasts & staples</div>
               </div>
-              <span style="color:var(--accent);font-weight:700;">19 items</span>
+              <span style="color:#4d8a0b;font-weight:800;">19 items</span>
             </div>
           </div>
 
@@ -1253,53 +1476,53 @@
           <!-- 1. Behaviours Built from Week 1 Eating -->
           <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <strong style="color:var(--accent);">1. Your Week 1 Eating Behaviours</strong>
-              <span style="color:var(--muted);">Avg ${avg.weightKg} kg</span>
+              <strong style="color:var(--accent-dark);">1. Your Week 1 Eating Behaviours</strong>
+              <span class="coral-summary-pill">Avg ${avg.weightKg} kg</span>
             </div>
             <div style="font-size:11px;color:var(--muted);">
               Your 7-day baseline average: <strong style="color:var(--carbs);">${avg.c}g C</strong> · <strong style="color:var(--protein);">${avg.p}g P</strong> · <strong style="color:var(--fat);">${avg.f}g F</strong> · <strong style="color:var(--sugar);">${avg.su}g Su</strong> · <strong style="color:var(--salt);">${avg.sa}g Sa</strong>
             </div>
-            <div class="behaviour-item">
+            <div class="behaviour-item" style="background:var(--tint-peach);border-color:var(--tint-peach-border);">
               <div>
-                <div style="font-weight:600;">☕ Morning Flat White Habit</div>
-                <div style="color:var(--muted);">Logged 6 of 7 mornings around 7:45 am</div>
+                <div style="font-weight:700;">☕ Morning Flat White Habit</div>
+                <div style="color:#7c5b50;font-size:11px;">Logged 6 of 7 mornings around 7:45 am</div>
               </div>
-              <span style="color:var(--carbs);font-weight:600;">Routine</span>
+              <span style="color:var(--accent-dark);font-weight:800;">Routine</span>
             </div>
-            <div class="behaviour-item">
+            <div class="behaviour-item" style="background:var(--tint-mint);border-color:var(--tint-mint-border);">
               <div>
-                <div style="font-weight:600;">🥚 High-Protein Weekday Breakfasts</div>
-                <div style="color:var(--muted);">Oats or Poached Eggs on Vogels 5/7 days</div>
+                <div style="font-weight:700;">🥚 High-Protein Weekday Breakfasts</div>
+                <div style="color:#4d8a0b;font-size:11px;">Oats or Poached Eggs on Vogels 5/7 days</div>
               </div>
-              <span style="color:var(--accent);font-weight:600;">Keep</span>
+              <span style="color:#4d8a0b;font-weight:800;">Keep</span>
             </div>
-            <div class="behaviour-item">
+            <div class="behaviour-item" style="background:var(--tint-blush);border-color:var(--tint-blush-border);">
               <div>
-                <div style="font-weight:600;">🍟 Saturday Takeaway Spike</div>
-                <div style="color:var(--muted);">Pie + fish & chips pushed Salt to 5.3g & Fat to 77g</div>
+                <div style="font-weight:700;">🍟 Saturday Takeaway Spike</div>
+                <div style="color:#9e356a;font-size:11px;">Pie + fish & chips pushed Salt to 5.3g & Fat to 77g</div>
               </div>
-              <span style="color:var(--protein);font-weight:600;">Balance</span>
+              <span style="color:var(--accent-pink);font-weight:800;">Balance</span>
             </div>
           </div>
 
-          <!-- 2. Ask Goal Weight Now That Baseline Is Known -->
-          <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;border-color:rgba(16,185,129,0.4);">
+          <!-- 2. Ask Goal Weight Now That Baseline Is Known (Cream Weight Card) -->
+          <div class="card" style="background:var(--tint-cream);border-color:var(--tint-cream-border);display:flex;flex-direction:column;gap:8px;font-size:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <strong>2. Set Your Goal Weight</strong>
-              <span style="color:var(--muted);">Current: <strong style="color:var(--text);">${daysData[0].weightKg.toFixed(1)} kg</strong></span>
+              <span style="color:#8f6b32;font-weight:600;">Current: <strong style="color:var(--text);">${daysData[0].weightKg.toFixed(1)} kg</strong></span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-              <span style="color:var(--muted);">Target Goal Weight</span>
+              <span style="color:#8f6b32;font-weight:700;">Target Goal Weight</span>
               <div style="display:flex;align-items:center;gap:6px;">
                 <button class="step-btn" onclick="nudgeGoalWeight(-0.5)">-0.5</button>
-                <strong style="font-size:14px;color:var(--accent);min-width:58px;text-align:center;">${state.goalKg.toFixed(1)} kg</strong>
+                <strong style="font-size:15px;color:var(--text);min-width:60px;text-align:center;">${state.goalKg.toFixed(1)} kg</strong>
                 <button class="step-btn" onclick="nudgeGoalWeight(0.5)">+0.5</button>
               </div>
             </div>
             <input type="range" min="55" max="115" step="0.5" value="${state.goalKg}" oninput="setGoalWeight(this.value)" style="width:100%;accent-color:var(--accent);" />
-            <div style="font-size:11px;color:var(--muted);display:flex;justify-content:space-between;padding-top:4px;border-top:1px solid var(--border);">
+            <div style="font-size:11px;color:#8f6b32;display:flex;justify-content:space-between;padding-top:4px;border-top:1px solid var(--tint-cream-border);">
               <span>Daily limits from your baseline:</span>
-              <span style="color:var(--text);font-weight:600;">${targetLim.c}C · ${targetLim.p}P · ${targetLim.f}F · ${targetLim.su}Su · ${targetLim.sa}Sa</span>
+              <span style="color:var(--text);font-weight:800;">${targetLim.c}C · ${targetLim.p}P · ${targetLim.f}F · ${targetLim.su}Su · ${targetLim.sa}Sa</span>
             </div>
           </div>
 
@@ -1307,18 +1530,18 @@
           <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <strong>3. Suggested Routines from Week 1</strong>
-              <span style="color:var(--accent);cursor:pointer;font-weight:600;" onclick="setViewMode('routines')">Routines Page →</span>
+              <span style="color:var(--accent-dark);cursor:pointer;font-weight:800;" onclick="setViewMode('routines')">Routines Page →</span>
             </div>
-            ${routinesList.slice(0, 4).map(r => `
+            ${routinesList.slice(0, 3).map(r => `
               <div class="behaviour-item" onclick="toggleRoutineActive('${r.id}')" style="cursor:pointer;">
                 <div style="display:flex;align-items:center;gap:8px;min-width:0;">
-                  <span>${escapeHtml(r.icon)}</span>
+                  <span class="food-icon-badge" style="width:30px;height:30px;font-size:15px;">${escapeHtml(r.icon)}</span>
                   <div style="min-width:0;">
-                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                    <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
                     <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.freq)} · ${escapeHtml(r.time)} (${escapeHtml(r.reason)})</div>
                   </div>
                 </div>
-                <span class="pill ${r.active ? 'weight-pill' : ''}" style="height:22px;padding:0 7px;">
+                <span class="pill ${r.active ? 'active-exercise' : ''}" style="height:24px;min-height:24px;padding:0 8px;">
                   ${r.active ? '✓ Active' : '+ Add'}
                 </span>
               </div>
@@ -1326,8 +1549,8 @@
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button class="cta-btn" onclick="setViewMode('routines')" style="justify-content:center;">
-              <span>⚙ Open Routines Page</span>
+            <button class="cta-btn" onclick="setViewMode('routines')" style="justify-content:center;background:#ffffff;color:var(--text);border:1px solid var(--border);box-shadow:none;">
+              <span>🔁 Open Routines</span>
             </button>
             <button class="cta-btn" onclick="setViewMode('log')" style="justify-content:center;">
               <span>Go to Daily Log →</span>
@@ -1344,34 +1567,34 @@
 
       el.innerHTML = `
         <!-- Active Routines (Appear as 1-Tap Chips on Daily Log) -->
-        <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+        <div class="card" style="background:var(--tint-mint);border-color:var(--tint-mint-border);display:flex;flex-direction:column;gap:8px;font-size:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <strong>Your Active Routines (${activeRoutines.length})</strong>
-            <span style="color:var(--muted);font-size:11px;">Tap schedule/time to edit</span>
+            <strong style="color:#366306;">Your Active Routines (${activeRoutines.length})</strong>
+            <span style="color:#4d8a0b;font-size:11px;font-weight:600;">Tap schedule/time to edit</span>
           </div>
           ${activeRoutines.length === 0 ? `<div style="color:var(--muted);">No active routines yet. Add a suggested routine below.</div>` : ''}
           ${activeRoutines.map(r => `
-            <div class="behaviour-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+            <div class="behaviour-item" style="background:#ffffff;border-color:var(--tint-mint-border);flex-direction:column;align-items:stretch;gap:6px;">
               <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                <div style="display:flex;align-items:center;gap:7px;min-width:0;">
-                  <span>${escapeHtml(r.icon)}</span>
+                <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                  <span class="food-icon-badge" style="background:var(--tint-mint);width:32px;height:32px;">${escapeHtml(r.icon)}</span>
                   <div style="min-width:0;">
-                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                    <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
                     <div style="color:var(--muted);font-size:11px;">${r.c}C · ${r.p}P · ${r.f}F · ${r.su}Su · ${r.sa}Sa</div>
                   </div>
                 </div>
-                <button class="pill" style="height:22px;padding:0 7px;" onclick="toggleRoutineActive('${r.id}')">Remove</button>
+                <button class="pill" style="height:24px;min-height:24px;padding:0 8px;" onclick="toggleRoutineActive('${r.id}')">Remove</button>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding-top:4px;border-top:1px solid var(--border);font-size:11px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-top:5px;border-top:1px solid var(--border);font-size:11px;">
                 <div style="display:flex;gap:4px;align-items:center;">
-                  <button class="pill weight-pill" style="height:22px;padding:0 7px;font-size:11px;" onclick="cycleRoutineFreq('${r.id}', event)" title="Tap to change schedule">
+                  <button class="pill active-exercise" style="height:24px;min-height:24px;padding:0 8px;font-size:11px;" onclick="cycleRoutineFreq('${r.id}', event)" title="Tap to change schedule">
                     📅 ${escapeHtml(r.freq)}
                   </button>
-                  <button class="pill" style="height:22px;padding:0 7px;font-size:11px;" onclick="cycleRoutineTime('${r.id}', event)" title="Tap to change default time">
+                  <button class="pill" style="height:24px;min-height:24px;padding:0 8px;font-size:11px;" onclick="cycleRoutineTime('${r.id}', event)" title="Tap to change default time">
                     🕒 ${escapeHtml(r.time)}
                   </button>
                 </div>
-                <button class="pill" style="height:22px;padding:0 7px;font-size:11px;color:var(--accent);" onclick="quickRoutine('${r.icon}', '${escapeHtml(r.shortLabel)}', ${r.c}, ${r.p}, ${r.f}, ${r.su}, ${r.sa}); setViewMode('log');">
+                <button class="pill active-review" style="height:24px;min-height:24px;padding:0 9px;font-size:11px;" onclick="quickRoutine('${r.icon}', '${escapeHtml(r.shortLabel)}', ${r.c}, ${r.p}, ${r.f}, ${r.su}, ${r.sa}); setViewMode('log');">
                   + Log now
                 </button>
               </div>
@@ -1380,22 +1603,22 @@
         </div>
 
         <!-- Suggested from Your Week 1 Eating -->
-        <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+        <div class="card" style="background:var(--tint-peach);border-color:var(--tint-peach-border);display:flex;flex-direction:column;gap:8px;font-size:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <strong style="color:var(--accent);">Suggested from Your Week 1 Eating</strong>
-            <span style="color:var(--muted);font-size:11px;">1-tap add</span>
+            <strong style="color:var(--accent-dark);">Suggested from Your Week 1 Eating</strong>
+            <span style="color:#7c5b50;font-size:11px;font-weight:600;">1-tap add</span>
           </div>
-          ${suggestedRoutines.length === 0 ? `<div style="color:var(--muted);">All Week 1 suggested routines are active!</div>` : ''}
+          ${suggestedRoutines.length === 0 ? `<div style="color:#7c5b50;">All Week 1 suggested routines are active!</div>` : ''}
           ${suggestedRoutines.map(r => `
-            <div class="behaviour-item" onclick="toggleRoutineActive('${r.id}')" style="cursor:pointer;">
-              <div style="display:flex;align-items:center;gap:7px;min-width:0;">
-                <span>${escapeHtml(r.icon)}</span>
+            <div class="behaviour-item" style="background:#ffffff;border-color:var(--tint-peach-border);cursor:pointer;" onclick="toggleRoutineActive('${r.id}')">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                <span class="food-icon-badge" style="background:var(--tint-peach);width:32px;height:32px;">${escapeHtml(r.icon)}</span>
                 <div style="min-width:0;">
-                  <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
+                  <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.name)}</div>
                   <div style="color:var(--muted);font-size:11px;">${escapeHtml(r.reason)} · ${escapeHtml(r.freq)}</div>
                 </div>
               </div>
-              <span class="pill weight-pill" style="height:22px;padding:0 8px;">+ Add</span>
+              <span class="pill active-review" style="height:24px;min-height:24px;padding:0 9px;">+ Add</span>
             </div>
           `).join('')}
         </div>
@@ -1403,16 +1626,16 @@
         <!-- Create Custom Routine -->
         <div class="card" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
           <strong>Create a Routine</strong>
-          <select id="sel-routine-food" class="text-input" style="width:100%;">
+          <select id="sel-routine-food" class="text-input" style="width:100%;border-color:var(--border);box-shadow:none;">
             ${nzfcdCatalog.slice(0, 15).map((item, idx) => `
               <option value="${idx}">${escapeHtml(item.icon)} ${escapeHtml(item.name)}</option>
             `).join('')}
           </select>
           <div style="display:flex;gap:6px;">
-            <select id="sel-routine-freq" class="text-input" style="flex:1;">
+            <select id="sel-routine-freq" class="text-input" style="flex:1;border-color:var(--border);box-shadow:none;">
               ${freqOptions.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('')}
             </select>
-            <button class="pill weight-pill" style="height:32px;padding:0 12px;" onclick="addNewRoutine()">+ Create Routine</button>
+            <button class="time-pill" style="height:36px;padding:0 14px;" onclick="addNewRoutine()">+ Create</button>
           </div>
         </div>
       `;
@@ -1420,16 +1643,16 @@
 
     function renderNutrientFooter(vals, lim, isAvg = false) {
       const items = [
-        { short: 'C', val: vals.c, max: lim.c, unit: 'g', col: 'var(--carbs)' },
-        { short: 'P', val: vals.p, max: lim.p, unit: 'g', col: 'var(--protein)' },
-        { short: 'F', val: vals.f, max: lim.f, unit: 'g', col: 'var(--fat)' },
-        { short: 'Su', val: vals.su, max: lim.su, unit: 'g', col: 'var(--sugar)' },
-        { short: 'Sa', val: vals.sa, max: lim.sa, unit: 'g', col: 'var(--salt)' }
+        { short: 'C', val: vals.c, max: lim.c, unit: 'g', col: 'var(--carbs)', track: 'var(--carbs-track)' },
+        { short: 'P', val: vals.p, max: lim.p, unit: 'g', col: 'var(--protein)', track: 'var(--protein-track)' },
+        { short: 'F', val: vals.f, max: lim.f, unit: 'g', col: 'var(--fat)', track: 'var(--fat-track)' },
+        { short: 'Su', val: vals.su, max: lim.su, unit: 'g', col: 'var(--sugar)', track: 'var(--sugar-track)' },
+        { short: 'Sa', val: vals.sa, max: lim.sa, unit: 'g', col: 'var(--salt)', track: 'var(--salt-track)' }
       ];
       return `
         ${isAvg ? `
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);padding-top:6px;border-top:1px solid var(--border);">
-            <span style="font-weight:600;color:var(--text);">Daily Average Intake</span>
+            <span style="font-weight:700;color:var(--text);">Daily Average Intake</span>
             <span>Avg / day vs limit</span>
           </div>
         ` : ''}
@@ -1438,14 +1661,14 @@
             const pct = Math.min(100, Math.round((b.val / b.max) * 100));
             return `
               <div style="display:flex;flex-direction:column;gap:3px;">
-                <div style="display:flex;justify-content:space-between;font-size:12px;">
-                  <span style="color:${b.col};font-weight:700;">${b.short}</span>
-                  <span style="color:var(--text);font-weight:600;">${b.val}${b.unit}</span>
+                <div style="display:flex;justify-content:space-between;font-size:11px;">
+                  <span style="color:${b.col};font-weight:800;">${b.short}</span>
+                  <span style="color:var(--text);font-weight:700;">${b.val}${b.unit}</span>
                 </div>
-                <div class="track">
+                <div class="track" style="background:${b.track};height:6px;">
                   <div class="fill" style="width:${pct}%;background:${b.col};"></div>
                 </div>
-                <div style="font-size:11px;color:var(--muted);">
+                <div style="font-size:10px;color:var(--muted);font-weight:600;">
                   ${isAvg ? `Avg · ${pct}%` : `${pct}% of ${b.max}g`}
                 </div>
               </div>
@@ -1496,13 +1719,13 @@
             <div class="review-row" onclick="jumpToDay(${idx})" title="Tap to open ${escapeHtml(d.label)}">
               <div class="review-top">
                 <div style="display:flex;align-items:center;gap:6px;">
-                  <strong>${escapeHtml(d.label)}</strong>
-                  ${d.heavyExercise ? '<span style="color:#fbbf24;">🔥</span>' : ''}
-                  ${d.ateTooMuch ? '<span style="color:#fda4af;">😮‍💨</span>' : ''}
+                  <strong style="font-size:13px;">${escapeHtml(d.label)}</strong>
+                  ${d.heavyExercise ? '<span style="background:var(--tint-mint);padding:1px 6px;border-radius:999px;font-size:11px;">🔥</span>' : ''}
+                  ${d.ateTooMuch ? '<span style="background:var(--tint-blush);padding:1px 6px;border-radius:999px;font-size:11px;">😮‍💨</span>' : ''}
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
-                  <span style="color:var(--muted);">${wDiff > 0 ? '+' + wDiff : wDiff} kg</span>
-                  <strong style="color:var(--accent);">${d.weightKg.toFixed(1)} kg</strong>
+                  <span style="color:var(--muted);font-weight:600;">${wDiff > 0 ? '+' + wDiff : wDiff} kg</span>
+                  <strong style="color:var(--accent-dark);background:var(--tint-peach);padding:2px 8px;border-radius:999px;">${d.weightKg.toFixed(1)} kg</strong>
                 </div>
               </div>
               ${renderNutrientFooter(t, lim, false)}
@@ -1528,12 +1751,12 @@
           <div class="review-row">
             <div class="review-top">
               <div>
-                <strong>${escapeHtml(w.label)}</strong>
-                <div style="color:var(--muted);font-size:12px;">${escapeHtml(w.note)}</div>
+                <strong style="font-size:13px;">${escapeHtml(w.label)}</strong>
+                <div style="color:var(--muted);font-size:11px;font-weight:600;">${escapeHtml(w.note)}</div>
               </div>
               <div style="text-align:right;">
-                <strong style="color:var(--accent);">Avg ${w.weightKg.toFixed(1)} kg</strong>
-                <div style="color:var(--muted);font-size:12px;">${escapeHtml(w.delta)}</div>
+                <strong style="color:var(--accent-dark);background:var(--tint-peach);padding:2px 8px;border-radius:999px;">Avg ${w.weightKg.toFixed(1)} kg</strong>
+                <div style="color:var(--muted);font-size:11px;margin-top:2px;font-weight:600;">${escapeHtml(w.delta)}</div>
               </div>
             </div>
             ${renderNutrientFooter(w, stdLim, true)}
@@ -1558,12 +1781,12 @@
           <div class="review-row">
             <div class="review-top">
               <div>
-                <strong>${escapeHtml(y.label)}</strong>
-                <div style="color:var(--muted);font-size:12px;">${escapeHtml(y.note)}</div>
+                <strong style="font-size:13px;">${escapeHtml(y.label)}</strong>
+                <div style="color:var(--muted);font-size:11px;font-weight:600;">${escapeHtml(y.note)}</div>
               </div>
               <div style="text-align:right;">
-                <strong style="color:var(--accent);">Avg ${y.weightKg.toFixed(1)} kg</strong>
-                <div style="color:var(--muted);font-size:12px;">${escapeHtml(y.delta)}</div>
+                <strong style="color:var(--accent-dark);background:var(--tint-peach);padding:2px 8px;border-radius:999px;">Avg ${y.weightKg.toFixed(1)} kg</strong>
+                <div style="color:var(--muted);font-size:11px;margin-top:2px;font-weight:600;">${escapeHtml(y.delta)}</div>
               </div>
             </div>
             ${renderNutrientFooter(y, stdLim, true)}
@@ -1571,45 +1794,54 @@
         `).join('');
       }
 
-      // Render SVG Chart combining 5 Color-Coded Nutrient Bars + Weight Line
-      const w = 320, h = 115;
+      // Render Dribbble "Activities"-style SVG Chart: Soft Grid + 5 Nutrient Bars + Coral Area/Line Curve + Hollow Nodes
+      const w = 320, h = 116;
       const weights = points.map(p => p.weight);
       const minW = Math.min(...weights) - 0.5;
       const maxW = Math.max(...weights) + 0.5;
       const stepX = w / Math.max(1, points.length);
-      const barColors = ['#f59e0b', '#f43f5e', '#6366f1', '#ec4899', '#06b6d4'];
+      const barColors = ['#e1308c', '#7ac71f', '#7000df', '#f48265', '#2b9af3'];
 
       const barsSvg = points.map((p, i) => {
         const groupWidth = Math.min(28, stepX * 0.65);
         const startX = i * stepX + (stepX - groupWidth) / 2;
         const bw = groupWidth / 5;
         return p.pcts.map((pct, bi) => {
-          const barH = Math.max(3, Math.round((pct / 100) * 58));
+          const barH = Math.max(3, Math.round((pct / 100) * 56));
           const x = startX + bi * bw;
-          return `<rect x="${x.toFixed(1)}" y="${h - 20 - barH}" width="${Math.max(2, bw - 1).toFixed(1)}" height="${barH}" rx="1.5" fill="${barColors[bi]}" opacity="0.45" />`;
+          return `<rect x="${x.toFixed(1)}" y="${h - 20 - barH}" width="${Math.max(2.2, bw - 1).toFixed(1)}" height="${barH}" rx="2" fill="${barColors[bi]}" opacity="0.38" />`;
         }).join('');
       }).join('');
 
-      const polyPoints = points.map((p, i) => {
+      const coords = points.map((p, i) => {
         const x = i * stepX + stepX * 0.5;
-        const y = h - 26 - ((p.weight - minW) / Math.max(0.1, maxW - minW)) * 68;
-        return `${x.toFixed(1)},${y.toFixed(1)}`;
-      }).join(' ');
+        const y = h - 26 - ((p.weight - minW) / Math.max(0.1, maxW - minW)) * 66;
+        return { x, y, weight: p.weight, label: p.label };
+      });
 
-      const dotsSvg = points.map((p, i) => {
-        const x = i * stepX + stepX * 0.5;
-        const y = h - 26 - ((p.weight - minW) / Math.max(0.1, maxW - minW)) * 68;
-        return `
-          <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="var(--accent)" />
-          <text x="${x.toFixed(1)}" y="${(y - 7).toFixed(1)}" fill="#f3f4f6" font-size="11" text-anchor="middle">${p.weight.toFixed(1)}</text>
-          <text x="${x.toFixed(1)}" y="${h - 4}" fill="#8e95a5" font-size="11" text-anchor="middle">${escapeHtml(p.label.slice(0, 6))}</text>
-        `;
-      }).join('');
+      const polyPoints = coords.map(c => `${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+      const areaPoints = coords.length > 0
+        ? `${coords[0].x.toFixed(1)},${h - 20} ${polyPoints} ${coords[coords.length - 1].x.toFixed(1)},${h - 20}`
+        : '';
+
+      const dotsSvg = coords.map(c => `
+        <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="4" fill="#ffffff" stroke="#f48265" stroke-width="2.5" />
+        <text x="${c.x.toFixed(1)}" y="${(c.y - 8).toFixed(1)}" fill="#191c26" font-size="10.5" font-weight="800" text-anchor="middle">${c.weight.toFixed(1)}</text>
+        <text x="${c.x.toFixed(1)}" y="${h - 4}" fill="#7e8497" font-size="10.5" font-weight="600" text-anchor="middle">${escapeHtml(c.label.slice(0, 6))}</text>
+      `).join('');
 
       chartEl.innerHTML = `
-        <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:115px;overflow:visible;">
+        <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:116px;overflow:visible;">
+          <defs>
+            <linearGradient id="coralArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f48265" stop-opacity="0.26" />
+              <stop offset="100%" stop-color="#f48265" stop-opacity="0.0" />
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="${h - 20}" x2="${w}" y2="${h - 20}" stroke="#eceef5" stroke-width="1" />
           ${barsSvg}
-          <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${polyPoints}" />
+          <polygon points="${areaPoints}" fill="url(#coralArea)" />
+          <polyline fill="none" stroke="#f48265" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="${polyPoints}" />
           ${dotsSvg}
         </svg>
       `;
@@ -1621,10 +1853,12 @@
       const totals = getTotalsForEntries(d.entries);
       const isBaselineWeek1 = state.onboardingStage === 'week1';
 
-      // Top Mode Switcher Tabs
+      // Top Mode Switcher Tabs + Bottom Floating Capsule Dock
       ['onboarding', 'log', 'routines', 'review'].forEach(m => {
         const tab = document.getElementById('tab-' + m);
         if (tab) tab.className = state.viewMode === m ? 'mode-tab active' : 'mode-tab';
+        const dock = document.getElementById('dock-' + m);
+        if (dock) dock.className = state.viewMode === m ? 'dock-btn active' : 'dock-btn';
       });
 
       // Header Updates
@@ -1636,6 +1870,15 @@
       document.getElementById('slider-cur').value = d.weightKg;
       document.getElementById('lbl-goal').textContent = state.goalKg.toFixed(1) + ' kg';
       document.getElementById('slider-goal').value = state.goalKg;
+      document.getElementById('lbl-gauge-sub').textContent = isBaselineWeek1 ? 'Wk 1 Baseline' : `Goal ${state.goalKg.toFixed(1)} kg`;
+
+      // Update Semi-Circular Weight Gauge Arc
+      const gaugeArc = document.getElementById('gauge-arc');
+      if (gaugeArc) {
+        const ratio = Math.max(0.1, Math.min(1, (d.weightKg - 50) / 80));
+        const offset = Math.round(100 - ratio * 100);
+        gaugeArc.setAttribute('stroke-dashoffset', String(offset));
+      }
 
       // Hide Goal Weight slider during Week 1 Baseline recording
       document.getElementById('goal-slider-row').style.display = isBaselineWeek1 ? 'none' : 'flex';
@@ -1668,21 +1911,22 @@
       }
 
       const nutrients = [
-        { short: 'Carbs', val: totals.c, max: limits.c, unit: 'g', color: 'var(--carbs)' },
-        { short: 'Protein', val: totals.p, max: limits.p, unit: 'g', color: 'var(--protein)' },
-        { short: 'Fat', val: totals.f, max: limits.f, unit: 'g', color: 'var(--fat)' },
-        { short: 'Sugar', val: totals.su, max: limits.su, unit: 'g', color: 'var(--sugar)' },
-        { short: 'Salt', val: totals.sa, max: limits.sa, unit: 'g', color: 'var(--salt)' }
+        { short: 'Carbs', val: totals.c, max: limits.c, unit: 'g', color: 'var(--carbs)', track: 'var(--carbs-track)' },
+        { short: 'Protein', val: totals.p, max: limits.p, unit: 'g', color: 'var(--protein)', track: 'var(--protein-track)' },
+        { short: 'Fat', val: totals.f, max: limits.f, unit: 'g', color: 'var(--fat)', track: 'var(--fat-track)' },
+        { short: 'Sugar', val: totals.su, max: limits.su, unit: 'g', color: 'var(--sugar)', track: 'var(--sugar-track)' },
+        { short: 'Salt', val: totals.sa, max: limits.sa, unit: 'g', color: 'var(--salt)', track: 'var(--salt-track)' }
       ];
 
-      // 1. Indicative Strip
+      // 1. Dribbble-Style Macro Cards Strip (Label + Bold % + Pastel Track with Vibrant Fill)
       const barsRow = document.getElementById('bars-row');
       barsRow.innerHTML = nutrients.map(n => {
         const pct = Math.min(100, Math.round((n.val / n.max) * 100));
         return `
           <div class="mini-col">
             <div class="mini-label"><span>${n.short}</span></div>
-            <div class="track">
+            <div class="mini-pct">${pct}%</div>
+            <div class="track" style="background:${n.track};">
               <div class="fill" style="width:${pct}%;background:${n.color};"></div>
             </div>
           </div>
@@ -1694,8 +1938,8 @@
       if (state.intakeExpanded) {
         details.innerHTML = nutrients.map(n => `
           <div class="detail-row">
-            <span style="color:${n.color};font-weight:600;">${n.short}</span>
-            <span>${n.val}${n.unit} <span style="color:var(--muted);">/ ${n.max}${n.unit}</span></span>
+            <span style="color:${n.color};font-weight:800;">● ${n.short}</span>
+            <span style="font-weight:700;">${n.val}${n.unit} <span style="color:var(--muted);font-weight:500;">/ ${n.max}${n.unit}</span></span>
           </div>
         `).join('');
       }
@@ -1707,13 +1951,13 @@
       const limitBtn = document.getElementById('btn-limit');
 
       const ranked = rankMatches(state.searchQuery);
-      clearBtn.style.display = state.searchQuery ? 'inline-block' : 'none';
+      clearBtn.style.display = state.searchQuery ? 'inline-flex' : 'none';
       matchesPanel.style.display = ranked.length > 0 ? 'flex' : 'none';
       limitBtn.textContent = state.matchLimit === 10 ? 'Showing 10 · Show 25' : 'Showing 25 · Show 10';
 
       if (ranked.length > 0) {
         matchesScroll.innerHTML = ranked.map((r, i) => {
-          const dotColor = r.score >= 45 ? 'var(--accent)' : (r.score >= 20 ? 'var(--carbs)' : '#4b5563');
+          const dotColor = r.score >= 45 ? 'var(--protein)' : (r.score >= 20 ? 'var(--sugar)' : '#cbd0de');
           return `
             <div class="match-row" onclick="selectMatch(${r.idx})">
               <div class="match-left">
@@ -1726,7 +1970,7 @@
               </div>
               <div class="match-right">
                 <span class="score-dot" style="background:${dotColor};" title="Match score"></span>
-                <span style="color:var(--accent);font-weight:700;">+</span>
+                <span class="add-circle">+</span>
               </div>
             </div>
           `;
@@ -1741,8 +1985,8 @@
           ${escapeHtml(r.icon)} ${escapeHtml(r.shortLabel)}
         </button>
       `).join('') + `
-        <button class="routine-chip" style="border-color:rgba(16,185,129,0.4);color:var(--accent);" onclick="setViewMode('routines')">
-          ⚙ Routines
+        <button class="routine-chip" style="background:var(--tint-mint);border-color:var(--tint-mint-border);color:#4d8a0b;font-weight:700;" onclick="setViewMode('routines')">
+          🔁 Routines
         </button>
       `;
 
@@ -1751,34 +1995,39 @@
       const weightRowHtml = `
         <div class="weight-log-row" onclick="toggleWeightDrawer()">
           <div style="display:flex;align-items:center;gap:8px;">
-            <span>⚖️</span>
-            <span style="font-weight:600;color:var(--accent);">Recorded weight (${escapeHtml(d.label)}): ${d.weightKg.toFixed(1)} kg</span>
+            <span class="food-icon-badge" style="background:#ffffff;width:30px;height:30px;font-size:15px;">⚖️</span>
+            <div>
+              <div style="font-weight:800;color:var(--text);">Recorded weight (${escapeHtml(d.label)}): ${d.weightKg.toFixed(1)} kg</div>
+              <div style="font-size:11px;color:#8f6b32;font-weight:600;">${isBaselineWeek1 ? 'Week 1 Baseline · Tap to edit' : `Goal ${state.goalKg.toFixed(1)} kg · Tap to edit`}</div>
+            </div>
           </div>
-          <span style="color:var(--muted);">${isBaselineWeek1 ? 'Week 1 Baseline · Edit' : `Goal ${state.goalKg.toFixed(1)} kg · Edit`}</span>
+          <span style="color:#b4690e;font-weight:800;font-size:11px;background:#ffffff;padding:4px 9px;border-radius:999px;border:1px solid var(--tint-cream-border);">Edit</span>
         </div>
       `;
 
-      listEl.innerHTML = weightRowHtml + d.entries.map(e => {
+      const iconTints = ['var(--tint-peach)', 'var(--tint-mint)', 'var(--tint-cream)', 'var(--tint-blush)'];
+      listEl.innerHTML = weightRowHtml + d.entries.map((e, idx) => {
         const isOpen = state.selectedEntryId === e.id;
+        const badgeBg = iconTints[idx % iconTints.length];
         return `
           <div class="food-item" onclick="state.selectedEntryId = state.selectedEntryId === ${e.id} ? null : ${e.id}; render();">
             <div class="food-main">
               <div class="food-left">
-                <span>${escapeHtml(e.icon)}</span>
+                <span class="food-icon-badge" style="background:${badgeBg};">${escapeHtml(e.icon)}</span>
                 <span>${escapeHtml(e.name)}</span>
               </div>
               <div class="food-right">
                 <span>${escapeHtml(e.time)}</span>
-                <span onclick="removeEntry(${e.id}, event)" style="padding:0 4px;cursor:pointer;">×</span>
+                <span onclick="removeEntry(${e.id}, event)" style="padding:2px 6px;border-radius:999px;background:#f3f4f8;color:var(--muted);cursor:pointer;">×</span>
               </div>
             </div>
             ${isOpen ? `
               <div class="food-macros">
-                <span>${e.c}g Carbs</span>
-                <span>${e.p}g Protein</span>
-                <span>${e.f}g Fat</span>
-                <span>${e.su}g Sugar</span>
-                <span>${e.sa}g Salt</span>
+                <span style="color:var(--carbs);">${e.c}g Carbs</span>
+                <span style="color:var(--protein);">${e.p}g Protein</span>
+                <span style="color:var(--fat);">${e.f}g Fat</span>
+                <span style="color:var(--sugar);">${e.su}g Sugar</span>
+                <span style="color:var(--salt);">${e.sa}g Salt</span>
               </div>
             ` : ''}
           </div>
