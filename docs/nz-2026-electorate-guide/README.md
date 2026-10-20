@@ -8,9 +8,13 @@ electorates), **481 candidates**, and **7 major parties**. Live at
 ## What it does
 
 - Starts with a single fill-in-the-blanks sentence:
-  > *“I am from `<city/town>` and I want to vote for `<local candidate>` and the `<political party>` party.”*
-- Maps every town, suburb and city in New Zealand to its 2026 General or Māori
-  electorate, then populates the exact candidates standing in that electorate.
+  > *“I am from `<city, town or suburb>` and I want to vote for `<local candidate>` and the `<political party>` party.”*
+- Maps **220+ cities, towns, and suburbs** across New Zealand to their official
+  **August 2025 Representation Commission Final Electorate Boundaries** for the
+  2026 General Election (including newly formed and redrawn seats such as
+  *Kāpiti*, *Kenepuru*, *Wellington North*, *Wellington Bays*, *Glendene*,
+  *Henderson*, *Waitākere*, *Ōtāhuhu*, *Mt Maunganui*, and *East Cape*), then
+  populates the exact candidates standing in that electorate.
 - Once all three blanks are chosen, reveals a four-chapter breakdown tailored to
   that combination:
   1. **Your Ballot Verdict:** How your local candidate vote and national Party
@@ -47,6 +51,9 @@ dependencies.
 
 ## Sources
 
+- **Representation Commission 2025 Final Report ([elections.nz](https://elections.nz)):**
+  Official 2026 electorate boundaries and suburb/town allocations across all 64
+  General and 7 Māori electorates.
 - **Electoral Commission ([vote.nz](https://vote.nz)):** Official 2026 candidate
   nominations across all 71 electorates and 17 party lists.
 - **Policy.nz ([policy.nz/2026](https://policy.nz/2026)):** Candidate
