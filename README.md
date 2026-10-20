@@ -82,6 +82,13 @@ And one that watches a feed instead of pruning it:
 Static pages, published from [`docs/`](docs/) to
 [unashamedai.broadley.org.nz](https://unashamedai.broadley.org.nz):
 
+- **[Electorate vs Party (2026 Election)](docs/nz-2026-electorate-guide/)** —
+  interactive MMP split-vote and candidate guide across all 71 New Zealand
+  electorates (481 candidates and 7 major parties). Fill in one sentence (*“I am
+  from `<city/town>` and I want to vote for `<candidate>` and the `<party>`
+  party”*) to compare local candidates, party delivery records from *Promised vs
+  Performed*, and 8-issue policy coverage side by side. One HTML file, zero
+  outbound network requests.
 - **[Lighthouses of New Zealand](docs/nz-lighthouses/)** — an animated night
   chart of 86 coastal lights, each sweeping or flashing to its published
   characteristic on one shared clock. No land is drawn: beams are ray-traced
