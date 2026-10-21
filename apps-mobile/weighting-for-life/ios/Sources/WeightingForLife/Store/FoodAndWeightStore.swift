@@ -201,6 +201,48 @@ public final class FoodAndWeightStore {
         touchAndSave()
     }
 
+    /// Cycles the schedule frequency of a routine.
+    public func cycleRoutineFrequency(id: String) {
+        let options = ["Every day", "Weekdays", "Weekends", "🔥 Exercise days", "Tue / Thu / Sun", "2× / week"]
+        guard let idx = database.routines.firstIndex(where: { $0.id == id }) else { return }
+        let current = database.routines[idx].frequency
+        let nextIdx = ((options.firstIndex(of: current) ?? -1) + 1) % options.count
+        database.routines[idx].frequency = options[nextIdx]
+        touchAndSave()
+    }
+
+    /// Cycles the default time of a routine.
+    public func cycleRoutineTime(id: String) {
+        let times = ["7:45 am", "8:10 am", "12:40 pm", "6:50 pm"]
+        guard let idx = database.routines.firstIndex(where: { $0.id == id }) else { return }
+        let current = database.routines[idx].defaultTime
+        let nextIdx = ((times.firstIndex(of: current) ?? -1) + 1) % times.count
+        database.routines[idx].defaultTime = times[nextIdx]
+        touchAndSave()
+    }
+
+    /// Creates and activates a new custom routine from an NZFCD food item.
+    public func addCustomRoutine(from item: NZFCDFoodItem, frequency: String) {
+        let shortWords = item.name.split(separator: ",").first.map(String.init) ?? item.name
+        let newRoutine = MealRoutine(
+            id: "r-\(Int(Date().timeIntervalSince1970 * 1000))",
+            icon: item.icon,
+            shortLabel: shortWords,
+            name: item.name,
+            frequency: frequency,
+            defaultTime: "8:00 am",
+            reason: "Custom routine created by you",
+            active: true,
+            carbsG: item.carbsG,
+            proteinG: item.proteinG,
+            fatG: item.fatG,
+            sugarG: item.sugarG,
+            saltG: item.saltG
+        )
+        database.routines.insert(newRoutine, at: 0)
+        touchAndSave()
+    }
+
     // MARK: - Weekly & Yearly Daily-Average Rollups for Review Screen
 
     public func weeklyRollups() -> [PeriodAverageRollup] {

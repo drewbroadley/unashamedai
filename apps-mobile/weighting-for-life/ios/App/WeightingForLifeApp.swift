@@ -6,6 +6,7 @@ struct WeightingForLifeApp: App {
     var body: some Scene {
         WindowGroup {
             WeightingForLifeRootView()
+                .preferredColorScheme(.light)
         }
     }
 }
