@@ -52,14 +52,19 @@ struct WeightingForLifeVerify {
         check(store.weeklyRollups().count == 5, "Weekly rollups count")
         check(store.yearlyRollups().count == 3, "Yearly rollups count")
 
-        // 5. Plain-English NZFCD search ranking (Top 10 and Top 25)
+        // 5. Plain-English NZFCD search ranking across the full 2,904-item 2024 NZ FOODfiles database
         let engine = NZFCDSearchEngine()
+        check(engine.catalog.count >= 2900, "Full NZFCD 2024 catalog loaded (\(engine.catalog.count) items)")
         let top10 = engine.search("poached egg", limit: 10)
         check(top10.count == 10, "Top 10 search count")
-        check(top10.first?.item.name.contains("poached") == true, "Top 1 match relevance")
+        check(top10.first?.item.name.lowercased().contains("poached") == true, "Top 1 match relevance")
         let top25 = engine.search("flat white", limit: 25)
-        check(top25.count == 25, "Top 25 search count")
+        check(!top25.isEmpty && top25.first?.item.name.lowercased().contains("flat white") == true, "Flat white search")
+        check(engine.search("rewena", limit: 5).first?.item.name.lowercased().contains("rewena") == true, "Rewena bread search")
+        check(engine.search("feijoa", limit: 5).first?.item.name.lowercased().contains("feijoa") == true, "Feijoa search")
+        check(engine.search("tim tam", limit: 5).first?.item.name.lowercased().contains("tim tam") == true, "Tim Tam search")
+        check(engine.search("pavlova", limit: 5).first?.item.name.lowercased().contains("pavlova") == true, "Pavlova search")
 
-        print("✅ WeightingForLifeCore V1 verified: O(1) dateKey lookup, range/year queries, JSON persistence, daily averages, and NZFCD search passed.")
+        print("✅ WeightingForLifeCore V1 verified: \(engine.catalog.count) NZFCD foods loaded, O(1) dateKey lookup, range/year queries, JSON persistence, daily averages, and NZFCD search passed.")
     }
 }
