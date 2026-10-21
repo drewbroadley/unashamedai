@@ -57,7 +57,34 @@
   "spatialCoverage": {
     "@type": "Place",
     "name": "New Zealand"
-  }
+  },
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "text/csv",
+      "contentUrl": "https://unashamedai.broadley.org.nz/nz-2026-electorate-guide/data/candidates.csv"
+    },
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "text/csv",
+      "contentUrl": "https://unashamedai.broadley.org.nz/nz-2026-electorate-guide/data/electorates-and-suburbs.csv"
+    },
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "text/csv",
+      "contentUrl": "https://unashamedai.broadley.org.nz/nz-2026-electorate-guide/data/parties-and-policies.csv"
+    },
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://unashamedai.broadley.org.nz/nz-2026-electorate-guide/data/electorates.json"
+    },
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://unashamedai.broadley.org.nz/nz-2026-electorate-guide/data/parties.json"
+    }
+  ]
 }
 </script>
 <style>
@@ -670,6 +697,16 @@ section{padding:40px 0;border-bottom:1px solid var(--rule)}
 
 .colophon-h{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;
   text-transform:uppercase;color:var(--ink-3);margin-bottom:7px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0;
+  border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+.dl{display:flex;flex-direction:column;gap:5px;padding:18px;text-decoration:none;color:var(--ink);
+  border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--paper)}
+.dl:hover{background:var(--paper-well)}
+.dl-k{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3)}
+.dl-t{font-size:16px;font-weight:600;text-decoration:underline;text-underline-offset:3px;
+  text-decoration-thickness:.5px}
+.dl-d{font-size:13.5px;color:var(--ink-2);line-height:1.5}
 footer{padding:36px 0 56px;color:var(--ink-3);font-size:13.5px;background:var(--paper-page);
   border-top:3px double var(--rule-ink)}
 .foot-grid{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
@@ -695,10 +732,12 @@ footer a{color:var(--ink-2)}
       <a href="#parties">3. Parties</a>
       <a href="#coverage">4. Policy Coverage</a>
       <a href="#method">MMP Rules</a>
+      <a href="#data">Open Data</a>
     </nav>
     <button class="iconbtn" id="resetBtn" type="button" onclick="resetStory()" style="display:none;margin-left:auto" title="Clear selections and start over">Reset</button>
     <button class="iconbtn" id="shareBtn" type="button" style="display:none" title="Copy a direct link to this exact story selection">Share story</button>
-    <button class="iconbtn sq" id="themeBtn" type="button" style="margin-left:auto" aria-label="Toggle dark mode" title="Toggle dark mode">
+    <a class="iconbtn" id="dataBtn" href="data/" style="text-decoration:none;margin-left:auto" title="Access and download the open CSV, JSON, and Markdown datasets">Open data</a>
+    <button class="iconbtn sq" id="themeBtn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
       <svg class="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.4A8.6 8.6 0 019.6 3.5a8.6 8.6 0 1010.9 10.9z"/></svg>
     </button>
@@ -888,11 +927,58 @@ footer a{color:var(--ink-2)}
       <div class="mcard">
         <h3>4. Verified data sources</h3>
         <ul>
-          <li><b>Vote.nz:</b> Official 2026 Electoral Commission candidate nominations (71 electorates, 481 candidates, 17 party lists).</li>
+          <li><b>Elections.nz (2025 Final Report):</b> Official 2026 electorate boundaries across 64 General and 7 M&#257;ori seats.</li>
+          <li><b>Vote.nz:</b> Official 2026 Electoral Commission candidate nominations (71 electorates, 479 candidates, 17 party lists).</li>
           <li><b>Policy.nz (2026):</b> Candidate profiles, local priorities, and party platforms.</li>
           <li><b>Promised vs Performed:</b> 2017&ndash;2026 government promise tracking.</li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- OPEN DATA SECTION (Matching Promised vs Performed)                    -->
+<!-- ===================================================================== -->
+<section id="data">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Open data</div>
+      <h2>Check the work &amp; download the dataset</h2>
+      <p>Everything behind this page is published in the <a href="data/"><code>data/</code> folder</a> as spreadsheets (CSV), structured JSON, and readable Markdown under CC0 1.0 Public Domain.</p>
+    </div>
+
+    <div class="dl-grid">
+      <a class="dl" href="data/candidates.csv" download>
+        <span class="dl-k">Spreadsheet &middot; CSV</span>
+        <span class="dl-t">data/candidates.csv</span>
+        <span class="dl-d">All <b>479</b> candidates across all <b>71</b> electorates with party, Vote.nz list rank, MMP entry path, career background, 2023&ndash;26 record, and 2026 priorities. Opens in Excel or Sheets.</span>
+      </a>
+      <a class="dl" href="data/electorates-and-suburbs.csv" download>
+        <span class="dl-k">Spreadsheet &middot; CSV</span>
+        <span class="dl-t">data/electorates-and-suburbs.csv</span>
+        <span class="dl-d">All <b>232</b> city, town, and suburb groups mapped to their official 2026 General or M&#257;ori electorate under the August 2025 Representation Commission Final Report.</span>
+      </a>
+      <a class="dl" href="data/parties-and-policies.csv" download>
+        <span class="dl-k">Spreadsheet &middot; CSV</span>
+        <span class="dl-t">data/parties-and-policies.csv</span>
+        <span class="dl-d">All <b>7</b> major political parties compared across <b>8</b> policy domains, including 2017&ndash;2026 delivery scores, 2023&ndash;26 actions, and 2026&ndash;29 commitments.</span>
+      </a>
+      <a class="dl" href="data/electorates.json">
+        <span class="dl-k">Structured &middot; JSON</span>
+        <span class="dl-t">data/electorates.json</span>
+        <span class="dl-d">Full structured JSON for all <b>71</b> electorates, their 2025/2026 suburb boundaries, local issue clashes vs complementarities, and all candidate profiles.</span>
+      </a>
+      <a class="dl" href="data/parties.json">
+        <span class="dl-k">Structured &middot; JSON</span>
+        <span class="dl-t">data/parties.json</span>
+        <span class="dl-d">Full structured JSON for all <b>7</b> political parties, their Promised vs Performed delivery records, and stances across all 8 policy domains.</span>
+      </a>
+      <a class="dl" href="data/by-electorate.md">
+        <span class="dl-k">Reference &middot; Markdown</span>
+        <span class="dl-t">data/by-electorate.md</span>
+        <span class="dl-d">Human-readable Markdown directory of all 71 electorates, their 2026 suburb coverage, and candidate summary tables.</span>
+      </a>
     </div>
   </div>
 </section>
@@ -903,11 +989,11 @@ footer a{color:var(--ink-2)}
     <div style="max-width:64ch">
       <div class="colophon-h">Colophon &amp; house style</div>
       <p style="margin:0 0 8px"><strong>Electorate vs Party &middot; 2026 New Zealand General Election Story Guide (All 71 Electorates)</strong>. Visual design adapted from <a href="https://github.com/drewbroadley/unashamedai/tree/main/docs/nz-govt-promised-vs-did">Promised vs Performed</a>.</p>
-      <p style="margin:0">Data cross-referenced from <a href="https://vote.nz">Vote.nz</a> and <a href="https://policy.nz/2026">Policy.nz</a> for the Saturday 7 November 2026 General Election.</p>
+      <p style="margin:0">Data cross-referenced from <a href="https://elections.nz">Elections.nz</a>, <a href="https://vote.nz">Vote.nz</a>, and <a href="https://policy.nz/2026">Policy.nz</a> for the Saturday 7 November 2026 General Election. Browse or download all source files in the <a href="data/"><code>data/</code> folder</a>.</p>
     </div>
     <div>
       <div class="colophon-h">Jump to chapter</div>
-      <p style="margin:0"><a href="#your-story">Your Story</a> &middot; <a href="#verdict">1. Verdict</a> &middot; <a href="#candidates">2. Local Candidates</a> &middot; <a href="#parties">3. Parties</a> &middot; <a href="#coverage">4. Policy Coverage</a></p>
+      <p style="margin:0"><a href="#your-story">Your Story</a> &middot; <a href="#verdict">1. Verdict</a> &middot; <a href="#candidates">2. Local Candidates</a> &middot; <a href="#parties">3. Parties</a> &middot; <a href="#coverage">4. Policy Coverage</a> &middot; <a href="#data">Open Data</a></p>
     </div>
   </div>
 </footer>
@@ -1589,6 +1675,8 @@ const ELECTORATES = {
     ]
   }
 };
+
+
 
 
 
@@ -2842,7 +2930,7 @@ function renderAll() {
   const navEl = document.getElementById("topNavLinks");
   const shareEl = document.getElementById("shareBtn");
   const resetEl = document.getElementById("resetBtn");
-  const themeEl = document.getElementById("themeBtn");
+  const dataEl = document.getElementById("dataBtn");
   const hasAny = Boolean(currentElectorateSlug || simCandId || simPartyId);
 
   if (!complete) {
@@ -2852,7 +2940,7 @@ function renderAll() {
     shareEl.style.display = "none";
     resetEl.style.display = hasAny ? "inline-grid" : "none";
     resetEl.style.marginLeft = "auto";
-    themeEl.style.marginLeft = hasAny ? "0" : "auto";
+    dataEl.style.marginLeft = hasAny ? "0" : "auto";
     return;
   }
 
@@ -2862,7 +2950,7 @@ function renderAll() {
   shareEl.style.display = "inline-grid";
   resetEl.style.display = "inline-grid";
   resetEl.style.marginLeft = "0";
-  themeEl.style.marginLeft = "0";
+  dataEl.style.marginLeft = "0";
 
   syncSmartComparisonDefaults();
   renderChapter1Verdict();

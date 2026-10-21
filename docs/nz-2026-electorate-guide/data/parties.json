@@ -1,0 +1,690 @@
+{
+  "generated": "2026-10-22",
+  "electionDate": "2026-11-07",
+  "policyDomains": [
+    {
+      "id": "tax",
+      "name": "Tax & Economy",
+      "subtitle": ""
+    },
+    {
+      "id": "cost",
+      "name": "Cost of Living & Monopolies",
+      "subtitle": ""
+    },
+    {
+      "id": "health",
+      "name": "Health & Medicines",
+      "subtitle": ""
+    },
+    {
+      "id": "housing",
+      "name": "Housing & Local Govt",
+      "subtitle": ""
+    },
+    {
+      "id": "transport",
+      "name": "Transport & Infrastructure",
+      "subtitle": ""
+    },
+    {
+      "id": "law",
+      "name": "Law, Order & Justice",
+      "subtitle": ""
+    },
+    {
+      "id": "climate",
+      "name": "Climate, Energy & Oceans",
+      "subtitle": ""
+    },
+    {
+      "id": "democracy",
+      "name": "Te Tiriti & Democracy",
+      "subtitle": ""
+    }
+  ],
+  "parties": [
+    {
+      "id": "labour",
+      "name": "New Zealand Labour Party",
+      "shortName": "Labour",
+      "leaders": "Chris Hipkins",
+      "bloc": "centre-left",
+      "founded": 1916,
+      "mps2026": "34 MPs (17 electorates)",
+      "poll2026": "31.3%",
+      "donations2025": "$2,403,242",
+      "promisedVsPerformedDelivery": [
+        {
+          "label": "Labour (2017–23 govt)",
+          "term": "87 promises tracked",
+          "keptPct": 62,
+          "counts": {
+            "kept": 53,
+            "partial": 0,
+            "broken": 33,
+            "unscored": 1
+          },
+          "summary": ""
+        }
+      ],
+      "pastRecord": [
+        "Kept 53 of 86 judgeable promises (62%): Passed the Zero Carbon Act, Fair Pay Agreements, Clean Car Discount, free $5 prescriptions, 20 hours ECE expansion, and trade deals with the UK and EU.",
+        "Where it fell shortest: Transport and infrastructure (20% kept — Auckland Light Rail, Let's Get Wellington Moving, and KiwiBuild's 100,000-home target all failed or stalled) and post-DHB health wait times.",
+        "2023 'Policy Bonfire': When Chris Hipkins became PM in Jan 2023, he scrapped the TVNZ–RNZ merger, biofuels mandate, and ruled out a wealth or capital gains tax for the 2023 campaign."
+      ],
+      "lastTerm2023_2026": [
+        "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+        "2025/26 Tax Pivot: Reversed Hipkins's 2023 veto to adopt a targeted 28% Capital Gains Tax strictly on commercial and residential investment properties (from 1 July 2027), ring-fencing every dollar to fund three free GP visits per year.",
+        "Hard Coalition Red Line: Explicitly ruled out adopting the Green Party's net wealth tax or inheritance tax in 2026 coalition talks.",
+        "Fought Wellington & Hutt Cuts: Opposed the Coalition's 6.5%–7.5% public sector job cuts, the cancellation of the iReX Cook Strait ferries, and the repeal of Fair Pay Agreements and smoke-free laws."
+      ],
+      "thisTerm2026_2029": [
+        "'Medicard' & Primary Health: Issue every Kiwi a Medicard for 3 free GP visits a year, restore universal free $5 prescriptions, fund free cervical screening & maternity ultrasounds, and forgive student loans for GPs bonding to under-served areas like Upper Hutt.",
+        "28% Investment Property CGT & NZ Future Fund: Tax realised gains on investment property (family home, farms, KiwiSaver, shares & small business exempt); create a sovereign NZ Future Fund to finance domestic infrastructure without privatisation.",
+        "$20 Weekly Public Transport Fare Cap: Cap public transport fares at $20/week nationwide—major relief for Hutt Valley Line train commuters.",
+        "Jobs, Solar & Student Loans: Make Apprenticeship Boost permanent, offer Crown-backed household solar/battery loans, and write off 10% of student loan balances for NZ-based graduates who missed Fees Free."
+      ],
+      "domainStances": {
+        "tax": {
+          "domainName": "Tax & Economy",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "28% CGT on commercial & residential investment property only (from 1 July 2027; family home, farms, shares, KiwiSaver & small businesses exempt). Create sovereign NZ Future Fund. Return to surplus by 2028/29. Explicitly rules out the Greens' broad wealth tax.",
+          "alignmentSummary": "Core 2026 priority for Labour"
+        },
+        "cost": {
+          "domainName": "Cost of Living & Monopolies",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "Nationwide $20/week public transport fare cap (huge savings on Hutt Valley rail). Universal free $5 prescriptions & 3 free GP visits/yr. Crown-backed household solar/battery loans and tougher electricity market oversight.",
+          "alignmentSummary": "Core 2026 priority for Labour"
+        },
+        "health": {
+          "domainName": "Health & Medicines",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "'Medicard' delivering 3 free GP visits per year for every New Zealander (funded by investment property CGT). Free cervical screening & pregnancy ultrasounds. Student loan write-offs for doctors bonding to high-need areas.",
+          "alignmentSummary": "Core 2026 priority for Labour"
+        },
+        "housing": {
+          "domainName": "Housing & Local Govt",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "Cool investor speculation via the 28% investment property CGT to help first-home buyers. Maintain steady Kāinga Ora public housing build pipeline and Healthy Homes rental insulation enforcement.",
+          "alignmentSummary": "Core 2026 priority for Labour"
+        },
+        "transport": {
+          "domainName": "Transport & Infrastructure",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "$20/week nationwide public transport fare cap. Finance long-term rail, Cook Strait ferries, and regional corridors (including RiverLink/Melling) through the NZ Future Fund without asset privatisation.",
+          "alignmentSummary": "Core 2026 priority for Labour"
+        },
+        "law": {
+          "domainName": "Law, Order & Justice",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "Focus on frontline community policing numbers, mental health crisis co-response teams, retail crime prevention, and tackling youth crime drivers while opposing private prisons and military boot camps.",
+          "alignmentSummary": "Conditional / secondary focus for Labour"
+        },
+        "climate": {
+          "domainName": "Climate, Energy & Oceans",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "Strictly uphold Paris Agreement targets and domestic emissions budgets. Crown-backed household solar/battery loans, green regeneration jobs, expand marine reserves, and ban new seabed mining permits.",
+          "alignmentSummary": "Core 2026 priority for Labour"
+        },
+        "democracy": {
+          "domainName": "Te Tiriti & Democracy",
+          "lastTerm2023_2026": "Rebuilt economic platform in Opposition: Led by Remutaka MP Chris Hipkins and Finance spokesperson Barbara Edmonds after losing the 2023 election.",
+          "thisTerm2026_2029": "Uphold Te Tiriti o Waitangi partnership, protect the Māori electorates and local council Māori wards, and support targeted equity delivery in health and education.",
+          "alignmentSummary": "Core 2026 priority for Labour"
+        }
+      }
+    },
+    {
+      "id": "national",
+      "name": "New Zealand National Party",
+      "shortName": "National",
+      "leaders": "Christopher Luxon",
+      "bloc": "centre-right",
+      "founded": 1936,
+      "mps2026": "49 MPs (43 electorates)",
+      "poll2026": "30.8%",
+      "donations2025": "$6,275,234",
+      "promisedVsPerformedDelivery": [
+        {
+          "label": "National (2023–26 govt)",
+          "term": "99 promises tracked",
+          "keptPct": 62,
+          "counts": {
+            "kept": 60,
+            "partial": 7,
+            "broken": 30,
+            "unscored": 2
+          },
+          "summary": ""
+        }
+      ],
+      "pastRecord": [
+        "Core Philosophy: Incremental reduction in the role of government, fiscal restraint, private enterprise, roading infrastructure, and tough sentencing.",
+        "2023 Campaign Ground: Won power in October 2023 campaigning on 'Back Pocket Boost' income tax threshold adjustments, restoring landlord mortgage interest deductibility, repealing Three Waters and the RMA replacements, and restoring law-and-order targets."
+      ],
+      "lastTerm2023_2026": [
+        "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+        "Major Repeals: Repealed Three Waters (replaced with Local Water Done Well / Tiaki Wai), repealed the NBA/SPA resource laws and Fair Pay Agreements, scrapped the Clean Car Discount ('ute tax'), and disestablished Te Aka Whai Ora.",
+        "What They Struggled With / Broke: Cancelled KiwiRail's iReX Cook Strait rail-ferry contract in Dec 2023 (incurring heavy break costs and delays), scaled back the Dunedin Hospital inpatient build (sparking a 35,000-person protest), stalled on the 10,000 EV chargers rollout (0 contracts signed at 30 months), and pushed the budget surplus target back two years amid deep Wellington public service cuts."
+      ],
+      "thisTerm2026_2029": [
+        "Break Up the Supermarket Duopoly: Forcibly separate Foodstuffs' New World and PAK'nSAVE operations into competing entities to drive down grocery prices.",
+        "No New Taxes & Compulsory KiwiSaver: Pledge zero new capital gains, wealth or land taxes; make KiwiSaver compulsory for all workers, kickstart KiwiSaver accounts at birth for every newborn, and fund contributions during paid parental leave.",
+        "'Elective Boost' & Maternal Care: Use private hospital surgical capacity to clear public waitlists (hips, knees, cataracts), guarantee 3-day funded postnatal stays for new mums, and lower free bowel screening to age 56.",
+        "5% Deposit First Home Loans & Roads: Expand 5% deposit First Home Loan access, pass permanent RMA replacement unlocking 30 years of housing land, and transition the entire fleet to electronic Road User Charges (RUC) to build Roads of National Significance."
+      ],
+      "domainStances": {
+        "tax": {
+          "domainName": "Tax & Economy",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "No new taxes (opposes CGT, wealth & land taxes). Keep 100% landlord interest deductibility & 2-year bright-line test. Compulsory KiwiSaver with kickstart accounts at birth. Return to budget surplus by 2028/29.",
+          "alignmentSummary": "Core 2026 priority for National"
+        },
+        "cost": {
+          "domainName": "Cost of Living & Monopolies",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "Forcibly break up the supermarket duopoly by splitting Foodstuffs' New World and PAK'nSAVE brands. Student loan 'Back Pocket Boost' for graduates staying in NZ; flexible Paid Parental Leave.",
+          "alignmentSummary": "Core 2026 priority for National"
+        },
+        "health": {
+          "domainName": "Health & Medicines",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "'Elective Boost' using private hospitals to clear public surgical waitlists (hips, knees, cataracts). Guaranteed 3-day funded postnatal stay for new mothers. Free bowel screening lowered to age 56.",
+          "alignmentSummary": "Core 2026 priority for National"
+        },
+        "housing": {
+          "domainName": "Housing & Local Govt",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "Expand 5% deposit First Home Loans. Enact permanent RMA replacement requiring councils to free up 30 years of housing land supply and mixed-use zoning near transit.",
+          "alignmentSummary": "Core 2026 priority for National"
+        },
+        "transport": {
+          "domainName": "Transport & Infrastructure",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "Build Roads of National Significance (including Petone-to-Grenada / Cross Valley Link planning & Melling), funded via PPPs, tolling, and transitioning all vehicles to electronic Road User Charges (RUC).",
+          "alignmentSummary": "Core 2026 priority for National"
+        },
+        "law": {
+          "domainName": "Law, Order & Justice",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "Tough sentencing (capping sentence discounts at 40%, Three Strikes law), gang patch bans, Youth Military Academies, and expanding prison capacity.",
+          "alignmentSummary": "Core 2026 priority for National"
+        },
+        "climate": {
+          "domainName": "Climate, Energy & Oceans",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "'Electrify NZ' (fast-track consenting for wind, solar, geothermal & grid upgrades to double renewable electricity) while permanently keeping agricultural methane out of the ETS.",
+          "alignmentSummary": "Conditional / secondary focus for National"
+        },
+        "democracy": {
+          "domainName": "Te Tiriti & Democracy",
+          "lastTerm2023_2026": "Kept 60 of 97 judgeable promises (62%): Delivered the 2024 income tax bracket relief, restored 100% landlord mortgage interest deductibility, shortened the bright-line test to 2 years, banned gang patches in public, and banned cellphones in schools.",
+          "thisTerm2026_2029": "Deliver public services strictly on clinical and social need rather than ethnicity; voted down ACT's Treaty Principles Bill at Second Reading to hold the pragmatic centre.",
+          "alignmentSummary": "Conditional / secondary focus for National"
+        }
+      }
+    },
+    {
+      "id": "act",
+      "name": "ACT New Zealand",
+      "shortName": "ACT",
+      "leaders": "David Seymour",
+      "bloc": "centre-right",
+      "founded": 1994,
+      "mps2026": "11 MPs (2 electorates)",
+      "poll2026": "8.3%",
+      "donations2025": "$2,445,256",
+      "promisedVsPerformedDelivery": [
+        {
+          "label": "ACT (2023–26 govt)",
+          "term": "35 promises tracked",
+          "keptPct": 62,
+          "counts": {
+            "kept": 20,
+            "partial": 1,
+            "broken": 11,
+            "unscored": 3
+          },
+          "summary": ""
+        }
+      ],
+      "pastRecord": [
+        "Core Philosophy: Free-market economics, smaller government, flatter taxes, property rights, tough truth-in-sentencing, and 'one law for all' equal citizenship.",
+        "Growth Trajectory: Grew from 1 MP (Epsom) in 2017 to 10 MPs in 2020 and 11 MPs (winning both Epsom and Tāmaki) in 2023."
+      ],
+      "lastTerm2023_2026": [
+        "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+        "Landlords, Welfare & Firearms: Championed rapid restoration of landlord mortgage interest deductibility, tighter welfare sanctions, overseas investment streamlining, and firearm law reform.",
+        "What Was Blocked: Secured First Reading and Select Committee hearings for its flagship Treaty Principles Bill (sparking a 40,000+ person hīkoi and record submissions), but National and NZ First voted it down at Second Reading in 2025."
+      ],
+      "thisTerm2026_2029": [
+        "Cut Government Departments from 41 to 30: Slash bureaucracy, demographic ministries, and 'corporate welfare' to fund a flatter, lower income tax structure.",
+        "Tax-Free KiwiSaver Earnings & Super at 67: Remove taxes on qualifying KiwiSaver investment earnings while gradually raising the NZ Superannuation eligibility age to 67 by 2035 (with an early-access exemption for manual/physical trades).",
+        "Australian Parity on Medicines (12% by 2033): Legally commit to lifting Pharmac's share of the health budget every year until it reaches Australian parity (12% of health spend) by 2033; expand pharmacists' scope to treat minor ailments.",
+        "Share 50% of Construction GST with Councils: Give local councils half the GST on every new home built so councils have a financial incentive to approve housing."
+      ],
+      "domainStances": {
+        "tax": {
+          "domainName": "Tax & Economy",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Slash government departments from 41 to 30 and move toward a flatter, lower income tax structure. Remove tax on qualifying KiwiSaver investment earnings. Gradually raise Super age to 67 by 2035 (manual trades exempt).",
+          "alignmentSummary": "Core 2026 priority for ACT"
+        },
+        "cost": {
+          "domainName": "Cost of Living & Monopolies",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Cut regulatory compliance costs across building supplies (auto-approving overseas-certified products), energy, banking, and farming so market competition lowers prices without state break-ups.",
+          "alignmentSummary": "Conditional / secondary focus for ACT"
+        },
+        "health": {
+          "domainName": "Health & Medicines",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Legally commit to lifting Pharmac medicine funding to match Australia (12% of health budget) by 2033. Empower community pharmacists to treat everyday ailments and order blood tests.",
+          "alignmentSummary": "Core 2026 priority for ACT"
+        },
+        "housing": {
+          "domainName": "Housing & Local Govt",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Share 50% of GST from new residential builds with local councils to incentivise consents. Abolish rental loss ring-fencing and strip non-material clauses from resource consenting.",
+          "alignmentSummary": "Core 2026 priority for ACT"
+        },
+        "transport": {
+          "domainName": "Transport & Infrastructure",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Expand private capital and Public-Private Partnerships (PPPs), 30-year regional infrastructure deals, user-pays road tolling, and electronic road pricing.",
+          "alignmentSummary": "Core 2026 priority for ACT"
+        },
+        "law": {
+          "domainName": "Law, Order & Justice",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Strict truth-in-sentencing, abolish Section 27 cultural reports, build prison capacity via PPPs, lower the youth offending accountability age, and enforce reparation for vandalism.",
+          "alignmentSummary": "Core 2026 priority for ACT"
+        },
+        "climate": {
+          "domainName": "Climate, Energy & Oceans",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Tie NZ's domestic carbon price strictly to major trading partners, remove ETS price floors, repeal domestic green subsidies, and permanently exclude farm methane from the ETS.",
+          "alignmentSummary": "Conditional / secondary focus for ACT"
+        },
+        "democracy": {
+          "domainName": "Te Tiriti & Democracy",
+          "lastTerm2023_2026": "Kept 20 of 32 judgeable promises (62%): Established the Ministry for Regulation, passed the Regulatory Standards framework, reintroduced Charter Schools (Partnership Schools), and restored 90-day employment trials for all employers.",
+          "thisTerm2026_2029": "Enforce 'one law for all' equal citizenship, make all public service delivery strictly needs-based (not race-based), and entrench property rights via the Regulatory Standards Act.",
+          "alignmentSummary": "Core 2026 priority for ACT"
+        }
+      }
+    },
+    {
+      "id": "green",
+      "name": "Green Party of Aotearoa New Zealand",
+      "shortName": "Greens",
+      "leaders": "Marama Davidson & Chlöe Swarbrick",
+      "bloc": "centre-left",
+      "founded": 1990,
+      "mps2026": "15 MPs (3 electorates)",
+      "poll2026": "11.2%",
+      "donations2025": "$1,848,679",
+      "promisedVsPerformedDelivery": [
+        {
+          "label": "Greens (2017–23 cooperation)",
+          "term": "33 promises tracked",
+          "keptPct": 28,
+          "counts": {
+            "kept": 9,
+            "partial": 0,
+            "broken": 23,
+            "unscored": 1
+          },
+          "summary": ""
+        }
+      ],
+      "pastRecord": [
+        "What They Delivered: Former co-leader James Shaw passed the landmark Zero Carbon Act, established the independent Climate Change Commission and Green Investment Finance, and funded industrial heat decarbonisation (GIDI).",
+        "Why Their Scorecard Read 28% (9 of 32): Held no Cabinet seats and relied on Labour's majority; 42% of their tracked commitments were ambitious numerical targets outside their direct control, and Labour vetoed their wealth tax and rent control proposals."
+      ],
+      "lastTerm2023_2026": [
+        "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+        "2024 Caucus Turbulence: Weathered intense scrutiny over the resignation of Golriz Ghahraman, the tragic passing of Efeso Collins, and the waka-jumping expulsion of Darleen Tana before rebuilding polling above 11%.",
+        "Assertive Coalition Strategy: Swarbrick announced the Greens will no longer accept peripheral cooperation roles—explicitly targeting core economic ministries (Finance, Energy, State-Owned Enterprises, and Climate Change) in a future government."
+      ],
+      "thisTerm2026_2029": [
+        "Tax Cut for 96% + 2.5% Wealth Tax: Make the first $10,000 of income tax-free (cutting tax for 96% of earners), funded by a 2.5% Net Wealth Tax on individual net assets above $10m (family home exempt), a 33% corporate tax on the top 0.7% mega-firms, an inheritance tax >$1m, and a big-bank levy.",
+        "Universal Free Dental & GP Care: Fund free dental care for all adults and free primary GP visits via the wealth tax, plus an Income Guarantee so no household falls below the poverty line.",
+        "Rent Controls & Mass State Housing: Cap annual rent increases, enforce a mandatory Rental Warrant of Fitness, scale up Kāinga Ora public housing, and give renters legal rights to plug-in solar.",
+        "'Kiwipower' Public Energy & 90% Solar Loans: Create a 100% public clean energy company (Kiwipower) to slash power bills, offer 90% zero-interest home solar/battery loans, protect 30% of oceans in marine reserves, and ban seabed mining."
+      ],
+      "domainStances": {
+        "tax": {
+          "domainName": "Tax & Economy",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "First $10,000 of income tax-free (cutting tax for 96% of earners). Funded by a 2.5% Net Wealth Tax on individual net assets &gt;$10m (family home exempt), 33% corporate tax on top 0.7% mega-firms, inheritance tax &gt;$1m, and Aussie bank levy.",
+          "alignmentSummary": "Core 2026 priority for Greens"
+        },
+        "cost": {
+          "domainName": "Cost of Living & Monopolies",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "Income Guarantee & Working for Families overhaul. Establish 'Kiwipower' (public energy company) to cut power bills, 90% zero-interest home solar loans, statutory rent controls, and free ECE/school lunches.",
+          "alignmentSummary": "Core 2026 priority for Greens"
+        },
+        "health": {
+          "domainName": "Health & Medicines",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "Universal free dental care for all adults AND free GP visits (funded by the wealth tax). Expand mental health and addiction care; restore Te Tiriti-grounded Māori and Pasifika health delivery.",
+          "alignmentSummary": "Core 2026 priority for Greens"
+        },
+        "housing": {
+          "domainName": "Housing & Local Govt",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "Enact statutory rent controls (capping annual rent increases), a mandatory Rental Warrant of Fitness, mass Kāinga Ora state housing build, and legalise renters' rights to balcony solar.",
+          "alignmentSummary": "Core 2026 priority for Greens"
+        },
+        "transport": {
+          "domainName": "Transport & Infrastructure",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "Shift transport funding away from new highway mega-projects into frequent electric commuter rail, feeder buses, safe cycling, and inter-regional passenger rail.",
+          "alignmentSummary": "Core 2026 priority for Greens"
+        },
+        "law": {
+          "domainName": "Law, Order & Justice",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "Overhaul justice around restorative and Te Tiriti principles, decriminalise personal drug use in favour of health/addiction treatment, reduce remand muster, and strengthen family violence prevention.",
+          "alignmentSummary": "Conditional / secondary focus for Greens"
+        },
+        "climate": {
+          "domainName": "Climate, Energy & Oceans",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "Create 'Kiwipower', offer 90% zero-interest solar loans, expand marine reserves to 30% of NZ's oceans, permanently ban seabed mining and new fossil fuel permits, and phase out synthetic nitrogen fertiliser.",
+          "alignmentSummary": "Core 2026 priority for Greens"
+        },
+        "democracy": {
+          "domainName": "Te Tiriti & Democracy",
+          "lastTerm2023_2026": "Generational Leadership Shift: Following James Shaw's resignation in early 2024, Auckland Central MP Chlöe Swarbrick became co-leader alongside Marama Davidson.",
+          "thisTerm2026_2029": "Uphold tino rangatiratanga, implement Waitangi Tribunal recommendations, protect Māori wards and electorates, and lower the voting age to 16.",
+          "alignmentSummary": "Core 2026 priority for Greens"
+        }
+      }
+    },
+    {
+      "id": "nzfirst",
+      "name": "New Zealand First Party",
+      "shortName": "NZ First",
+      "leaders": "Winston Peters",
+      "bloc": "centre-right",
+      "founded": 1993,
+      "mps2026": "8 MPs (0 electorates)",
+      "poll2026": "9.7%",
+      "donations2025": "$1,360,273",
+      "promisedVsPerformedDelivery": [
+        {
+          "label": "NZ First (2017–20 w/ Labour)",
+          "term": "32 promises tracked",
+          "keptPct": 64,
+          "counts": {
+            "kept": 18,
+            "partial": 0,
+            "broken": 10,
+            "unscored": 4
+          },
+          "summary": ""
+        },
+        {
+          "label": "NZ First (2023–26 w/ National)",
+          "term": "61 promises tracked",
+          "keptPct": 48,
+          "counts": {
+            "kept": 28,
+            "partial": 3,
+            "broken": 27,
+            "unscored": 3
+          },
+          "summary": ""
+        }
+      ],
+      "pastRecord": [
+        "The Only Two-Era Governing Party: Served in coalition with Labour (2017–2020, securing the $3b Provincial Growth Fund) before losing its seats in 2020 and roaring back with 8 MPs in 2023.",
+        "Role in Both Governments: Combines economic nationalism (state intervention in banking, energy, and regional industry) with socially conservative positions on Treaty issues, immigration, and law and order."
+      ],
+      "lastTerm2023_2026": [
+        "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+        "Coalition Wins: Repealed the offshore oil and gas exploration ban, enforced binding referendums on local Māori wards, mandated English-first department names, and launched Phase Two of the COVID-19 Royal Commission.",
+        "Where It Clashed Inside the Coalition: Publicly broke with ACT and National over Australian bank profits, winter electricity price spikes, protecting NZ Super at 65, and procuring a more cost-effective replacement for the Cook Strait rail ferries."
+      ],
+      "thisTerm2026_2029": [
+        "Buy Back BNZ ('National Bank of NZ'): Return the Bank of New Zealand (BNZ) from Australian ownership into a Crown-owned powerhouse bank; cut the corporate tax rate to 20% for small businesses; enrol citizen babies in KiwiSaver at birth; provide a $5,000 grant for new parents.",
+        "Break Up Gentailers & Foodstuffs: Forcibly separate electricity generation from retail ('gentailers') AND split Foodstuffs into two separate supermarket cooperatives.",
+        "50% Mining Royalties to Regions & Super at 65: Return at least 50% of Crown mining royalties directly to the regions where mining takes place; fiercely defend universal NZ Super at age 65 (restricted to NZ citizens).",
+        "Gangs as Terrorists & Māori Seats Referendum: Designate gangs as terrorist entities; tie migration to a 30-year Population Plan; hold a binding referendum on abolishing the Māori seats; replace the Waitangi Tribunal with a Treaty Completion Commission."
+      ],
+      "domainStances": {
+        "tax": {
+          "domainName": "Tax & Economy",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "Buy back BNZ from Australia to form a Crown-owned bank. Lower corporate tax rate to 20% for small businesses. Return 50% of mining royalties to regions. Fiercely protect NZ Super at 65 (for citizens).",
+          "alignmentSummary": "Core 2026 priority for NZ First"
+        },
+        "cost": {
+          "domainName": "Cost of Living & Monopolies",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "Split Foodstuffs into two separate supermarket cooperatives AND structurally separate electricity 'gentailers' (generation vs retail). Lift In-Work Family Tax Credit by $70/wk; $5,000 grant for new parents.",
+          "alignmentSummary": "Core 2026 priority for NZ First"
+        },
+        "health": {
+          "domainName": "Health & Medicines",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "Strictly clinical needs-based surgical waitlists (no ethnicity prioritisation). Bond NZ-trained doctors and nurses via loan write-offs. Integrate health coaches and nutrition into primary care.",
+          "alignmentSummary": "Conditional / secondary focus for NZ First"
+        },
+        "housing": {
+          "domainName": "Housing & Local Govt",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "Tie net migration strictly to a 30-Year Population Plan so housing and water pipes are built before population grows. Reserve social housing strictly for NZ citizens first.",
+          "alignmentSummary": "Conditional / secondary focus for NZ First"
+        },
+        "transport": {
+          "domainName": "Transport & Infrastructure",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "'Road to Zero Potholes' maintenance priority, regional bridges, resilient Cook Strait rail ferries, and requiring infrastructure capacity before fast-track residential approvals.",
+          "alignmentSummary": "Core 2026 priority for NZ First"
+        },
+        "law": {
+          "domainName": "Law, Order & Justice",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "Designate all gangs as terrorist entities under NZ law. Mandatory minimum prison sentences for assaults on police, prison officers, and first responders.",
+          "alignmentSummary": "Core 2026 priority for NZ First"
+        },
+        "climate": {
+          "domainName": "Climate, Energy & Oceans",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "Expand domestic oil, gas, coal, and mineral extraction (returning 50% of royalties to regions), establish a Marsden Point Special Economic Zone, reject offshore Paris transfers, and protect farmers from methane taxes.",
+          "alignmentSummary": "Conditional / secondary focus for NZ First"
+        },
+        "democracy": {
+          "domainName": "Te Tiriti & Democracy",
+          "lastTerm2023_2026": "Kept 28 of 58 judgeable promises (48%, plus 3 in progress): Winston Peters served as Foreign Minister, Rail Minister, and Deputy PM (Nov 2023 – May 2025), while Shane Jones led the $1.2b Regional Infrastructure Fund and the Fast-Track Approvals Act.",
+          "thisTerm2026_2029": "Hold a binding referendum on abolishing the Māori electorates, replace the Waitangi Tribunal with a Treaty Completion Commission, and restrict voting and Superannuation strictly to NZ citizens.",
+          "alignmentSummary": "Core 2026 priority for NZ First"
+        }
+      }
+    },
+    {
+      "id": "top",
+      "name": "The Opportunity Party (TOP)",
+      "shortName": "Opportunity (TOP)",
+      "leaders": "Qiulae Wong",
+      "bloc": "cross-bench",
+      "founded": 2016,
+      "mps2026": "0 MPs (Best result: 2.4% in 2017; 2.2% in 2023)",
+      "poll2026": "3.4%",
+      "donations2025": "$179,401",
+      "promisedVsPerformedDelivery": [
+        {
+          "label": "Opportunity / TOP (extra-parliamentary)",
+          "term": "2026 platform",
+          "keptPct": null,
+          "counts": {
+            "kept": 0,
+            "partial": 0,
+            "broken": 0,
+            "unscored": 1
+          },
+          "summary": ""
+        }
+      ],
+      "pastRecord": [
+        "Core Philosophy: Empirical, evidence-led policy combining market efficiency (taxing unproductive land rather than wages) with strong environmental limits and social equity.",
+        "2023 Near-Miss in Ilam: Former leader Raf Manji won 32.3% of the electorate vote in Ilam (second behind National) and 2.22% of the party vote nationwide."
+      ],
+      "lastTerm2023_2026": [
+        "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+        "Sharpened Five Bottom Lines: Replaced sprawling white papers with five non-negotiable coalition bottom lines: (1) Bring Prices Down, (2) Fix Our Health System, (3) Clean Up Politics, (4) Restore Climate Credibility, and (5) Revive Ocean Health.",
+        "Polling Surge: Climbed to a 3.4% polling average in 2026—within 1.6 points of the 5% MMP threshold."
+      ],
+      "thisTerm2026_2029": [
+        "Tax Switch (1.75% Land Value Tax + Citizen's Income): Introduce a 1.75% Land Value Tax on urban residential land to stop speculative land banking, paired with an income tax cut and a Universal Citizen's Income of up to $370/week.",
+        "Clean Up Politics (Bottom Line #3): Create a mandatory public lobbyist register, an independent political corruption watchdog, cap political donations at $30,000 per donor, establish Citizens' Assemblies, and lower the MMP threshold to 3.5%.",
+        "Binding 10-Year Health & 30-Year Infrastructure Plans: Take health and infrastructure out of 3-year political flip-flopping; lift health funding to 9% of GDP; ring-fence 60% of infrastructure spend for maintenance; make public transport free.",
+        "Climate & Oceans (Bottom Lines #4 & #5): Retain the independent Climate Change Commission, strengthen the ETS (including agriculture), phase out inshore bottom-trawling by 2030, ban seabed mining, and protect 30% of oceans."
+      ],
+      "domainStances": {
+        "tax": {
+          "domainName": "Tax & Economy",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "1.75% Land Value Tax on urban residential land paired with an income tax reset and a Universal Citizen's Income of up to $370/week. Gradually raise KiwiSaver to 6% and make it compulsory.",
+          "alignmentSummary": "Core 2026 priority for Opportunity (TOP)"
+        },
+        "cost": {
+          "domainName": "Cost of Living & Monopolies",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "Bottom Line #1: Give the Commerce Commission stronger powers to break up monopolies across groceries, electricity, banking, and building supplies. Make public transport free nationwide.",
+          "alignmentSummary": "Core 2026 priority for Opportunity (TOP)"
+        },
+        "health": {
+          "domainName": "Health & Medicines",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "Bottom Line #2: Legislate a binding 10-Year Cross-Party Health Plan designed by clinicians. Lift health funding to 9% of GDP with focus on primary, preventative, and youth mental health.",
+          "alignmentSummary": "Core 2026 priority for Opportunity (TOP)"
+        },
+        "housing": {
+          "domainName": "Housing & Local Govt",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "Use the 1.75% Land Value Tax to penalise urban land banking, revamp zoning to reduce house prices, give councils new infrastructure financing tools, and put 60% of spend into maintenance.",
+          "alignmentSummary": "Core 2026 priority for Opportunity (TOP)"
+        },
+        "transport": {
+          "domainName": "Transport & Infrastructure",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "Enforce a binding 30-Year Infrastructure Plan (raising up to $60b in long-term financing), make public transport free to ride, and incentivise business EV transition.",
+          "alignmentSummary": "Core 2026 priority for Opportunity (TOP)"
+        },
+        "law": {
+          "domainName": "Law, Order & Justice",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "Boost court and rehabilitation funding to clear backlogs and cut reoffending, screen early for neurodiversity, and decriminalise personal drug possession (not supply).",
+          "alignmentSummary": "Conditional / secondary focus for Opportunity (TOP)"
+        },
+        "climate": {
+          "domainName": "Climate, Energy & Oceans",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "Bottom Lines #4 & #5: Protect the independent Climate Change Commission, strengthen the ETS (including agriculture), phase out inshore bottom-trawling by 2030, ban seabed mining, and protect 30% of oceans.",
+          "alignmentSummary": "Core 2026 priority for Opportunity (TOP)"
+        },
+        "democracy": {
+          "domainName": "Te Tiriti & Democracy",
+          "lastTerm2023_2026": "New Leadership under Qiulae Wong: Following Manji's departure after 2023, TOP simplified its name to Opportunity and elected KPMG sustainable business strategist Qiulae Wong as leader in late 2025.",
+          "thisTerm2026_2029": "Bottom Line #3: Mandatory lobbyist register, political corruption watchdog, $30,000 cap on political donations, Citizens' Assemblies for major decisions, and lower MMP threshold to 3.5%.",
+          "alignmentSummary": "Core 2026 priority for Opportunity (TOP)"
+        }
+      }
+    },
+    {
+      "id": "tpm",
+      "name": "Te Pāti Māori",
+      "shortName": "Te Pāti Māori",
+      "leaders": "Rawiri Waititi & Debbie Ngarewa-Packer",
+      "bloc": "centre-left",
+      "founded": 2004,
+      "mps2026": "4 MPs (won 6 of 7 Māori electorates in 2023)",
+      "poll2026": "2.7%",
+      "donations2025": "$141,987",
+      "promisedVsPerformedDelivery": [
+        {
+          "label": "Te Pāti Māori",
+          "term": "2023–26 Opposition (6 Māori seats won in 2023)",
+          "keptPct": null,
+          "counts": {
+            "kept": 0,
+            "partial": 0,
+            "broken": 0,
+            "unscored": 1
+          },
+          "summary": "Opposition party"
+        }
+      ],
+      "pastRecord": [
+        "Confidence & Supply with National (2008–2017): Founded in 2004 by Dame Tariana Turia and Sir Pita Sharples following the Foreshore and Seabed Act; established the Whānau Ora commissioning model, repealed the 2004 Foreshore and Seabed Act, and secured endorsement of UNDRIP.",
+        "Rebuild & Return (2020–2023): Returned to Parliament in 2020 when Rawiri Waititi won Waiariki, then surged in 2023 to win 6 of the 7 Māori electorates."
+      ],
+      "lastTerm2023_2026": [
+        "Māori Electorate Stronghold (2023–2026): Won 6 of the 7 Māori seats in 2023 (and retained Tāmaki Makaurau in the 2025 by-election via Oriini Kaipara); spearheaded the November 2024 Hīkoi mō te Tiriti against the Treaty Principles Bill and opposed the abolition of Te Aka Whai Ora.",
+        "2025–2026 Caucus Split: Experienced internal turmoil in 2025–2026 resulting in the departure of Te Tai Tonga MP Tākuta Ferris (standing as an Independent) and Te Tai Tokerau MP Mariameno Kapa-Kingi (Te Tai Tokerau Party)."
+      ],
+      "thisTerm2026_2029": [
+        "Tax-Free First $30,000 & GST Off Kai: Make the first $30,000 earned tax-free and remove GST from all food (kai), funded by a progressive wealth tax (starting at 1.5%), a land-banking tax, a 5% residential stamp duty, and raising the corporate tax rate.",
+        "By-Māori-For-Māori Health, Education & Care: Re-establish an independent Māori Health Authority, create a Māori Education Authority, and restore whānau-led Oranga Tamariki partnerships.",
+        "Constitutional Transformation & Tangaroa Protection: Make Waitangi Tribunal recommendations binding, convene a Matike Mai constitutional convention, ban seabed mining, and invest in marae climate adaptation and household solar."
+      ],
+      "domainStances": {
+        "tax": {
+          "domainName": "Tax & Economy",
+          "lastTerm2023_2026": "Campaigned against the coalition's landlord tax cuts and argued the wage tax regime punishes low-income whānau while leaving wealth untaxed.",
+          "thisTerm2026_2029": "Make the first $30,000 earned tax-free and remove GST from kai (food), funded by a wealth tax (starting at 1.5%), a land-banking tax, and higher corporate tax.",
+          "alignmentSummary": "Clashes with National/ACT; pushes further than Labour and the Greens on tax-free income thresholds ($30k) and GST off food."
+        },
+        "cost": {
+          "domainName": "Cost of Living & Monopolies",
+          "lastTerm2023_2026": "Campaigned on supermarket duopoly reform, kai sovereignty, and energy poverty.",
+          "thisTerm2026_2029": "Remove GST from kai, back Māori-owned supermarkets and kai sellers, and fund household solar and efficient appliances.",
+          "alignmentSummary": "Complements Green (Kiwipower / Income Guarantee) and Labour cost-of-living packages."
+        },
+        "health": {
+          "domainName": "Health & Medicines",
+          "lastTerm2023_2026": "Led parliamentary and Waitangi Tribunal challenges against the abolition of the Māori Health Authority (Te Aka Whai Ora).",
+          "thisTerm2026_2029": "Re-establish an independent Māori Health Authority, expand Whānau Ora commissioning, and fund Māori-led disability services.",
+          "alignmentSummary": "Complements Labour's Medicard and the Greens' free dental/GP care with dedicated By-Māori-For-Māori commissioning."
+        },
+        "housing": {
+          "domainName": "Housing & Local Govt",
+          "lastTerm2023_2026": "Opposed Kāinga Ora build slowdowns and championed papakāinga housing on ancestral land.",
+          "thisTerm2026_2029": "Expand public and papakāinga housing supply, introduce a land-banking tax and 5% stamp duty on residential sales, and invest in climate adaptation for at-risk marae.",
+          "alignmentSummary": "Aligned with Greens and Labour on state and papakāinga housing expansion."
+        },
+        "transport": {
+          "domainName": "Transport & Infrastructure",
+          "lastTerm2023_2026": "Advocated for regional roading resilience in isolated Māori communities and low-emissions public transport in urban centres.",
+          "thisTerm2026_2029": "Invest in regional connectivity, marae resilience infrastructure, and sustainable transport.",
+          "alignmentSummary": "Complements Labour/Green public transport investment and regional infrastructure."
+        },
+        "law": {
+          "domainName": "Law, Order & Justice",
+          "lastTerm2023_2026": "Opposed the Gang Patch ban, boot camps, Three Strikes reinstatement, and the repeal of Section 7AA of the Oranga Tamariki Act.",
+          "thisTerm2026_2029": "Move toward restorative justice, prioritise whānau decision-making for vulnerable children, and set a long-term goal to abolish prisons by 2040 in favour of community rehabilitation.",
+          "alignmentSummary": "Strongest contrast with National/ACT/NZ First sentencing laws; aligns with Green justice reform."
+        },
+        "climate": {
+          "domainName": "Climate, Energy & Oceans",
+          "lastTerm2023_2026": "Opposed the Fast-track Approvals Act, offshore oil and gas reversal, and seabed mining applications.",
+          "thisTerm2026_2029": "Ban seabed mining, invest in marae climate adaptation, and fund household solar and rural energy sovereignty.",
+          "alignmentSummary": "Aligned with Greens, TOP, and Labour on banning seabed mining and accelerating household solar."
+        },
+        "democracy": {
+          "domainName": "Te Tiriti & Democracy",
+          "lastTerm2023_2026": "Led the November 2024 Hīkoi mō te Tiriti (40,000+ marchers to Parliament) against ACT's Treaty Principles Bill and defended Māori wards.",
+          "thisTerm2026_2029": "Make Waitangi Tribunal recommendations binding, establish an independent Te Tiriti Commission, implement UNDRIP, and convene a Matike Mai constitutional convention.",
+          "alignmentSummary": "Direct constitutional clash with ACT and NZ First; forms the progressive Tiriti pole alongside the Greens."
+        }
+      }
+    }
+  ]
+}

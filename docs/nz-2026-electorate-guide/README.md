@@ -2,7 +2,8 @@
 
 An interactive split-vote and candidate guide for the 7 November 2026 New Zealand
 General Election, covering all **71 electorates** (64 General and 7 Māori
-electorates), **481 candidates**, and **7 major parties**. Live at
+electorates), **479 candidates**, **232 city, town, and suburb mappings**, and
+**7 major parties**. Live at
 [unashamedai.broadley.org.nz/nz-2026-electorate-guide/](https://unashamedai.broadley.org.nz/nz-2026-electorate-guide/).
 
 ## What it does
@@ -48,6 +49,31 @@ dependencies.
 - **Shareable URLs:** Selections are encoded in the URL query string
   (`?electorate=remutaka&party=top&cand=hipkins`) so any split-vote comparison
   can be bookmarked or shared directly.
+
+## The data
+
+All source data behind the interactive guide is published in the [`data/`](data/)
+folder under CC0 1.0 Public Domain and accessible directly from the page at
+[unashamedai.broadley.org.nz/nz-2026-electorate-guide/data/](https://unashamedai.broadley.org.nz/nz-2026-electorate-guide/data/):
+
+- [`data/candidates.csv`](data/candidates.csv) — all **479 candidates** across
+  all **71 electorates** with party, Vote.nz list rank, MMP entry path, career
+  background, 2023–26 record, and 2026–29 priorities.
+- [`data/electorates-and-suburbs.csv`](data/electorates-and-suburbs.csv) — all
+  **232 city, town, and suburb groups** mapped to their official 2026 General or
+  Māori electorate under the August 2025 Representation Commission Final Report.
+- [`data/parties-and-policies.csv`](data/parties-and-policies.csv) — all **7
+  major political parties** compared across **8 policy domains**, including
+  2017–2026 delivery scores, 2023–26 actions, and 2026–29 commitments.
+- [`data/electorates.json`](data/electorates.json) — full structured JSON for
+  all 71 electorates, their 2025/2026 suburb boundaries, local issue clashes vs
+  complementarities, and all candidate profiles.
+- [`data/parties.json`](data/parties.json) — full structured JSON for all 7
+  political parties, their Promised vs Performed delivery records, and stances
+  across all 8 policy domains.
+- [`data/by-electorate.md`](data/by-electorate.md) — human-readable Markdown
+  reference directory of all 71 electorates, their 2026 suburb coverage, and
+  candidate summary tables.
 
 ## Sources
 

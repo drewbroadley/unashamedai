@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en-NZ" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Open Data — Electorate vs Party: NZ 2026 Election Guide</title>
+<meta name="description" content="Download the full CSV, JSON, and Markdown datasets for all 71 New Zealand electorates, 479 candidates, 220+ suburbs/towns, and 7 political parties.">
+<style>
+:root{
+  --paper:#fcfbf8;--paper-page:#f2f0e9;--paper-well:#e9e6dd;
+  --ink:#1a1917;--ink-2:#4a4843;--ink-3:#76736b;
+  --rule:#dedad0;--rule-firm:#c6c1b4;--rule-ink:#1a1917;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Charter,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue", Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.58;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:44px 28px 64px}
+.eyebrow{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding-bottom:10px;border-bottom:3px double var(--rule-ink);margin-bottom:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.eyebrow a{color:var(--ink);text-decoration:none}
+.eyebrow a:hover{text-decoration:underline}
+h1{font-size:clamp(1.9rem,3.6vw,2.75rem);font-weight:700;letter-spacing:-.022em;line-height:1.1;margin:0 0 12px}
+p.lede{font-size:1.15rem;color:var(--ink-2);max-width:68ch;margin:0 0 28px}
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;border-top:1px solid var(--rule-firm);border-left:1px solid var(--rule-firm)}
+.dl{display:flex;flex-direction:column;gap:6px;padding:20px;text-decoration:none;color:var(--ink);border-right:1px solid var(--rule-firm);border-bottom:1px solid var(--rule-firm);background:var(--paper)}
+.dl:hover{background:var(--paper-well)}
+.dl-k{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.dl-t{font-size:17px;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.dl-d{font-size:14px;color:var(--ink-2);line-height:1.5}
+.foot{margin-top:28px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--sans);font-size:12.5px;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.foot a{color:var(--ink-2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">
+    <span>Electorate vs Party &middot; NZ 2026 General Election Open Data</span>
+    <a href="../">&larr; Back to Interactive Guide</a>
+  </div>
+  <h1>Open Data &amp; Source Files</h1>
+  <p class="lede">Everything behind the interactive split-vote guide is published here as spreadsheets (CSV), structured JSON, and readable Markdown under CC0 1.0 Public Domain.</p>
+
+  <div class="dl-grid">
+    <a class="dl" href="candidates.csv" download>
+      <span class="dl-k">Spreadsheet &middot; CSV</span>
+      <span class="dl-t">candidates.csv</span>
+      <span class="dl-d">All <b>479</b> candidates across all <b>71</b> electorates with party, Vote.nz list rank, MMP entry path, career background, 2023–26 record, and 2026 priorities. Opens in Excel or Google Sheets.</span>
+    </a>
+    <a class="dl" href="electorates-and-suburbs.csv" download>
+      <span class="dl-k">Spreadsheet &middot; CSV</span>
+      <span class="dl-t">electorates-and-suburbs.csv</span>
+      <span class="dl-d">All <b>232</b> city, town, and suburb groups mapped to their official 2026 General or Māori electorate under the August 2025 Representation Commission Final Report.</span>
+    </a>
+    <a class="dl" href="parties-and-policies.csv" download>
+      <span class="dl-k">Spreadsheet &middot; CSV</span>
+      <span class="dl-t">parties-and-policies.csv</span>
+      <span class="dl-d">All <b>7</b> major political parties compared across <b>8</b> policy domains, including 2017–2026 delivery scores, 2023–26 actions, and 2026–29 manifesto commitments.</span>
+    </a>
+    <a class="dl" href="electorates.json">
+      <span class="dl-k">Structured &middot; JSON</span>
+      <span class="dl-t">electorates.json</span>
+      <span class="dl-d">Full structured JSON for all <b>71</b> electorates, their 2025/2026 suburb boundaries, local issue clashes vs complementarities, and all <b>479</b> candidate profiles.</span>
+    </a>
+    <a class="dl" href="parties.json">
+      <span class="dl-k">Structured &middot; JSON</span>
+      <span class="dl-t">parties.json</span>
+      <span class="dl-d">Full structured JSON for all <b>7</b> political parties, their Promised vs Performed delivery records, and stances across all 8 policy domains.</span>
+    </a>
+    <a class="dl" href="by-electorate.md">
+      <span class="dl-k">Reference &middot; Markdown</span>
+      <span class="dl-t">by-electorate.md</span>
+      <span class="dl-d">Human-readable Markdown directory of all 71 electorates, their 2026 suburb coverage, and candidate summary tables.</span>
+    </a>
+  </div>
+
+  <div class="foot">
+    <span>Released under CC0 1.0 Public Domain &middot; Compiled by Drew Broadley</span>
+    <span><a href="../">Interactive Split-Vote Guide</a> &middot; <a href="https://github.com/drewbroadley/unashamedai/tree/main/docs/nz-2026-electorate-guide/data">View on GitHub</a></span>
+  </div>
+</div>
+</body>
+</html>
