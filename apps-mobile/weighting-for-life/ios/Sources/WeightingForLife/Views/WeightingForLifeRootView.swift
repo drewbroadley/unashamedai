@@ -91,6 +91,7 @@ public struct WeightingForLifeRootView: View {
     @State private var reviewPeriod: WFLReviewPeriod = .days
     @State private var newRoutineFoodIndex: Int = 9
     @State private var newRoutineFreqIndex: Int = 0
+    @FocusState private var isSearchFocused: Bool
 
     private let timeOptions = ["Now", "8:00 am", "12:30 pm"]
     private let freqOptions = ["Every day", "Weekdays", "Weekends", "🔥 Exercise days", "Tue / Thu / Sun", "2× / week"]
@@ -98,6 +99,29 @@ public struct WeightingForLifeRootView: View {
 
     public init(store: FoodAndWeightStore = FoodAndWeightStore()) {
         _store = State(initialValue: store)
+    }
+
+    private var isSearching: Bool {
+        isSearchFocused || !searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private func logFoodItem(_ item: NZFCDFoodItem) {
+        let chosenTime = timeOptions[timeIndex] == "Now" ? "2:24 pm" : timeOptions[timeIndex]
+        store.addFoodEntry(
+            FoodLogEntry(
+                icon: item.icon,
+                name: item.name,
+                timeLabel: chosenTime,
+                carbsG: item.carbsG,
+                proteinG: item.proteinG,
+                fatG: item.fatG,
+                sugarG: item.sugarG,
+                saltG: item.saltG
+            ),
+            to: currentDateKey
+        )
+        searchQuery = ""
+        isSearchFocused = false
     }
 
     private var currentDateKey: String {
@@ -142,7 +166,9 @@ public struct WeightingForLifeRootView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
-            bottomCapsuleDock
+            if !(activeTab == .log && isSearching) {
+                bottomCapsuleDock
+            }
         }
         .padding(.horizontal, 16)
         .padding(.top, 8)
@@ -391,7 +417,16 @@ public struct WeightingForLifeRootView: View {
     private var dailyLogView: some View {
         let totals = currentDay.totalIntake
         let limits = store.limits(for: currentDateKey)
-        let matches = searchEngine.search(searchQuery, limit: matchLimit)
+        let trimmedQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        let matches: [RankedNZFCDMatch] = {
+            if !trimmedQuery.isEmpty {
+                return searchEngine.search(searchQuery, limit: matchLimit)
+            } else if isSearchFocused {
+                return searchEngine.defaultSuggestions(limit: matchLimit)
+            } else {
+                return []
+            }
+        }()
 
         return VStack(spacing: 10) {
             // 1. Dribbble-Style 5-Nutrient Strip (Vibrant fills on pastel tracks, never turns red)
@@ -438,19 +473,33 @@ public struct WeightingForLifeRootView: View {
             }
             .buttonStyle(.plain)
 
-            // 2. Soft Peach Meal Search Card + Ranked NZFCD Matches + 1-Tap Routines
+            // 2. Soft Peach Meal Search Card + Live Keystroke Autocomplete + 1-Tap Routines
             VStack(alignment: .leading, spacing: 9) {
                 HStack(spacing: 6) {
                     HStack(spacing: 6) {
+                        Text("🔍")
+                            .font(.system(size: 12))
+
                         TextField(
                             "",
                             text: $searchQuery,
-                            prompt: Text("Add food (e.g. poached egg, vogels, pie)...")
+                            prompt: Text("Type food to autocomplete (e.g. egg, vogels, pie)...")
                                 .foregroundStyle(WFLTheme.placeholder)
                         )
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(WFLTheme.textPrimary)
                         .tint(WFLTheme.accentCoral)
+                        .focused($isSearchFocused)
+                        .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.never)
+                        .submitLabel(.done)
+                        .onSubmit {
+                            if !trimmedQuery.isEmpty, let top = matches.first {
+                                logFoodItem(top.item)
+                            } else {
+                                isSearchFocused = false
+                            }
+                        }
 
                         if !searchQuery.isEmpty {
                             Button {
@@ -466,13 +515,13 @@ public struct WeightingForLifeRootView: View {
                             .buttonStyle(.plain)
                         }
                     }
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 11)
                     .padding(.vertical, 9)
                     .background(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
-                            .stroke(WFLTheme.peachInputBorder, lineWidth: 1)
+                            .stroke(isSearchFocused ? WFLTheme.accentCoral : WFLTheme.peachInputBorder, lineWidth: isSearchFocused ? 1.5 : 1)
                     )
 
                     Button {
@@ -488,13 +537,63 @@ public struct WeightingForLifeRootView: View {
                             .shadow(color: WFLTheme.accentCoral.opacity(0.3), radius: 5, x: 0, y: 2)
                     }
                     .buttonStyle(.plain)
+
+                    if isSearching {
+                        Button {
+                            searchQuery = ""
+                            isSearchFocused = false
+                        } label: {
+                            Text("Done")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundStyle(WFLTheme.accentDark)
+                                .padding(.horizontal, 10)
+                                .frame(height: 34)
+                                .background(Color.white)
+                                .clipShape(Capsule())
+                                .overlay(Capsule().stroke(WFLTheme.peachInputBorder, lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
 
-                // Ranked NZFCD Search Results Dropdown
-                if !matches.isEmpty {
+                // Instant Top-1 Autocomplete Pill (1-tap or Return key to add)
+                if !trimmedQuery.isEmpty, let top = matches.first {
+                    Button {
+                        logFoodItem(top.item)
+                    } label: {
+                        HStack(spacing: 6) {
+                            Text("⏎")
+                                .font(.system(size: 11, weight: .heavy))
+                                .foregroundStyle(Color.white)
+                                .frame(width: 20, height: 20)
+                                .background(WFLTheme.accentCoral)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                            Text("\(top.item.icon) \(top.item.name)")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundStyle(WFLTheme.textPrimary)
+                                .lineLimit(1)
+                            Spacer()
+                            Text("Tap to add")
+                                .font(.system(size: 11, weight: .heavy))
+                                .foregroundStyle(WFLTheme.accentDark)
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 7)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(WFLTheme.accentCoral, lineWidth: 1)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                // Live Autocomplete Results Dropdown (expands to fill space above keyboard when typing)
+                if isSearching {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
-                            Text("Closest NZFCD matches (most → least relevant)")
+                            Text(trimmedQuery.isEmpty ? "Popular NZ foods (type to autocomplete)" : "Autocomplete matches (\(matches.count) shown)")
                                 .font(.system(size: 11, weight: .semibold))
                                 .foregroundStyle(WFLTheme.textMuted)
                             Spacer()
@@ -513,63 +612,57 @@ public struct WeightingForLifeRootView: View {
                             .buttonStyle(.plain)
                         }
 
-                        ScrollView {
-                            VStack(spacing: 4) {
-                                ForEach(matches) { m in
-                                    Button {
-                                        let chosenTime = timeOptions[timeIndex] == "Now" ? "2:24 pm" : timeOptions[timeIndex]
-                                        store.addFoodEntry(
-                                            FoodLogEntry(
-                                                icon: m.item.icon,
-                                                name: m.item.name,
-                                                timeLabel: chosenTime,
-                                                carbsG: m.item.carbsG,
-                                                proteinG: m.item.proteinG,
-                                                fatG: m.item.fatG,
-                                                sugarG: m.item.sugarG,
-                                                saltG: m.item.saltG
-                                            ),
-                                            to: currentDateKey
-                                        )
-                                        searchQuery = ""
-                                    } label: {
-                                        HStack(spacing: 8) {
-                                            Text("\(m.rank).")
-                                                .font(.system(size: 11, weight: .bold))
-                                                .foregroundStyle(WFLTheme.textMuted)
-                                                .frame(width: 18, alignment: .trailing)
-                                            Text(m.item.icon)
-                                                .font(.system(size: 15))
-                                            VStack(alignment: .leading, spacing: 1) {
-                                                Text(m.item.name)
-                                                    .font(.system(size: 12, weight: .semibold))
-                                                    .foregroundStyle(WFLTheme.textPrimary)
-                                                    .lineLimit(1)
-                                                Text("\(m.item.carbsG)C · \(m.item.proteinG)P · \(m.item.fatG)F · \(m.item.sugarG)Su · \(String(format: "%.1f", m.item.saltG))Sa")
-                                                    .font(.system(size: 11))
+                        if matches.isEmpty {
+                            Text("No NZFCD food matches \"\(trimmedQuery)\"")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(WFLTheme.textMuted)
+                                .padding(.vertical, 12)
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            ScrollView {
+                                VStack(spacing: 4) {
+                                    ForEach(matches) { m in
+                                        Button {
+                                            logFoodItem(m.item)
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                Text("\(m.rank).")
+                                                    .font(.system(size: 11, weight: .bold))
                                                     .foregroundStyle(WFLTheme.textMuted)
+                                                    .frame(width: 18, alignment: .trailing)
+                                                Text(m.item.icon)
+                                                    .font(.system(size: 15))
+                                                VStack(alignment: .leading, spacing: 1) {
+                                                    Text(m.item.name)
+                                                        .font(.system(size: 12, weight: .semibold))
+                                                        .foregroundStyle(WFLTheme.textPrimary)
+                                                        .lineLimit(1)
+                                                    Text("\(m.item.carbsG)C · \(m.item.proteinG)P · \(m.item.fatG)F · \(m.item.sugarG)Su · \(String(format: "%.1f", m.item.saltG))Sa")
+                                                        .font(.system(size: 11))
+                                                        .foregroundStyle(WFLTheme.textMuted)
+                                                }
+                                                Spacer()
+                                                Circle()
+                                                    .fill(m.score >= 120 ? WFLTheme.protein : (m.score >= 50 ? WFLTheme.sugar : WFLTheme.placeholder))
+                                                    .frame(width: 6, height: 6)
+                                                Text("+")
+                                                    .font(.system(size: 13, weight: .heavy))
+                                                    .foregroundStyle(Color.white)
+                                                    .frame(width: 22, height: 22)
+                                                    .background(WFLTheme.accentCoral)
+                                                    .clipShape(Circle())
                                             }
-                                            Spacer()
-                                            Circle()
-                                                .fill(m.score >= 45 ? WFLTheme.protein : (m.score >= 20 ? WFLTheme.sugar : WFLTheme.placeholder))
-                                                .frame(width: 6, height: 6)
-                                            Text("+")
-                                                .font(.system(size: 13, weight: .heavy))
-                                                .foregroundStyle(Color.white)
-                                                .frame(width: 22, height: 22)
-                                                .background(WFLTheme.accentCoral)
-                                                .clipShape(Circle())
+                                            .padding(.horizontal, 9)
+                                            .padding(.vertical, 7)
+                                            .background(WFLTheme.subtleBg)
+                                            .clipShape(RoundedRectangle(cornerRadius: 12))
                                         }
-                                        .padding(.horizontal, 9)
-                                        .padding(.vertical, 7)
-                                        .background(WFLTheme.subtleBg)
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
                                 }
                             }
+                            .frame(minHeight: 165, maxHeight: .infinity)
                         }
-                        .frame(maxHeight: 190)
                     }
                     .padding(9)
                     .background(Color.white)
@@ -578,57 +671,60 @@ public struct WeightingForLifeRootView: View {
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(WFLTheme.peachInputBorder, lineWidth: 1)
                     )
+                    .layoutPriority(1)
                 }
 
                 // 1-Tap Active Routine Chips + Link to Routines Page
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 6) {
-                        ForEach(store.database.routines.filter(\.active)) { r in
+                if !isSearching {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            ForEach(store.database.routines.filter(\.active)) { r in
+                                Button {
+                                    let chosenTime = timeOptions[timeIndex] == "Now" ? r.defaultTime : timeOptions[timeIndex]
+                                    store.addFoodEntry(
+                                        FoodLogEntry(
+                                            icon: r.icon,
+                                            name: r.name,
+                                            timeLabel: chosenTime,
+                                            carbsG: r.carbsG,
+                                            proteinG: r.proteinG,
+                                            fatG: r.fatG,
+                                            sugarG: r.sugarG,
+                                            saltG: r.saltG
+                                        ),
+                                        to: currentDateKey
+                                    )
+                                } label: {
+                                    Text("\(r.icon) \(r.shortLabel)")
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundStyle(WFLTheme.textSecondary)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 6)
+                                        .background(Color.white)
+                                        .clipShape(Capsule())
+                                        .overlay(
+                                            Capsule().stroke(WFLTheme.peachInputBorder, lineWidth: 1)
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                            }
+
                             Button {
-                                let chosenTime = timeOptions[timeIndex] == "Now" ? r.defaultTime : timeOptions[timeIndex]
-                                store.addFoodEntry(
-                                    FoodLogEntry(
-                                        icon: r.icon,
-                                        name: r.name,
-                                        timeLabel: chosenTime,
-                                        carbsG: r.carbsG,
-                                        proteinG: r.proteinG,
-                                        fatG: r.fatG,
-                                        sugarG: r.sugarG,
-                                        saltG: r.saltG
-                                    ),
-                                    to: currentDateKey
-                                )
+                                activeTab = .routines
                             } label: {
-                                Text("\(r.icon) \(r.shortLabel)")
-                                    .font(.system(size: 12, weight: .semibold))
-                                    .foregroundStyle(WFLTheme.textSecondary)
+                                Text("🔁 Routines")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundStyle(WFLTheme.mintText)
                                     .padding(.horizontal, 10)
                                     .padding(.vertical, 6)
-                                    .background(Color.white)
+                                    .background(WFLTheme.tintMint)
                                     .clipShape(Capsule())
                                     .overlay(
-                                        Capsule().stroke(WFLTheme.peachInputBorder, lineWidth: 1)
+                                        Capsule().stroke(WFLTheme.tintMintBorder, lineWidth: 1)
                                     )
                             }
                             .buttonStyle(.plain)
                         }
-
-                        Button {
-                            activeTab = .routines
-                        } label: {
-                            Text("🔁 Routines")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundStyle(WFLTheme.mintText)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(WFLTheme.tintMint)
-                                .clipShape(Capsule())
-                                .overlay(
-                                    Capsule().stroke(WFLTheme.tintMintBorder, lineWidth: 1)
-                                )
-                        }
-                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -639,145 +735,148 @@ public struct WeightingForLifeRootView: View {
                 RoundedRectangle(cornerRadius: 22)
                     .stroke(WFLTheme.tintPeachBorder, lineWidth: 1)
             )
+            .layoutPriority(isSearching ? 1 : 0)
 
-            // 3. Recorded Weight Row + Food Entries List
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 7) {
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.18)) {
-                            weightDrawerOpen.toggle()
-                        }
-                    } label: {
-                        HStack(spacing: 8) {
-                            Text("⚖️")
-                                .font(.system(size: 15))
-                                .frame(width: 30, height: 30)
-                                .background(Color.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                            VStack(alignment: .leading, spacing: 1) {
-                                Text(String(format: "Recorded weight (%@): %.1f kg", currentDay.displayLabel, currentDay.weightKg))
-                                    .font(.system(size: 12, weight: .heavy))
-                                    .foregroundStyle(WFLTheme.textPrimary)
-                                Text(isBaselineWeek1 ? "Week 1 Baseline · Tap to edit" : String(format: "Goal %.1f kg · Tap to edit", store.database.profile.goalWeightKg))
-                                    .font(.system(size: 11, weight: .semibold))
-                                    .foregroundStyle(WFLTheme.creamText)
+            if !isSearching {
+                // 3. Recorded Weight Row + Food Entries List
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 7) {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.18)) {
+                                weightDrawerOpen.toggle()
                             }
-                            Spacer()
-                            Text("Edit")
-                                .font(.system(size: 11, weight: .heavy))
-                                .foregroundStyle(WFLTheme.amberText)
-                                .padding(.horizontal, 9)
-                                .padding(.vertical, 4)
-                                .background(Color.white)
-                                .clipShape(Capsule())
-                                .overlay(
-                                    Capsule().stroke(WFLTheme.tintCreamBorder, lineWidth: 1)
-                                )
-                        }
-                        .padding(.horizontal, 13)
-                        .padding(.vertical, 10)
-                        .background(WFLTheme.tintCream)
-                        .clipShape(RoundedRectangle(cornerRadius: 18))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 18)
-                                .stroke(WFLTheme.tintCreamBorder, lineWidth: 1)
-                        )
-                    }
-                    .buttonStyle(.plain)
-
-                    let iconTints = [WFLTheme.tintPeach, WFLTheme.tintMint, WFLTheme.tintCream, WFLTheme.tintBlush]
-                    ForEach(Array(currentDay.entries.enumerated()), id: \.element.id) { idx, entry in
-                        let isExpanded = (expandedEntryID == entry.id)
-                        VStack(spacing: 8) {
-                            HStack(spacing: 10) {
-                                Text(entry.icon)
-                                    .font(.system(size: 17))
-                                    .frame(width: 34, height: 34)
-                                    .background(iconTints[idx % iconTints.count])
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                                Text(entry.name)
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundStyle(WFLTheme.textPrimary)
-                                    .lineLimit(1)
-
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text("⚖️")
+                                    .font(.system(size: 15))
+                                    .frame(width: 30, height: 30)
+                                    .background(Color.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                VStack(alignment: .leading, spacing: 1) {
+                                    Text(String(format: "Recorded weight (%@): %.1f kg", currentDay.displayLabel, currentDay.weightKg))
+                                        .font(.system(size: 12, weight: .heavy))
+                                        .foregroundStyle(WFLTheme.textPrimary)
+                                    Text(isBaselineWeek1 ? "Week 1 Baseline · Tap to edit" : String(format: "Goal %.1f kg · Tap to edit", store.database.profile.goalWeightKg))
+                                        .font(.system(size: 11, weight: .semibold))
+                                        .foregroundStyle(WFLTheme.creamText)
+                                }
                                 Spacer()
-
-                                Text(entry.timeLabel)
-                                    .font(.system(size: 12, weight: .semibold))
-                                    .foregroundStyle(WFLTheme.textMuted)
-
-                                Button {
-                                    store.removeFoodEntry(id: entry.id, from: currentDateKey)
-                                } label: {
-                                    Text("×")
-                                        .font(.system(size: 13, weight: .bold))
-                                        .foregroundStyle(WFLTheme.textMuted)
-                                        .frame(width: 22, height: 22)
-                                        .background(WFLTheme.chipBg)
-                                        .clipShape(Circle())
-                                }
-                                .buttonStyle(.plain)
+                                Text("Edit")
+                                    .font(.system(size: 11, weight: .heavy))
+                                    .foregroundStyle(WFLTheme.amberText)
+                                    .padding(.horizontal, 9)
+                                    .padding(.vertical, 4)
+                                    .background(Color.white)
+                                    .clipShape(Capsule())
+                                    .overlay(
+                                        Capsule().stroke(WFLTheme.tintCreamBorder, lineWidth: 1)
+                                    )
                             }
-
-                            if isExpanded {
-                                Divider().overlay(WFLTheme.border)
-                                HStack {
-                                    Text("\(entry.carbsG)g Carbs").foregroundStyle(WFLTheme.carbs)
-                                    Spacer()
-                                    Text("\(entry.proteinG)g Protein").foregroundStyle(WFLTheme.protein)
-                                    Spacer()
-                                    Text("\(entry.fatG)g Fat").foregroundStyle(WFLTheme.fat)
-                                    Spacer()
-                                    Text("\(entry.sugarG)g Sugar").foregroundStyle(WFLTheme.sugar)
-                                    Spacer()
-                                    Text(String(format: "%.1fg Salt", entry.saltG)).foregroundStyle(WFLTheme.salt)
-                                }
-                                .font(.system(size: 11, weight: .bold))
-                            }
+                            .padding(.horizontal, 13)
+                            .padding(.vertical, 10)
+                            .background(WFLTheme.tintCream)
+                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18)
+                                    .stroke(WFLTheme.tintCreamBorder, lineWidth: 1)
+                            )
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 9)
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 18))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 18)
-                                .stroke(WFLTheme.border, lineWidth: 1)
-                        )
-                        .shadow(color: Color.black.opacity(0.02), radius: 5, x: 0, y: 2)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                expandedEntryID = isExpanded ? nil : entry.id
+                        .buttonStyle(.plain)
+
+                        let iconTints = [WFLTheme.tintPeach, WFLTheme.tintMint, WFLTheme.tintCream, WFLTheme.tintBlush]
+                        ForEach(Array(currentDay.entries.enumerated()), id: \.element.id) { idx, entry in
+                            let isExpanded = (expandedEntryID == entry.id)
+                            VStack(spacing: 8) {
+                                HStack(spacing: 10) {
+                                    Text(entry.icon)
+                                        .font(.system(size: 17))
+                                        .frame(width: 34, height: 34)
+                                        .background(iconTints[idx % iconTints.count])
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                                    Text(entry.name)
+                                        .font(.system(size: 13, weight: .semibold))
+                                        .foregroundStyle(WFLTheme.textPrimary)
+                                        .lineLimit(1)
+
+                                    Spacer()
+
+                                    Text(entry.timeLabel)
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundStyle(WFLTheme.textMuted)
+
+                                    Button {
+                                        store.removeFoodEntry(id: entry.id, from: currentDateKey)
+                                    } label: {
+                                        Text("×")
+                                            .font(.system(size: 13, weight: .bold))
+                                            .foregroundStyle(WFLTheme.textMuted)
+                                            .frame(width: 22, height: 22)
+                                            .background(WFLTheme.chipBg)
+                                            .clipShape(Circle())
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+
+                                if isExpanded {
+                                    Divider().overlay(WFLTheme.border)
+                                    HStack {
+                                        Text("\(entry.carbsG)g Carbs").foregroundStyle(WFLTheme.carbs)
+                                        Spacer()
+                                        Text("\(entry.proteinG)g Protein").foregroundStyle(WFLTheme.protein)
+                                        Spacer()
+                                        Text("\(entry.fatG)g Fat").foregroundStyle(WFLTheme.fat)
+                                        Spacer()
+                                        Text("\(entry.sugarG)g Sugar").foregroundStyle(WFLTheme.sugar)
+                                        Spacer()
+                                        Text(String(format: "%.1fg Salt", entry.saltG)).foregroundStyle(WFLTheme.salt)
+                                    }
+                                    .font(.system(size: 11, weight: .bold))
+                                }
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 9)
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18)
+                                    .stroke(WFLTheme.border, lineWidth: 1)
+                            )
+                            .shadow(color: Color.black.opacity(0.02), radius: 5, x: 0, y: 2)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    expandedEntryID = isExpanded ? nil : entry.id
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            // 4. Bottom "I ate too much today" Rebalance Button
-            Button {
-                store.toggleAteTooMuch(for: currentDateKey)
-            } label: {
-                HStack {
-                    Text(currentDay.ateTooMuch ? "✓ Next day’s limits rebalanced (-15%)" : "😮‍💨 I ate too much today")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(currentDay.ateTooMuch ? WFLTheme.accentPink : WFLTheme.textMuted)
-                    Spacer()
-                    Text(currentDay.ateTooMuch ? "Undo" : "Balance tomorrow")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(currentDay.ateTooMuch ? WFLTheme.accentPink : WFLTheme.accentDark)
+                // 4. Bottom "I ate too much today" Rebalance Button
+                Button {
+                    store.toggleAteTooMuch(for: currentDateKey)
+                } label: {
+                    HStack {
+                        Text(currentDay.ateTooMuch ? "✓ Next day’s limits rebalanced (-15%)" : "😮‍💨 I ate too much today")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundStyle(currentDay.ateTooMuch ? WFLTheme.accentPink : WFLTheme.textMuted)
+                        Spacer()
+                        Text(currentDay.ateTooMuch ? "Undo" : "Balance tomorrow")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundStyle(currentDay.ateTooMuch ? WFLTheme.accentPink : WFLTheme.accentDark)
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 11)
+                    .background(currentDay.ateTooMuch ? WFLTheme.tintBlush : Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18)
+                            .stroke(currentDay.ateTooMuch ? WFLTheme.tintBlushBorder : WFLTheme.border, lineWidth: 1)
+                    )
                 }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 11)
-                .background(currentDay.ateTooMuch ? WFLTheme.tintBlush : Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 18))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18)
-                        .stroke(currentDay.ateTooMuch ? WFLTheme.tintBlushBorder : WFLTheme.border, lineWidth: 1)
-                )
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
     }
 

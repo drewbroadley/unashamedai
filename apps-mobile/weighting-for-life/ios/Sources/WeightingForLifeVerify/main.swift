@@ -52,9 +52,12 @@ struct WeightingForLifeVerify {
         check(store.weeklyRollups().count == 5, "Weekly rollups count")
         check(store.yearlyRollups().count == 3, "Yearly rollups count")
 
-        // 5. Plain-English NZFCD search ranking across the full 2,904-item 2024 NZ FOODfiles database
+        // 5. Plain-English NZFCD autocomplete & search ranking across the full 2,904-item 2024 NZ FOODfiles database
         let engine = NZFCDSearchEngine()
         check(engine.catalog.count >= 2900, "Full NZFCD 2024 catalog loaded (\(engine.catalog.count) items)")
+        check(engine.defaultSuggestions(limit: 10).count == 10, "Default suggestions count")
+        check(!engine.search("e", limit: 10).isEmpty, "1-char autocomplete ('e')")
+        check(!engine.search("p", limit: 10).isEmpty, "1-char autocomplete ('p')")
         let top10 = engine.search("poached egg", limit: 10)
         check(top10.count == 10, "Top 10 search count")
         check(top10.first?.item.name.lowercased().contains("poached") == true, "Top 1 match relevance")

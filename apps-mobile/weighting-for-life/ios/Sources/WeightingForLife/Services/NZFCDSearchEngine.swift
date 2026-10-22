@@ -8,7 +8,7 @@ public struct RankedNZFCDMatch: Sendable, Equatable, Identifiable {
     public let rank: Int
 }
 
-/// Pre-indexed entry for fast (<1ms) full-catalog search across all 2,904 NZFCD foods.
+/// Pre-indexed entry for fast (<1ms) full-catalog autocomplete across all 2,904 NZFCD foods.
 private struct IndexedNZFCDItem: Sendable {
     let item: NZFCDFoodItem
     let index: Int
@@ -17,7 +17,7 @@ private struct IndexedNZFCDItem: Sendable {
     let words: [String]
 }
 
-/// Plain-English search engine backed by the bundled New Zealand Food Composition Database (`nzfcd_v1.json` — 2,904 items from NZ FOODfiles 2024 v1).
+/// Plain-English autocomplete & search engine backed by the bundled New Zealand Food Composition Database (`nzfcd_v1.json` — 2,904 items from NZ FOODfiles 2024 v1).
 public struct NZFCDSearchEngine: Sendable {
     public let catalog: [NZFCDFoodItem]
     private let indexedCatalog: [IndexedNZFCDItem]
@@ -67,7 +67,6 @@ public struct NZFCDSearchEngine: Sendable {
         var scalars = String.UnicodeScalarView()
         scalars.reserveCapacity(folded.unicodeScalars.count)
         for s in folded.unicodeScalars {
-            // Strip trademark/apostrophe symbols so "Weet-Bix™", "Arnott's™", "McDonald's®" normalize cleanly
             if s == "'" || s == "’" || s == "‘" || s == "™" || s == "®" {
                 continue
             } else if CharacterSet.alphanumerics.contains(s) {
@@ -94,7 +93,15 @@ public struct NZFCDSearchEngine: Sendable {
         }
     }
 
-    /// Ranks all 2,904 NZFCD items from most closely matched to least closely matched, returning up to `limit` (10 or 25) items.
+    /// Returns default popular NZ starter suggestions when the search field is focused before typing.
+    public func defaultSuggestions(limit: Int = 10) -> [RankedNZFCDMatch] {
+        let capped = indexedCatalog.prefix(max(1, limit))
+        return capped.enumerated().map { offset, entry in
+            RankedNZFCDMatch(item: entry.item, score: 100 - offset, rank: offset + 1)
+        }
+    }
+
+    /// Real-time keystroke-by-keystroke autocomplete across all 2,904 NZFCD items (starting from the 1st character typed).
     public func search(_ query: String, limit: Int = 10) -> [RankedNZFCDMatch] {
         let normQuery = Self.normalize(query).trimmingCharacters(in: .whitespacesAndNewlines)
         guard !normQuery.isEmpty else { return [] }
@@ -103,8 +110,15 @@ public struct NZFCDSearchEngine: Sendable {
             .split(separator: " ")
             .map(String.init)
             .filter { !$0.isEmpty }
-        let tokens = rawTokens.filter { !Self.stopWords.contains($0) }
-        let activeTokens = tokens.isEmpty ? rawTokens : tokens
+        let filteredTokens = rawTokens.filter { !Self.stopWords.contains($0) }
+        // Keep the last token even if it's a 1-letter stopword prefix (e.g., typing "a" for apple/avocado or "t" for toast)
+        let activeTokens: [String] = {
+            if filteredTokens.isEmpty { return rawTokens }
+            if let last = rawTokens.last, filteredTokens.last != last {
+                return filteredTokens + [last]
+            }
+            return filteredTokens
+        }()
         guard !activeTokens.isEmpty else { return [] }
 
         let compactQuery = activeTokens.joined(separator: " ")
@@ -119,9 +133,9 @@ public struct NZFCDSearchEngine: Sendable {
             if entry.nameNormalized == compactQuery {
                 score += 500
             } else if entry.nameNormalized.hasPrefix(compactQuery) {
-                score += 240
-            } else if entry.nameNormalized.contains(compactQuery) {
-                score += 110
+                score += 260
+            } else if compactQuery.count >= 2 && entry.nameNormalized.contains(compactQuery) {
+                score += 120
             }
 
             let firstWord = entry.words.first ?? ""
@@ -132,16 +146,18 @@ public struct NZFCDSearchEngine: Sendable {
 
                 var tokScore = 0
                 if firstWord == tok || firstWord == singular || firstWord == plural {
-                    tokScore = 180
-                } else if tok.count >= 2 && firstWord.hasPrefix(tok) {
-                    tokScore = 120
+                    tokScore = 200
+                } else if firstWord.hasPrefix(tok) || (singular.count >= 2 && firstWord.hasPrefix(singular)) {
+                    // Works from the very 1st character typed ("a" -> Apple, Avocado; "p" -> Pie, Pizza, Poached)
+                    tokScore = 145
                 } else if entry.words.contains(tok) || entry.words.contains(singular) || entry.words.contains(plural) {
-                    tokScore = 95
-                } else if tok.count >= 2 && entry.words.contains(where: { $0.hasPrefix(tok) || $0.hasPrefix(singular) }) {
-                    tokScore = 55
+                    tokScore = 105
+                } else if entry.words.contains(where: { $0.hasPrefix(tok) || (singular.count >= 2 && $0.hasPrefix(singular)) }) {
+                    // Matches any word prefix from the 1st character (e.g. "f" -> "Coffee, flat white", "v" -> "Bread, Vogels")
+                    tokScore = tok.count == 1 ? 65 : 80
                 } else if tok.count >= 3 && entry.nameNormalized.contains(tok) {
-                    tokScore = 22
-                } else if entry.categoryNormalized.contains(tok) || entry.categoryNormalized.contains(singular) {
+                    tokScore = 25
+                } else if tok.count >= 2 && (entry.categoryNormalized.contains(tok) || entry.categoryNormalized.contains(singular)) {
                     tokScore = 30
                 }
 
@@ -153,17 +169,15 @@ public struct NZFCDSearchEngine: Sendable {
 
             guard matchedTokens > 0 else { continue }
 
-            // Strongly prefer entries that match EVERY token in a multi-word query (e.g. "mince cheese pie", "poached egg")
             if matchedTokens == activeTokens.count {
                 score += matchedTokens * 160
             } else {
-                // Penalize partial multi-word matches so full matches always rank above them
-                score -= (activeTokens.count - matchedTokens) * 60
+                score -= (activeTokens.count - matchedTokens) * 75
             }
 
-            // Slight preference for curated everyday items and concise food names when scores are close
+            // Boost everyday curated NZ foods so 1-2 letter prefixes surface the most common foods first
             if entry.index < 47 {
-                score += 25
+                score += 45
             }
 
             if score > 0 {
