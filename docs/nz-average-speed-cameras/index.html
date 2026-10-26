@@ -168,10 +168,12 @@ svg.map.drag{cursor:grabbing}
 .pill text{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;fill:#fff;text-anchor:middle;dominant-baseline:central;font-variant-numeric:tabular-nums}
 .pill{pointer-events:none}
 .arrow{fill:var(--panel);pointer-events:none}
-.mk{cursor:pointer}
-.mk circle{fill:var(--c);stroke:var(--panel);stroke-width:2.5px}
-.mk.hi circle{stroke:var(--ink);stroke-width:3px}
-.mklbl{font-family:Barlow,sans-serif;font-size:13px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--map-ground);stroke-width:2.5px;stroke-linejoin:round;pointer-events:none}
+.mk{cursor:pointer;outline:none}
+.mk .dot{fill:var(--c);stroke:var(--panel);stroke-width:2.5px}
+.mk .hit{fill:transparent;stroke:none}
+.mk:hover .dot,.mk:focus-visible .dot{stroke:var(--ink);stroke-width:3px}
+.mk:focus-visible .mklbl{text-decoration:underline}
+.mklbl{font-family:Barlow,sans-serif;font-size:13px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--map-ground);stroke-width:2.5px;stroke-linejoin:round}
 /* controls */
 .ctl{position:absolute;display:flex;flex-direction:column;gap:6px;top:12px;right:12px}
 .ctl button{width:34px;height:34px;border-radius:6px;background:var(--panel);box-shadow:var(--shadow);font-size:20px;font-weight:500;display:grid;place-items:center;color:var(--ink)}
@@ -281,7 +283,7 @@ const fmtLL=p=>`${p[0].toFixed(5)}, ${p[1].toFixed(5)}`;
 const osmLink=p=>`https://www.openstreetmap.org/?mlat=${p[0]}&mlon=${p[1]}#map=16/${p[0]}/${p[1]}`;
 
 const svg=document.getElementById('map'), world=document.getElementById('world'), base=document.getElementById('base'), secsG=document.getElementById('secs'), overlay=document.getElementById('overlay'), wrap=document.getElementById('mapwrap'), tip=document.getElementById('tip');
-let cur=null, flip={}, view={s:1,tx:0,ty:0}, fitS=1, PRJ=null, upm=1, hoverId=null;
+let cur=null, flip={}, view={s:1,tx:0,ty:0}, fitS=1, PRJ=null, upm=1;
 let geo=null; // per-site screen-independent geometry cache (route split per leg)
 
 // ---- projections ----
@@ -360,12 +362,12 @@ function drawOverlay(){
   if(!cur){
     const pts=SITES.map(s=>({s,p:T(nzMid(s.id))}));
     for(const {s,p} of pts) boxes.push([p[0]-9,p[1]-9,p[0]+9,p[1]+9]);
-    let lab='';
+    const lab={};
     const pri=[...pts].sort((a,b)=>(a.s.status==='enforcing')-(b.s.status==='enforcing'));
     for(const {s,p} of pri){ const w=s.name.length*6.9+4, right=p[0]+12+w<W-56; const bx=right?[p[0]+11,p[1]-8,p[0]+13+w,p[1]+8]:[p[0]-13-w,p[1]-8,p[0]-11,p[1]+8];
-      if(free(bx)||s.id===hoverId){ boxes.push(bx); lab+=`<text class="mklbl" x="${(right?p[0]+12:p[0]-12).toFixed(1)}" y="${(p[1]+4).toFixed(1)}" text-anchor="${right?'start':'end'}">${esc(s.name)}</text>`; } }
-    for(const {s,p} of pts) html+=`<g class="mk${s.id===hoverId?' hi':''}" data-site="${s.id}" style="--c:${cvar(s.status)}"><circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${s.id===hoverId?9:7}"/></g>`;
-    html+=lab;
+      if(free(bx)){ boxes.push(bx); lab[s.id]=`<text class="mklbl" x="${(right?p[0]+12:p[0]-12).toFixed(1)}" y="${(p[1]+4).toFixed(1)}" text-anchor="${right?'start':'end'}">${esc(s.name)}</text>`; } }
+    // the dot, a larger invisible tap target and the name are one button, so clicking any of them opens the site
+    for(const {s,p} of pts){ const x=p[0].toFixed(1), y=p[1].toFixed(1); html+=`<g class="mk" data-site="${s.id}" tabindex="0" role="button" aria-label="${esc(s.name)}, ${STATUS[s.status].toLowerCase()}" style="--c:${cvar(s.status)}"><circle class="hit" cx="${x}" cy="${y}" r="15"/><circle class="dot" cx="${x}" cy="${y}" r="7"/>${lab[s.id]||''}</g>`; }
     overlay.innerHTML=html; bindMarkers(); scaleBar(); return;
   }
   const s=BY[cur], B=MAP.BASE[cur], ord=orderOf(s), legs=legsOf(s), {rp,idx,camXY}=geo;
@@ -414,8 +416,10 @@ function along(seg,f){ if(seg.length<2) return null; let tot=0; const ls=[]; for
   for(let i=1;i<seg.length;i++){ const l=ls[i-1]; if(h<=l){ const t=l?h/l:0; const a=seg[i-1],b=seg[i]; return {x:a[0]+(b[0]-a[0])*t,y:a[1]+(b[1]-a[1])*t,ang:Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI}; } h-=l; } return null; }
 function scaleBar(){ const mpp=1/(view.s*upm); const nice=[20,50,100,200,500,1000,2000,5000,10000,20000,50000,100000,200000,500000]; let m=nice[0]; for(const n of nice) if(n/mpp<=120) m=n; const el=document.getElementById('scale'); el.querySelector('span').textContent=m>=1000?`${m/1000} km`:`${m} m`; el.querySelector('i').style.width=(m/mpp).toFixed(1)+'px'; }
 function bindMarkers(){ overlay.querySelectorAll('.mk').forEach(el=>{ const id=el.dataset.site;
-  el.addEventListener('mouseenter',()=>{ hoverId=id; showTip(id); drawOverlay(); });
-  el.addEventListener('mouseleave',()=>{ hoverId=null; tip.style.display='none'; drawOverlay(); }); }); }
+  el.addEventListener('mouseenter',()=>showTip(id));
+  el.addEventListener('mouseleave',()=>{ tip.style.display='none'; });
+  el.addEventListener('click',()=>select(id));
+  el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); select(id); } }); }); }
 function showTip(id){ const s=BY[id], p=T(nzMid(id)); tip.style.setProperty('--c',cvar(s.status)); tip.innerHTML=`<b>${esc(s.name)}</b>${STATUS[s.status]} · ${anyEstimate(s)?'≈ ':''}${fmtKm(totalM(s))} km · ${s.cams.length} cameras`; tip.style.display='block'; const W=wrap.clientWidth; tip.style.left=Math.min(W-250,p[0]+14)+'px'; tip.style.top=(p[1]+12)+'px'; }
 
 // ---- view / pan / zoom ----
@@ -433,13 +437,12 @@ document.getElementById('zout').onclick=()=>zoomAt(1/1.5,wrap.clientWidth/2,wrap
 document.getElementById('zfit').onclick=fit;
 svg.addEventListener('wheel',e=>{e.preventDefault(); const r=svg.getBoundingClientRect(); zoomAt(Math.exp(-e.deltaY*0.0015),e.clientX-r.left,e.clientY-r.top);},{passive:false});
 let drag=null, pinch=null; const ptrs=new Map();
-svg.addEventListener('pointerdown',e=>{ ptrs.set(e.pointerId,[e.clientX,e.clientY]); svg.setPointerCapture(e.pointerId); if(ptrs.size===1){drag={x:e.clientX,y:e.clientY,tx:view.tx,ty:view.ty,moved:false};svg.classList.add('drag');} else if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1]),s:view.s}; drag=null; } });
+// capture the pointer only once it starts dragging, so a plain click still lands on the marker or section under it
+svg.addEventListener('pointerdown',e=>{ ptrs.set(e.pointerId,[e.clientX,e.clientY]); if(ptrs.size===1){drag={x:e.clientX,y:e.clientY,tx:view.tx,ty:view.ty,moved:false};} else if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1]),s:view.s}; drag=null; for(const id of ptrs.keys()) try{ svg.setPointerCapture(id); }catch(_){} } });
 svg.addEventListener('pointermove',e=>{ if(!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId,[e.clientX,e.clientY]);
   if(pinch&&ptrs.size===2){ const [a,b]=[...ptrs.values()]; const d=Math.hypot(a[0]-b[0],a[1]-b[1]); const r=svg.getBoundingClientRect(); const cx=(a[0]+b[0])/2-r.left, cy=(a[1]+b[1])/2-r.top; zoomAt(pinch.s*d/pinch.d/view.s,cx,cy); return; }
-  if(drag){ const dx=e.clientX-drag.x, dy=e.clientY-drag.y; if(Math.abs(dx)+Math.abs(dy)>3) drag.moved=true; if(drag.moved){ tip.style.display='none'; setView({s:view.s,tx:drag.tx+dx,ty:drag.ty+dy}); } } });
-const endPtr=e=>{ ptrs.delete(e.pointerId);
-  if(drag&&!drag.moved&&e.type==='pointerup'){ const el=document.elementFromPoint(e.clientX,e.clientY); const hit=el&&el.closest&&el.closest('.mk,.sec.other'); if(hit) select(hit.dataset.site); }
-  drag=null; pinch=null; svg.classList.remove('drag'); };
+  if(drag){ const dx=e.clientX-drag.x, dy=e.clientY-drag.y; if(!drag.moved&&Math.abs(dx)+Math.abs(dy)>3){ drag.moved=true; try{ svg.setPointerCapture(e.pointerId); }catch(_){} svg.classList.add('drag'); tip.style.display='none'; } if(drag.moved) setView({s:view.s,tx:drag.tx+dx,ty:drag.ty+dy}); } });
+const endPtr=e=>{ ptrs.delete(e.pointerId); drag=null; pinch=null; svg.classList.remove('drag'); };
 svg.addEventListener('pointerup',endPtr); svg.addEventListener('pointercancel',endPtr);
 let rz=null, lastWH=''; new ResizeObserver(()=>{ const wh=wrap.clientWidth+'x'+wrap.clientHeight; if(wh===lastWH) return; lastWH=wh; clearTimeout(rz); rz=setTimeout(fit,80); }).observe(wrap);
 
@@ -496,7 +499,7 @@ function renderHeader(){
   svg.setAttribute('aria-label',cur?`Map of the ${BY[cur].name} average speed camera section`:'Map of New Zealand average speed camera sites');
 }
 function select(id){
-  cur=id&&BY[id]?id:null; hoverId=null; tip.style.display='none';
+  cur=id&&BY[id]?id:null; tip.style.display='none';
   if(cur) drawSite(cur); else { geo=null; drawNZ(); }
   renderHeader(); renderSide(); fit();
   if(location.hash!==(cur?'#'+cur:'')) history.replaceState(null,'',cur?'#'+cur:location.pathname+location.search);
