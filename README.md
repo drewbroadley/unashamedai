@@ -107,6 +107,14 @@ Static pages, published from [`docs/`](docs/) to
   Good Bridge and Melling drawn on the actual carriageway, with a night-by-night
   strip per job and the Upper Hutt and regional notes listed alongside. One HTML
   file, no build step, one outbound request (Google Fonts).
+- **[Average Speed Cameras NZ](docs/nz-average-speed-cameras/)** — all 19 NZTA
+  average speed safety camera sites on one map, from Matakana Road to SH6
+  Kingston. Each section is drawn along the real road with the 1st and 2nd
+  camera tagged in your direction of travel (reversible) and the distance
+  between them: NZTA's surveyed figure where it has one, the routed road
+  distance where NZTA still says TBC. One HTML file, one outbound request
+  (Google Fonts); the embedded map data is rebuilt by
+  [`scripts/nz-average-speed-cameras/build_map.py`](scripts/nz-average-speed-cameras/build_map.py).
 - **[Kiwi Businesses Going Under](docs/nz-insolvency-since-gfc/)** — New
   Zealand company liquidations from 2005 to August 2026, by year, sector and
   business size, counted in Isotype pictograms (one shopfront = 100 companies)
