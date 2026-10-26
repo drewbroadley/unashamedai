@@ -46,6 +46,11 @@ worker, no cookies, no `localStorage`.
   unchanged. Nothing else is fetched and nothing is sent anywhere. The links
   to NZTA's PDF and to OpenStreetMap are ordinary links; nothing loads from
   them until you click.
+- **Link previews:** the page's Open Graph and X tags point at
+  `img/og-image.png`, a 1200×630 card (Whitford Road with its 1st and 2nd
+  camera and the distance, plus the site counts). Only link-preview services
+  (Slack, LinkedIn, Facebook, iMessage and so on) fetch it; the page itself
+  never loads it.
 - **Data:** every site, every basemap (roads, rivers, lakes, coastline and
   place names around each section) and the New Zealand outline are embedded in
   the file. The page reads pointer position for pan, zoom and hover, and the
@@ -120,6 +125,17 @@ what lies at each end (`ends`), the status (`enforcing`, `construction` or
   packages. Downloads are cached in `scripts/nz-average-speed-cameras/.cache/`
   (git-ignored), so only changed sites are fetched again. The Overpass server
   is often busy; the script retries until it answers.
+- **The link-preview card** shows the status counts, so re-render it when a
+  status changes:
+
+  ```bash
+  python3 scripts/nz-average-speed-cameras/render_og.py
+  ```
+
+  It fills `scripts/nz-average-speed-cameras/og-card.html` with the page's data
+  and screenshots it with headless Google Chrome (set `CHROME` to the binary if
+  it isn't in the usual macOS place). Pass a site id to feature a different
+  section; the default is `whitford`.
 
 ## Credits
 

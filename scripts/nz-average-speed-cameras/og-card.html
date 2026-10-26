@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Average Speed Cameras NZ, link-preview card</title>
+<!-- Template for render_og.py: it fills in MAP and SITES from the page and screenshots this at 1200x630. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=block">
+<style>
+:root{
+  --ground:#EEF1F0; --panel:#FFFFFF; --ink:#18262B; --ink-2:#4B5A60; --ink-3:#7B888D; --rule:#D7DDDC;
+  --map-void:#DCE1DF; --map-ground:#E8ECEA; --map-sea:#B6D2DE; --map-road:#FFFFFF; --map-case:#C9D0CF; --map-minor:#F7F8F8; --map-water:#B6D2DE; --map-rail:#9AA6A9; --map-label:#5B6A70; --map-halo:#E8ECEA; --map-coast:#9DBCC9;
+  --c-enforcing:#C4302B; --c-construction:#D9640F; --c-planned:#4D4BAF;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:var(--panel)}
+body{font-family:Barlow,"Helvetica Neue",Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;display:grid;grid-template-columns:560px 640px}
+.txt{padding:54px 40px 46px 60px;display:flex;flex-direction:column;border-top:8px solid var(--c-enforcing)}
+.eyebrow{font-weight:600;font-size:14.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:96px;line-height:.92;letter-spacing:-.005em;margin:18px 0 22px}
+p{font-size:25px;line-height:1.32;font-weight:500;color:var(--ink-2);margin:0;max-width:450px}
+p b{color:var(--ink);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:26px;font-size:18px;font-weight:600}
+.chips span{display:flex;align-items:center;gap:8px}
+.chips i{width:13px;height:13px;border-radius:50%;background:var(--c)}
+.url{margin-top:auto;font-size:17px;font-weight:500;color:var(--ink-3);white-space:nowrap}
+.map{position:relative;background:var(--map-void);overflow:hidden}
+svg{display:block}
+.frame{fill:var(--map-ground)} .sea{fill:var(--map-sea)}
+.landp{fill:var(--map-ground);stroke:var(--map-coast);stroke-width:1px}
+.water{fill:var(--map-water)}
+.riv{fill:none;stroke:var(--map-water);stroke-width:2.6px;stroke-linecap:round;stroke-linejoin:round}
+.rail{fill:none;stroke:var(--map-rail);stroke-width:1.4px;stroke-dasharray:6 4}
+.r,.c{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.r-R{stroke:var(--map-minor);stroke-width:1.6px} .c-R{stroke:var(--map-case);stroke-width:2.8px}
+.r-S{stroke:var(--map-road);stroke-width:2.6px} .c-S{stroke:var(--map-case);stroke-width:4px}
+.r-M{stroke:var(--map-road);stroke-width:4px} .c-M{stroke:var(--map-case);stroke-width:5.6px}
+.r-H{stroke:var(--map-road);stroke-width:5.4px} .c-H{stroke:var(--map-case);stroke-width:7.4px}
+.halo{fill:none;stroke:var(--panel);stroke-width:17px;stroke-linecap:round;stroke-linejoin:round}
+.ln{fill:none;stroke:var(--c-enforcing);stroke-width:10px;stroke-linecap:round;stroke-linejoin:round}
+.lbl{font-family:Barlow,sans-serif;font-size:14px;font-weight:500;fill:var(--map-label);paint-order:stroke;stroke:var(--map-halo);stroke-width:3.5px;stroke-linejoin:round}
+.lbl.big{font-family:"Barlow Condensed",sans-serif;font-size:17px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;fill:var(--ink-2)}
+.cam circle{fill:var(--c-enforcing);stroke:var(--panel);stroke-width:4px}
+.cam text{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:19px;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.tag rect{fill:var(--panel);stroke:var(--c-enforcing);stroke-width:2px}
+.tag line{stroke:var(--c-enforcing);stroke-width:2px}
+.tag .t1{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;fill:var(--ink)}
+.tag .t2{font-family:Barlow,sans-serif;font-weight:500;font-size:15px;fill:var(--ink-2)}
+.pill rect{fill:var(--c-enforcing);stroke:var(--panel);stroke-width:3px}
+.pill text{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:26px;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.arrow{fill:var(--panel)}
+.inset{position:absolute;right:18px;top:18px;width:150px;height:206px;background:var(--map-sea);border:3px solid var(--panel);border-radius:8px;box-shadow:0 2px 10px rgba(24,38,43,.18)}
+.inset .nz{fill:var(--map-ground);stroke:var(--map-coast);stroke-width:.6px}
+.inset .dot{stroke:var(--panel);stroke-width:1.2px}
+.inset .ring{fill:none;stroke:var(--ink);stroke-width:2px}
+.cap{position:absolute;left:18px;bottom:16px;background:var(--panel);border-radius:6px;padding:7px 12px 8px;box-shadow:0 2px 10px rgba(24,38,43,.14);border-left:5px solid var(--c-enforcing)}
+.cap b{display:block;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:21px;line-height:1.1}
+.cap span{font-size:14px;color:var(--ink-2);font-weight:500}
+</style>
+</head>
+<body>
+<div class="txt">
+  <div class="eyebrow">NZTA average speed safety cameras</div>
+  <h1>Average Speed Cameras NZ</h1>
+  <p>All 19 sites on one map. <b>Which camera you reach first, which second,</b> and how far apart they are.</p>
+  <div class="chips" id="chips"></div>
+  <div class="url">unashamedai.broadley.org.nz/nz-average-speed-cameras</div>
+</div>
+<div class="map" id="map">
+  <svg id="svg" width="640" height="630"></svg>
+  <svg class="inset" id="inset" width="150" height="206"></svg>
+  <div class="cap" id="cap"></div>
+</div>
+<script>
+/*MAPDATA*/
+/*SITES*/
+const FEAT=new URLSearchParams(location.search).get('site')||'whitford';
+const BY=Object.fromEntries(SITES.map(s=>[s.id,s]));
+const pairs=a=>{const o=[];for(let i=0;i<a.length;i+=2)o.push([a[i],a[i+1]]);return o;};
+const fmtKm=m=>m>=20000?(m/1000).toFixed(1):(m/1000).toFixed(2);
+// chips
+const c={enforcing:0,construction:0,planned:0}; SITES.forEach(s=>c[s.status]++);
+const lab={enforcing:'enforcing',construction:'under construction',planned:'planned'};
+document.getElementById('chips').innerHTML=Object.entries(c).map(([k,v])=>`<span style="--c:var(--c-${k})"><i></i>${v} ${lab[k]}</span>`).join('');
+// featured site map
+const s=BY[FEAT], B=MAP.BASE[FEAT], W=640, H=630;
+const kx=111320*Math.cos(B.o[0]*Math.PI/180), PRJ=(la,lo)=>[(lo-B.o[1])*kx,-(la-B.o[0])*111320];
+const rp=pairs(B.route); let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; for(const [x,y] of rp){x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}
+const padX=110,padY=120; const sc=Math.min((W-2*padX)/(x1-x0),(H-2*padY)/(y1-y0)); const tx=(W-(x1-x0)*sc)/2-x0*sc, ty=(H-(y1-y0)*sc)/2-y0*sc+10;
+const T=p=>[p[0]*sc+tx,p[1]*sc+ty];
+const pf=(a,close)=>{let d='';for(let i=0;i<a.length;i+=2){const p=T([a[i],a[i+1]]);d+=(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}return d+(close?'Z':'');};
+let h='';
+const [bx0,by0,bx1,by1]=B.bb; const q0=T([bx0,by0]), q1=T([bx1,by1]);
+if(B.land){h+=`<rect class="sea" x="${q0[0]}" y="${q0[1]}" width="${q1[0]-q0[0]}" height="${q1[1]-q0[1]}"/><path class="landp" d="${B.land.map(r=>pf(r,true)).join('')}"/>`;} else h+=`<rect class="frame" x="${q0[0]}" y="${q0[1]}" width="${q1[0]-q0[0]}" height="${q1[1]-q0[1]}"/>`;
+if(B.water.length) h+=`<path class="water" fill-rule="evenodd" d="${B.water.map(w=>w[1].map(r=>pf(r,true)).join('')).join('')}"/>`;
+if(B.rivers.length) h+=`<path class="riv" d="${B.rivers.map(r=>pf(r[1])).join('')}"/>`;
+if(B.rail.length) h+=`<path class="rail" d="${B.rail.map(r=>pf(r)).join('')}"/>`;
+for(const k of ['R','S','M','H']){const d=B.roads.filter(r=>r[0]===k).map(r=>pf(r[2])).join(''); if(d) h+=`<path class="c c-${k}" d="${d}"/>`;}
+for(const k of ['R','S','M','H']){const d=B.roads.filter(r=>r[0]===k).map(r=>pf(r[2])).join(''); if(d) h+=`<path class="r r-${k}" d="${d}"/>`;}
+const rd=pf(B.route); h+=`<path class="halo" d="${rd}"/><path class="ln" d="${rd}"/>`;
+const scr=rp.map(T);
+function along(seg,f){let tot=0;const ls=[];for(let i=1;i<seg.length;i++){const l=Math.hypot(seg[i][0]-seg[i-1][0],seg[i][1]-seg[i-1][1]);ls.push(l);tot+=l;}let r=tot*f;for(let i=1;i<seg.length;i++){const l=ls[i-1];if(r<=l){const t=l?r/l:0,a=seg[i-1],b=seg[i];return{x:a[0]+(b[0]-a[0])*t,y:a[1]+(b[1]-a[1])*t,ang:Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI};}r-=l;}return null;}
+for(const f of [0.22,0.78]){const q=along(scr,f); h+=`<path class="arrow" transform="translate(${q.x.toFixed(1)} ${q.y.toFixed(1)}) rotate(${q.ang.toFixed(1)})" d="M-6 -6.5L4.5 0L-6 6.5Z"/>`;}
+// place labels (towns and villages only)
+const boxes=[]; const free=b=>boxes.every(o=>!(b[0]<o[2]&&b[2]>o[0]&&b[1]<o[3]&&b[3]>o[1]));
+const cams=s.cams.map(c=>T(PRJ(...c)));
+cams.forEach(p=>boxes.push([p[0]-18,p[1]-18,p[0]+18,p[1]+18]));
+boxes.push([0,0,W,8],[W-180,0,W,236],[0,H-80,330,H]);
+const legs=B.legs; const L=s.dist&&s.dist[0]!=null?s.dist[0]:legs[0]; const official=!!(s.dist&&s.dist[0]!=null);
+const mid=along(scr,0.5); const ptxt=(official?'':'≈ ')+fmtKm(L)+' km'; const pw=ptxt.length*12.5+28; const pb=[mid.x-pw/2,mid.y-19,mid.x+pw/2,mid.y+19]; boxes.push(pb);
+// tags
+let tags='';
+[0,s.cams.length-1].forEach((ci,k)=>{const p=cams[ci]; let j=0,bd=1e9; scr.forEach((q,i)=>{const d=Math.hypot(q[0]-p[0],q[1]-p[1]); if(d<bd){bd=d;j=i;}});
+  const a=scr[Math.max(0,j-3)], b=scr[Math.min(scr.length-1,j+3)]; let dx=b[0]-a[0],dy=b[1]-a[1]; const l=Math.hypot(dx,dy)||1; dx/=l; dy/=l;
+  const t1=(k?'2nd':'1st')+' camera', t2=s.ends[k]+' end'; const w=Math.max(t1.length*11.2,t2.length*8.2)+26, hh=56;
+  let best=null; for(const sg of [1,-1]) for(const rot of [0,0.6,-0.6]) for(const gap of [14,34,60]){const px=-dy*sg,py=dx*sg,c=Math.cos(rot),sn=Math.sin(rot),nx=px*c-py*sn,ny=px*sn+py*c; const r=20+gap+Math.abs(nx)*w/2+Math.abs(ny)*hh/2; const cx=p[0]+nx*r,cy=p[1]+ny*r,bx=[cx-w/2,cy-hh/2,cx+w/2,cy+hh/2]; const inV=bx[0]>10&&bx[2]<W-10&&bx[1]>14&&bx[3]<H-10; const scr2=(free(bx)?0:10)+(inV?0:6)+gap/50+(rot?0.4:0); if(!best||scr2<best.s) best={s:scr2,bx,cx,cy};}
+  boxes.push(best.bx); const ex=best.cx-p[0],ey=best.cy-p[1],el=Math.hypot(ex,ey)||1;
+  tags+=`<g class="tag"><line x1="${p[0]+ex/el*18}" y1="${p[1]+ey/el*18}" x2="${best.cx}" y2="${best.cy}"/><rect x="${best.bx[0]}" y="${best.bx[1]}" width="${w}" height="${hh}" rx="7"/><text class="t1" x="${best.bx[0]+13}" y="${best.bx[1]+25}">${t1}</text><text class="t2" x="${best.bx[0]+13}" y="${best.bx[1]+45}">${t2}</text></g>`; });
+let labs='';
+for(const [n,r,x,y] of B.places){ if(r>2) continue; const p=T([x,y]); const w=n.length*(r<=1?11:8.4)+8; const bx=[p[0]-w/2,p[1]-12,p[0]+w/2,p[1]+6]; if(bx[0]<4||bx[2]>W-4||bx[1]<10||bx[3]>H-4||!free(bx)) continue; boxes.push(bx); labs+=`<text class="lbl ${r<=1?'big':''}" x="${p[0]}" y="${p[1]}" text-anchor="middle">${n}</text>`; }
+h+=labs+tags+`<g class="pill"><rect x="${pb[0]}" y="${pb[1]}" width="${pw}" height="38" rx="19"/><text x="${mid.x}" y="${mid.y+1}">${ptxt}</text></g>`;
+cams.forEach((p,ci)=>{ h+=`<g class="cam"><circle cx="${p[0]}" cy="${p[1]}" r="16"/><text x="${p[0]}" y="${p[1]+1}">${'ABCD'[ci]}</text></g>`; });
+document.getElementById('svg').innerHTML=h;
+document.getElementById('cap').innerHTML=`<b>${s.name}</b><span>${s.area} · ${official?'surveyed by NZTA':'by road'} · ${s.limit}</span>`;
+// NZ locator inset
+let nx0=1e9,ny0=1e9,nx1=-1e9,ny1=-1e9; for(const r of MAP.NZ.land) for(let i=0;i<r.length;i+=2){nx0=Math.min(nx0,r[i]);nx1=Math.max(nx1,r[i]);ny0=Math.min(ny0,r[i+1]);ny1=Math.max(ny1,r[i+1]);}
+const iw=144,ih=200,is=Math.min((iw-16)/(nx1-nx0),(ih-16)/(ny1-ny0)), itx=(iw-(nx1-nx0)*is)/2-nx0*is, ity=(ih-(ny1-ny0)*is)/2-ny0*is;
+const IT=(x,y)=>[x*is+itx,y*is+ity];
+let ih2=`<path class="nz" d="${MAP.NZ.land.map(r=>{let d='';for(let i=0;i<r.length;i+=2){const p=IT(r[i],r[i+1]);d+=(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}return d+'Z';}).join('')}"/>`;
+for(const t of SITES){ const a=MAP.NZ.routes[t.id]; const m=Math.floor(a.length/4)*2; const p=IT(a[m],a[m+1]); ih2+=`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="3.6" fill="var(--c-${t.status})"/>`; if(t.id===FEAT) ih2+=`<circle class="ring" cx="${p[0]}" cy="${p[1]}" r="8"/>`; }
+document.getElementById('inset').innerHTML=ih2;
+document.fonts.ready.then(()=>document.body.dataset.ready='1');
+</script>
+</body>
+</html>
