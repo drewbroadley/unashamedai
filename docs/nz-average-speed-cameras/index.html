@@ -148,12 +148,12 @@ svg.map.drag{cursor:grabbing}
 .sec.other .ln{stroke-width:4px;opacity:.55}
 .sec.other:hover .ln{opacity:.9}
 .nzsec{fill:none;stroke:var(--c);stroke-width:3px;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.lbl{font-family:Barlow,sans-serif;font-size:11px;font-weight:500;fill:var(--map-label);paint-order:stroke;stroke:var(--map-halo);stroke-width:3px;stroke-linejoin:round;pointer-events:none;letter-spacing:.02em}
-.lbl.p0,.lbl.p1{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;fill:var(--ink-2)}
-.lbl.p2{font-size:12px;font-weight:600}
-.lbl.p4{font-style:italic;font-size:10.5px}
-.lbl.rd{font-size:10.5px}
-.lbl.rdH{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:600;letter-spacing:.04em}
+.lbl{font-family:Barlow,sans-serif;font-size:13.5px;font-weight:500;fill:var(--map-label);paint-order:stroke;stroke:var(--map-halo);stroke-width:2px;stroke-linejoin:round;pointer-events:none;letter-spacing:.01em}
+.lbl.p0,.lbl.p1{font-family:"Barlow Condensed",sans-serif;font-size:17px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;fill:var(--ink-2)}
+.lbl.p2{font-size:15px;font-weight:600}
+.lbl.p4{font-style:italic;font-size:12.5px}
+.lbl.rd{font-size:12px}
+.lbl.rdH{font-family:"Barlow Condensed",sans-serif;font-size:13.5px;font-weight:600;letter-spacing:.04em}
 .lbl.wt{fill:#3E6E82;font-style:italic;font-weight:400;stroke:var(--map-water)}
 .camm{cursor:default}
 .camm circle.o{fill:var(--c);stroke:var(--panel);stroke-width:3px}
@@ -171,7 +171,7 @@ svg.map.drag{cursor:grabbing}
 .mk{cursor:pointer}
 .mk circle{fill:var(--c);stroke:var(--panel);stroke-width:2.5px}
 .mk.hi circle{stroke:var(--ink);stroke-width:3px}
-.mklbl{font-family:Barlow,sans-serif;font-size:12px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--map-ground);stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
+.mklbl{font-family:Barlow,sans-serif;font-size:13px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--map-ground);stroke-width:2.5px;stroke-linejoin:round;pointer-events:none}
 /* controls */
 .ctl{position:absolute;display:flex;flex-direction:column;gap:6px;top:12px;right:12px}
 .ctl button{width:34px;height:34px;border-radius:6px;background:var(--panel);box-shadow:var(--shadow);font-size:20px;font-weight:500;display:grid;place-items:center;color:var(--ink)}
@@ -362,7 +362,7 @@ function drawOverlay(){
     for(const {s,p} of pts) boxes.push([p[0]-9,p[1]-9,p[0]+9,p[1]+9]);
     let lab='';
     const pri=[...pts].sort((a,b)=>(a.s.status==='enforcing')-(b.s.status==='enforcing'));
-    for(const {s,p} of pri){ const w=s.name.length*6.3+4, right=p[0]+12+w<W-56; const bx=right?[p[0]+11,p[1]-8,p[0]+13+w,p[1]+8]:[p[0]-13-w,p[1]-8,p[0]-11,p[1]+8];
+    for(const {s,p} of pri){ const w=s.name.length*6.9+4, right=p[0]+12+w<W-56; const bx=right?[p[0]+11,p[1]-8,p[0]+13+w,p[1]+8]:[p[0]-13-w,p[1]-8,p[0]-11,p[1]+8];
       if(free(bx)||s.id===hoverId){ boxes.push(bx); lab+=`<text class="mklbl" x="${(right?p[0]+12:p[0]-12).toFixed(1)}" y="${(p[1]+4).toFixed(1)}" text-anchor="${right?'start':'end'}">${esc(s.name)}</text>`; } }
     for(const {s,p} of pts) html+=`<g class="mk${s.id===hoverId?' hi':''}" data-site="${s.id}" style="--c:${cvar(s.status)}"><circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${s.id===hoverId?9:7}"/></g>`;
     html+=lab;
@@ -399,8 +399,12 @@ function drawOverlay(){
   // labels: places then roads, skipped where they would collide
   let labs='';
   const prank=mpp<6?4:mpp<14?3:mpp<40?2:1;
-  for(const [n,r,x,y] of B.places){ if(r>prank) continue; const p=T([x,y]); const fs=r<=1?8.6:r===2?7:6; const w=n.length*fs+6; const bx=[p[0]-w/2,p[1]-9,p[0]+w/2,p[1]+5]; if(!free(bx)) continue; boxes.push(bx); labs+=`<text class="lbl p${r}" x="${p[0].toFixed(1)}" y="${(p[1]+1).toFixed(1)}" text-anchor="middle">${esc(n)}</text>`; }
-  for(const L of geo.labels){ if(L.c==='S'&&mpp>9) continue; if(L.c==='M'&&mpp>30) continue; const p=T([L.x,L.y]); const w=L.text.length*(L.c==='H'?6.4:5.8)+6; const a=Math.abs(L.ang*Math.PI/180), cw=Math.abs(Math.cos(a))*w+Math.abs(Math.sin(a))*12, ch=Math.abs(Math.sin(a))*w+Math.abs(Math.cos(a))*12; const bx=[p[0]-cw/2,p[1]-ch/2,p[0]+cw/2,p[1]+ch/2]; if(p[0]<0||p[0]>W||p[1]<0||p[1]>H||!free(bx)) continue; boxes.push(bx); labs+=`<text class="lbl ${L.c==='H'?'rdH':'rd'}" transform="translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) rotate(${L.ang.toFixed(1)})" text-anchor="middle" dy="-5">${esc(L.text)}</text>`; }
+  for(const [n,r,x,y] of B.places){ if(r>prank) continue; const p=T([x,y]); const fs=r<=1?10.4:r===2?8.4:r===4?6.8:7.3; const w=n.length*fs+6, up=r<=1?14:12;
+    // towns and villages may shift a little to clear a camera tag; smaller places just drop out
+    const offs=r<=2?[[0,0],[0,-18],[0,18],[w/2+10,4],[-w/2-10,4]]:[[0,0]]; let at=null;
+    for(const [dx,dy] of offs){ const x=p[0]+dx, y=p[1]+dy, bx=[x-w/2,y-up,x+w/2,y+5]; if(free(bx)){ at={x,y,bx}; break; } }
+    if(!at) continue; boxes.push(at.bx); labs+=`<text class="lbl p${r}" x="${at.x.toFixed(1)}" y="${(at.y+1).toFixed(1)}" text-anchor="middle">${esc(n)}</text>`; }
+  for(const L of geo.labels){ if(L.c==='S'&&mpp>9) continue; if(L.c==='M'&&mpp>30) continue; const p=T([L.x,L.y]); const w=L.text.length*(L.c==='H'?6.9:6.6)+6; const a=Math.abs(L.ang*Math.PI/180), cw=Math.abs(Math.cos(a))*w+Math.abs(Math.sin(a))*14, ch=Math.abs(Math.sin(a))*w+Math.abs(Math.cos(a))*14; const bx=[p[0]-cw/2,p[1]-ch/2,p[0]+cw/2,p[1]+ch/2]; if(p[0]<0||p[0]>W||p[1]<0||p[1]>H||!free(bx)) continue; boxes.push(bx); labs+=`<text class="lbl ${L.c==='H'?'rdH':'rd'}" transform="translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) rotate(${L.ang.toFixed(1)})" text-anchor="middle" dy="-5">${esc(L.text)}</text>`; }
   let cm='';
   cams.forEach((p,ci)=>{ cm+=`<g class="camm" style="--c:${cvar(s.status)}"><circle class="o" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="11"/><text x="${p[0].toFixed(1)}" y="${p[1].toFixed(1)}">${'ABCD'[ci]}</text><title>Camera ${'ABCD'[ci]} · ${fmtLL(s.cams[ci])}</title></g>`; });
   overlay.innerHTML=html+labs+`<g style="--c:${cvar(s.status)}">${pills}${tags}</g>`+cm;
