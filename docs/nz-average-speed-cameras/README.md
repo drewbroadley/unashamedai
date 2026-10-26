@@ -18,8 +18,8 @@ same look, same pan-and-zoom map, different data.
 
 - Opens on an overview of New Zealand with all 19 sites, coloured by status:
   enforcing, under construction or planned.
-- Click a site (on the map, in the list, or with the ‹ › buttons and arrow keys)
-  to zoom to it. The section between the cameras is drawn along the actual road,
+- Click a site (its dot or name on the map, in the list, or with the ‹ › buttons
+  and arrow keys) to zoom to it. The map's dots are keyboard-focusable too. The section between the cameras is drawn along the actual road,
   with each camera marked A, B (C, D) as NZTA labels them, tagged **1st camera**
   and **2nd camera** in the direction of travel, and the distance between them
   on the line.
