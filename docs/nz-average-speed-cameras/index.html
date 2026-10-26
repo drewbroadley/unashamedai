@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Every NZTA average speed safety camera site in New Zealand on a map: where the first and second cameras are, the stretch of road between them, and how far apart they are.">
 <title>Average Speed Cameras NZ</title>
+<meta name="author" content="Drew Broadley">
+<link rel="canonical" href="https://unashamedai.broadley.org.nz/nz-average-speed-cameras/">
+
+<!-- Open Graph: Facebook, LinkedIn, Slack, WhatsApp, Signal, Bluesky, Mastodon -->
+<meta property="og:site_name" content="unashamedly AI-generated">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_NZ">
+<meta property="og:url" content="https://unashamedai.broadley.org.nz/nz-average-speed-cameras/">
+<meta property="og:title" content="Average Speed Cameras NZ">
+<meta property="og:description" content="All 19 NZTA average speed camera sites on one map. See which camera you reach first, which second, and how far apart they are.">
+<meta property="og:image" content="https://unashamedai.broadley.org.nz/nz-average-speed-cameras/img/og-image.png">
+<meta property="og:image:secure_url" content="https://unashamedai.broadley.org.nz/nz-average-speed-cameras/img/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Average Speed Cameras NZ. Whitford Road drawn on a map with the 1st camera at the Shamrock Park end, the 2nd at the Whitford end, 4.18 km apart. 15 sites enforcing, 3 under construction, 1 planned.">
+
+<!-- X / Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Average Speed Cameras NZ">
+<meta name="twitter:description" content="All 19 NZTA average speed camera sites on one map. See which camera you reach first, which second, and how far apart they are.">
+<meta name="twitter:image" content="https://unashamedai.broadley.org.nz/nz-average-speed-cameras/img/og-image.png">
+<meta name="twitter:image:alt" content="Average Speed Cameras NZ. Whitford Road drawn on a map with the 1st camera at the Shamrock Park end, the 2nd at the Whitford end, 4.18 km apart. 15 sites enforcing, 3 under construction, 1 planned.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
 <style>
@@ -365,9 +388,11 @@ function drawOverlay(){
   ord.forEach((ci,k)=>{ const p=cams[ci], j=idx[ci]; const a=scr[Math.max(0,j-3)], b=scr[Math.min(scr.length-1,j+3)]; let dx=b[0]-a[0], dy=b[1]-a[1]; const l=Math.hypot(dx,dy)||1; dx/=l; dy/=l;
     const endTxt=ci===0?s.ends[0]+' end':ci===s.cams.length-1?s.ends[1]+' end':'';
     const t1=`${ORD[k]} camera`, t2=endTxt; const w=Math.max(t1.length*7.4,t2.length*5.9)+18, hgt=t2?38:24;
+    // try both sides of the road, square-on and angled, and keep the tag's near edge clear of the marker
     let best=null;
-    for(const sgn of [1,-1]) for(const r of [34,54,80]){ const nx=-dy*sgn, ny=dx*sgn; const cx=p[0]+nx*r, cy=p[1]+ny*r; const bx=[cx-w/2,cy-hgt/2,cx+w/2,cy+hgt/2];
-      const inView=bx[0]>4&&bx[2]<W-52&&bx[1]>4&&bx[3]<H-30; const sc=(free(bx)?0:10)+(inView?0:5)+r/40; if(!best||sc<best.sc) best={sc,bx,cx,cy}; }
+    for(const sgn of [1,-1]) for(const rot of [0,0.6,-0.6]) for(const gap of [12,30,56]){ const px=-dy*sgn, py=dx*sgn, c=Math.cos(rot), sn=Math.sin(rot); const nx=px*c-py*sn, ny=px*sn+py*c;
+      const r=14+gap+Math.abs(nx)*w/2+Math.abs(ny)*hgt/2; const cx=p[0]+nx*r, cy=p[1]+ny*r; const bx=[cx-w/2,cy-hgt/2,cx+w/2,cy+hgt/2];
+      const inView=bx[0]>4&&bx[2]<W-52&&bx[1]>4&&bx[3]<H-30; const sc=(free(bx)?0:10)+(inView?0:5)+gap/40+(rot?0.4:0); if(!best||sc<best.sc) best={sc,bx,cx,cy}; }
     const {bx,cx,cy}=best; boxes.push(bx);
     const ex=cx-p[0], ey=cy-p[1], el=Math.hypot(ex,ey)||1;
     tags+=`<g class="ctag"><line x1="${(p[0]+ex/el*13).toFixed(1)}" y1="${(p[1]+ey/el*13).toFixed(1)}" x2="${cx.toFixed(1)}" y2="${cy.toFixed(1)}"/><rect x="${bx[0].toFixed(1)}" y="${bx[1].toFixed(1)}" width="${w.toFixed(1)}" height="${hgt}" rx="5"/><text class="t1" x="${(bx[0]+9).toFixed(1)}" y="${(bx[1]+16).toFixed(1)}">${t1}</text>${t2?`<text class="t2" x="${(bx[0]+9).toFixed(1)}" y="${(bx[1]+31).toFixed(1)}">${esc(t2)}</text>`:''}</g>`; });
