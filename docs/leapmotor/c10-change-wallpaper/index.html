@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leapmotor C10 Wallpaper</title>
+<meta name="description" content="How to put your own picture on the Leapmotor C10's centre screen as the wallpaper, using the file picker inside the AutoKit app. Twelve steps, a USB stick, about two minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lexend+Deca:wght@300;400;500&display=swap">
+<style>
+  :root{--bg:#F4F6F7;--card:#FFFFFF;--ink:#1A2329;--ink-2:#55626A;--ink-3:#8A969C;--line:#E1E6E9;--blue:#0A93D1;--blue-soft:#E4F3FB;
+    --amber:#9A5B00;--amber-line:#F1C27A;--amber-soft:#FFF5E3;
+    --scr:#161D22;--scr-2:#222C33;--scr-3:#33414A;--scr-ink:#D8E0E4;--scr-ink-2:#8E9BA3;--hl:#38BDF8;
+    --title:"Poppins","Helvetica Neue",Arial,sans-serif;--body:"Lexend Deca","Helvetica Neue",Arial,sans-serif;color-scheme:light}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:300 16px/1.7 var(--body);-webkit-font-smoothing:antialiased}
+  .wrap{width:min(100% - 32px,920px);margin:0 auto}
+  a{color:var(--blue)}
+  b,strong{font-weight:500}
+  header{padding:28px 0 0}
+  .brand{font:600 14px/1 var(--title);letter-spacing:.04em;text-decoration:none;color:var(--ink-2)}
+  .brand span{color:var(--blue)}
+  .crumb{font:400 14px/1 var(--body);color:var(--ink-3);margin-left:6px}
+  .crumb a{color:var(--ink-2);text-decoration:none}
+  .crumb a:hover{color:var(--blue)}
+
+  .hero{padding:clamp(40px,8vh,80px) 0 28px}
+  .eyebrow{display:inline-block;font:500 11.5px/1.4 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 8px;border-radius:4px}
+  .hero h1{font:600 clamp(28px,4.6vw,44px)/1.15 var(--title);margin:14px 0 16px;letter-spacing:-.01em;max-width:22ch;text-wrap:balance}
+  .hero h1 em{font-style:normal;color:var(--blue)}
+  .hero p{margin:0;font-size:17.5px;max-width:60ch;color:var(--ink-2)}
+  .hero p b{color:var(--ink)}
+
+  .warn{display:flex;gap:14px;background:var(--amber-soft);border:1px solid var(--amber-line);border-radius:10px;padding:16px 18px;margin:8px 0 0;color:#5A3A08;font-size:15px;line-height:1.6}
+  .warn svg{flex:none;width:22px;height:22px;margin-top:2px;fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .warn b{color:#3E2700}
+
+  h2{font:600 13px/1.3 var(--title);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:56px 0 16px}
+  .need{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;margin:0;padding:0;list-style:none}
+  .need li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+  .need li b{display:block;color:var(--ink);font:600 15.5px/1.35 var(--title);margin-bottom:4px}
+
+  .steps{list-style:none;margin:0;padding:0;counter-reset:step}
+  .step{counter-increment:step;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:28px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:0 0 16px}
+  .step h3{font:600 19px/1.3 var(--title);margin:0 0 8px;display:flex;gap:12px;align-items:baseline}
+  .step h3::before{content:counter(step);flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font:600 14px/1 var(--title);transform:translateY(-2px)}
+  .step p{margin:0 0 8px;color:var(--ink-2);font-size:15.5px}
+  .step p:last-child{margin-bottom:0}
+  .step .tip{font-size:14px;color:var(--ink-3)}
+  .ui{font:500 .92em/1 var(--body);color:var(--ink);background:#EEF1F3;border:1px solid var(--line);border-radius:4px;padding:2px 6px;white-space:nowrap}
+  .bezel{background:#0B0F12;border-radius:14px;padding:7px;box-shadow:0 10px 26px rgba(26,35,41,.16)}
+  .bezel svg{display:block;width:100%;height:auto;border-radius:8px}
+  figure{margin:0}
+  figcaption{font-size:12.5px;color:var(--ink-3);margin-top:8px;text-align:center}
+
+  /* screen drawing */
+  .s-bg{fill:var(--scr)} .s-panel{fill:var(--scr-2)} .s-line{stroke:var(--scr-3);stroke-width:1}
+  .s-t{fill:var(--scr-ink);font:400 10px/1 var(--body)} .s-t2{fill:var(--scr-ink-2);font:400 8.5px/1 var(--body)}
+  .s-h{fill:var(--scr-ink);font:500 11px/1 var(--body)} .s-ph{fill:var(--scr-3)}
+  .hl{fill:none;stroke:var(--hl);stroke-width:2}
+  .hl-fill{fill:rgba(56,189,248,.14)}
+  .tap{fill:var(--hl)}
+  .pulse{fill:none;stroke:var(--hl);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:pulse 1.8s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.2);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.pulse{animation:none;opacity:.5;transform:scale(1.8)}}
+
+  .notes{display:grid;gap:12px}
+  .notes details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+  .notes summary{cursor:pointer;font:600 15.5px/1.4 var(--title);color:var(--ink)}
+  .notes summary::marker{color:var(--blue)}
+  .notes details p{margin:10px 0 0;color:var(--ink-2);font-size:15px}
+  .credit{color:var(--ink-2);font-size:15px;max-width:64ch}
+  .credit p{margin:0 0 12px}
+
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:26px 0 36px;font-size:13.5px;line-height:1.8;color:var(--ink-3)}
+  footer a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--blue);border-color:var(--blue)}
+
+  @media (max-width:720px){
+    .step{grid-template-columns:1fr;gap:18px;padding:18px}
+  }
+</style>
+</head>
+<body>
+
+<!-- shared drawing parts for the screen diagrams -->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <symbol id="pic" viewBox="0 0 320 162" preserveAspectRatio="xMidYMid slice">
+    <rect width="320" height="162" fill="#A9DCF0"/>
+    <circle cx="244" cy="44" r="16" fill="#F7C95C"/>
+    <path d="M0 104 L60 70 L118 98 L178 58 L250 100 L320 76 V162 H0Z" fill="#6BAF84"/>
+    <path d="M0 128 Q90 100 170 120 T320 112 V162 H0Z" fill="#3F8A5F"/>
+    <path d="M150 162 L178 118 L186 118 L206 162Z" fill="#E9E2D0"/>
+  </symbol>
+  <symbol id="dock" viewBox="0 0 320 18">
+    <rect width="320" height="18" fill="#0E1418"/>
+    <path d="M14 9.5 L20 4.5 L26 9.5 V14 H14Z" fill="none" stroke="#C9D3D8" stroke-width="1.4" stroke-linejoin="round"/>
+    <g fill="#5E6C74"><rect x="46" y="5" width="8" height="8" rx="2"/><rect x="74" y="5" width="8" height="8" rx="2"/><rect x="102" y="5" width="8" height="8" rx="2"/><rect x="210" y="5" width="8" height="8" rx="2"/><rect x="238" y="5" width="8" height="8" rx="2"/><rect x="292" y="5" width="8" height="8" rx="2"/></g>
+    <text x="160" y="12.5" text-anchor="middle" fill="#C9D3D8" font-size="8.5" font-family="Lexend Deca, Arial, sans-serif">23°</text>
+  </symbol>
+  <symbol id="i-folder" viewBox="0 0 14 12">
+    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1H6l1.5 1.8h4A1.5 1.5 0 0 1 13 4.3V9.5A1.5 1.5 0 0 1 11.5 11h-9A1.5 1.5 0 0 1 1 9.5Z" fill="#8FB4C6"/>
+  </symbol>
+  <symbol id="i-expand" viewBox="0 0 12 12">
+    <path d="M1 4.5V1h3.5M7.5 1H11v3.5M11 7.5V11H7.5M4.5 11H1V7.5" fill="none" stroke="#C9D3D8" stroke-width="1.4"/>
+  </symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24">
+    <g fill="none" stroke="#D8E0E4"><circle cx="12" cy="12" r="6" stroke-width="2"/><circle cx="12" cy="12" r="2.2" stroke-width="1.6"/>
+    <path d="M12 2.5v3.5M12 18v3.5M2.5 12h3.5M18 12h3.5M5.3 5.3l2.5 2.5M16.2 16.2l2.5 2.5M5.3 18.7l2.5-2.5M16.2 7.8l2.5-2.5" stroke-width="3"/></g>
+  </symbol>
+  <symbol id="i-usb" viewBox="0 0 12 12">
+    <path d="M6 11V1.5M6 1.5 4.6 3.3M6 1.5l1.4 1.8M6 7.2 3.2 5.8V4.2M6 8.6l2.8-1.4V5.6" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="3.2" cy="3.8" r=".9" fill="currentColor"/><rect x="8.1" y="4.4" width="1.4" height="1.4" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-img" viewBox="0 0 14 12">
+    <rect x=".5" y=".5" width="13" height="11" rx="1.5" fill="#A9DCF0"/>
+    <path d="M.5 9 L4.5 5.5 L8 8.5 L10.5 6.5 L13.5 9 V10A1.5 1.5 0 0 1 12 11.5H2A1.5 1.5 0 0 1 .5 10Z" fill="#3F8A5F"/>
+  </symbol>
+</svg>
+
+<header class="wrap">
+  <a class="brand" href="../../">unashamed<span>/</span>ai</a><span class="crumb">/ <a href="../">Leapmotor</a></span>
+</header>
+
+<section class="hero wrap">
+  <span class="eyebrow">Leapmotor C10 &middot; how-to &middot; unofficial</span>
+  <h1>Put your own picture on the C10&rsquo;s <em>wallpaper</em></h1>
+  <p>The C10 has no setting for using your own photo as the background. But if the <b>AutoKit</b> app is on your car&rsquo;s screen, one of its settings opens the screen&rsquo;s file browser, and that browser can pass any picture to the car&rsquo;s own &ldquo;set as wallpaper&rdquo; tool. You need a USB stick and about two minutes.</p>
+</section>
+
+<main class="wrap">
+  <div class="warn" role="note">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 20h19Z"/><path d="M12 10v4.5M12 17.3v.2"/></svg>
+    <div><b>There&rsquo;s no undo.</b> Once your picture is set, the only known way back to Leapmotor&rsquo;s original wallpapers is to reset the screen system, which clears your other settings too. The owner who shared this method hadn&rsquo;t found another way back as of May 2026. Choose a picture you&rsquo;re happy to live with.</div>
+  </div>
+
+  <h2>What you need</h2>
+  <ul class="need">
+    <li><b>AutoKit on the car&rsquo;s screen</b>AutoKit is the app that runs Carlinkit CarPlay and Android Auto adapters, and some C10 owners have it installed. Look for it in the app grid. Without it this method doesn&rsquo;t work, and this page doesn&rsquo;t cover installing it.</li>
+    <li><b>A USB stick in the USB-A port</b>The stick the built-in dashcam records to is fine. If the dashcam can write to it, the screen can read it.</li>
+    <li><b>Landscape pictures</b>The screen is wide, so portrait photos get cropped hard. JPG and PNG both work.</li>
+    <li><b>Your phone disconnected</b>If your phone connects, AutoKit goes straight into CarPlay or Android Auto and you can&rsquo;t reach its settings. Turn off your phone&rsquo;s Bluetooth or leave it outside the car.</li>
+  </ul>
+
+  <h2>Twelve steps</h2>
+  <ol class="steps">
+
+    <li class="step">
+      <div class="txt">
+        <h3>Put your pictures on the USB stick</h3>
+        <p>On your computer, make a new folder on the stick (for example <span class="ui">Wallpapers</span>) and copy in the pictures you want.</p>
+        <p class="tip">Leave the dashcam&rsquo;s own folder alone.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The USB stick's folders: the dashcam folder, and a new Wallpapers folder holding two pictures">
+            <rect class="s-bg" width="320" height="180"/>
+            <rect class="s-panel" width="320" height="26"/>
+            <circle cx="14" cy="13" r="3.5" fill="#E46A5E"/><circle cx="26" cy="13" r="3.5" fill="#E8B34B"/><circle cx="38" cy="13" r="3.5" fill="#5CB874"/>
+            <use href="#i-usb" x="56" y="7" width="12" height="12" style="color:#8E9BA3"/>
+            <text class="s-t" x="74" y="16.5">USB stick</text>
+            <use href="#i-folder" x="20" y="40" width="14" height="12"/><text class="s-t" x="42" y="49.5">driverecord</text><text class="s-t2" x="300" y="49.5" text-anchor="end">dashcam</text>
+            <line class="s-line" x1="16" y1="62" x2="304" y2="62"/>
+            <rect class="hl-fill" x="12" y="68" width="296" height="22" rx="4"/>
+            <rect class="hl" x="12" y="68" width="296" height="22" rx="4"/>
+            <use href="#i-folder" x="20" y="73" width="14" height="12"/><text class="s-t" x="42" y="82.5">Wallpapers</text><text class="s-t2" x="300" y="82.5" text-anchor="end">new folder</text>
+            <use href="#i-img" x="44" y="100" width="14" height="12"/><text class="s-t" x="66" y="109.5">beach.jpg</text>
+            <use href="#i-img" x="44" y="122" width="14" height="12"/><text class="s-t" x="66" y="131.5">hills.png</text>
+            <path d="M30 92 V128 H40 M30 106 H40" fill="none" stroke="#33414A"/>
+          </svg>
+        </div>
+        <figcaption>On your computer</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Open AutoKit</h3>
+        <p>Plug the stick into the car&rsquo;s USB-A port, open the app grid and tap <span class="ui">AutoKit</span>.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The app grid with the AutoKit app highlighted">
+            <use href="#pic" x="0" y="0" width="320" height="162" opacity=".25"/>
+            <rect width="320" height="162" fill="#161D22" opacity=".72"/>
+            <g class="s-ph">
+              <rect x="30" y="30" width="28" height="28" rx="7"/><rect x="74" y="30" width="28" height="28" rx="7"/><rect x="118" y="30" width="28" height="28" rx="7"/><rect x="162" y="30" width="28" height="28" rx="7"/><rect x="206" y="30" width="28" height="28" rx="7"/><rect x="250" y="30" width="28" height="28" rx="7"/>
+              <rect x="30" y="86" width="28" height="28" rx="7"/><rect x="74" y="86" width="28" height="28" rx="7"/><rect x="118" y="86" width="28" height="28" rx="7"/><rect x="206" y="86" width="28" height="28" rx="7"/><rect x="250" y="86" width="28" height="28" rx="7"/>
+              <rect x="34" y="64" width="20" height="4" rx="2"/><rect x="78" y="64" width="20" height="4" rx="2"/><rect x="122" y="64" width="20" height="4" rx="2"/><rect x="166" y="64" width="20" height="4" rx="2"/><rect x="210" y="64" width="20" height="4" rx="2"/><rect x="254" y="64" width="20" height="4" rx="2"/>
+              <rect x="34" y="120" width="20" height="4" rx="2"/><rect x="78" y="120" width="20" height="4" rx="2"/><rect x="122" y="120" width="20" height="4" rx="2"/><rect x="210" y="120" width="20" height="4" rx="2"/><rect x="254" y="120" width="20" height="4" rx="2"/>
+            </g>
+            <rect x="162" y="86" width="28" height="28" rx="7" fill="#2B8FD6"/>
+            <path d="M169 104 L176 94 L183 104 M171.5 100.5 H180.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <text class="s-t" x="176" y="128" text-anchor="middle">AutoKit</text>
+            <rect class="hl" x="154" y="80" width="44" height="54" rx="9"/>
+            <circle class="pulse" cx="183" cy="108" r="4"/><circle class="tap" cx="183" cy="108" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>App grid</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Tap the settings gear</h3>
+        <p>With no phone connected, AutoKit sits on its waiting-for-phone screen. Tap the gear in the top-left corner.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="AutoKit's waiting screen with the settings gear in the top-left corner highlighted">
+            <rect width="320" height="162" fill="#3E63B8"/>
+            <rect width="320" height="162" fill="#6E8BE0" opacity=".35"/>
+            <use href="#i-gear" x="12" y="10" width="16" height="16"/>
+            <path d="M40 13 l5 5 -5 5 M40 23 l5-5 -5-5 M42.5 10.5 v15" fill="none" stroke="#D8E0E4" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M56 22 a8 8 0 0 1 12 0 M58.5 19 a4.5 4.5 0 0 1 7 0" fill="none" stroke="#D8E0E4" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="160" cy="80" r="26" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="4"/>
+            <circle cx="160" cy="80" r="26" fill="none" stroke="#5FE0C8" stroke-width="4" stroke-dasharray="60 164" stroke-linecap="round" transform="rotate(-30 160 80)"/>
+            <text class="s-t" x="160" y="126" text-anchor="middle" style="fill:#EAF0FF">Waiting for your phone&hellip;</text>
+            <rect class="hl" x="6" y="4" width="28" height="28" rx="7"/>
+            <circle class="pulse" cx="20" cy="18" r="4"/><circle class="tap" cx="20" cy="18" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>AutoKit, no phone connected</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Open Advanced settings</h3>
+        <p>Scroll down the settings list and tap <span class="ui">Advanced settings</span>.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="AutoKit's settings list with Advanced settings highlighted">
+            <rect width="320" height="162" fill="#3E63B8"/>
+            <rect width="320" height="162" fill="#6E8BE0" opacity=".35"/>
+            <text class="s-h" x="14" y="20" style="fill:#fff">&lsaquo; Back</text>
+            <text class="s-t" x="306" y="20" text-anchor="end" style="fill:#EAF0FF">App settings</text>
+            <g fill="rgba(255,255,255,.18)"><rect x="12" y="48" width="296" height="1"/><rect x="12" y="72" width="296" height="1"/><rect x="12" y="96" width="296" height="1"/><rect x="12" y="120" width="296" height="1"/><rect x="12" y="144" width="296" height="1"/></g>
+            <g class="s-t" style="fill:#EAF0FF">
+              <text x="16" y="41">Image scale</text>
+              <text x="16" y="65">Save log</text>
+              <text x="16" y="113">Software version</text>
+              <text x="16" y="137">Box version</text>
+            </g>
+            <rect x="10" y="75" width="300" height="19" rx="4" fill="rgba(56,189,248,.22)"/>
+            <text class="s-t" x="16" y="88.5" style="fill:#fff;font-weight:500">Advanced settings</text>
+            <rect class="hl" x="10" y="75" width="300" height="19" rx="4"/>
+            <circle class="pulse" cx="140" cy="85" r="4"/><circle class="tap" cx="140" cy="85" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>AutoKit &rsaquo; Settings</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Find &ldquo;OEM icon selection&rdquo; and tap +</h3>
+        <p>Advanced settings runs to a second page. Scroll right to the bottom, find <span class="ui">OEM icon selection</span> and tap the <span class="ui">+</span> at the end of its row of icons.</p>
+        <p class="tip">The + is meant for choosing an icon. You&rsquo;re only using it because it opens the file browser, so the icon itself won&rsquo;t change.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The bottom of Advanced settings, with the plus button at the end of the OEM icon selection row highlighted">
+            <rect width="320" height="162" fill="#3E63B8"/>
+            <rect width="320" height="162" fill="#6E8BE0" opacity=".35"/>
+            <text class="s-h" x="14" y="20" style="fill:#fff">&lsaquo; Back</text>
+            <text class="s-t" x="306" y="20" text-anchor="end" style="fill:#EAF0FF">Advanced settings</text>
+            <g fill="rgba(255,255,255,.18)"><rect x="12" y="50" width="296" height="1"/><rect x="12" y="76" width="296" height="1"/><rect x="12" y="102" width="296" height="1"/></g>
+            <g class="s-t" style="fill:#EAF0FF">
+              <text x="16" y="42">Volume buttons change track</text>
+              <text x="16" y="68">Restore default settings</text>
+              <text x="16" y="94" style="fill:#fff;font-weight:500">OEM icon selection</text>
+            </g>
+            <rect x="150" y="112" width="160" height="38" rx="8" fill="rgba(255,255,255,.14)"/>
+            <rect x="162" y="119" width="24" height="24" rx="5" fill="#fff"/><use href="#pic" x="164" y="121" width="20" height="20"/>
+            <rect x="198" y="119" width="24" height="24" rx="5" fill="#7D8A93"/>
+            <path d="M203 134 h14 v-3 l-2-4 h-10 l-2 4Z M205.5 136.5 v-2 M214.5 136.5 v-2" fill="none" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/>
+            <rect x="234" y="119" width="24" height="24" rx="5" fill="#7D8A93"/>
+            <rect x="243" y="124" width="6" height="10" rx="3" fill="none" stroke="#fff" stroke-width="1.3"/><path d="M240.5 131 a5.5 5.5 0 0 0 11 0 M246 136.5 v2" fill="none" stroke="#fff" stroke-width="1.3"/>
+            <rect x="270" y="119" width="24" height="24" rx="5" fill="#9AA6AE"/>
+            <path d="M282 125 v12 M276 131 h12" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <rect class="hl" x="266" y="115" width="32" height="32" rx="7"/>
+            <circle class="pulse" cx="282" cy="131" r="4"/><circle class="tap" cx="282" cy="131" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Advanced settings, second page</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Pick the USB stick</h3>
+        <p>An <span class="ui">Open from</span> panel slides in. Tap the USB stick, shown with a USB symbol and named <span class="ui">LEAPMOTOR</span>.</p>
+        <p class="tip"><b>Leapmotor C10</b> just above it is the car&rsquo;s own storage, not the stick.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The Open from panel, with the LEAPMOTOR USB drive highlighted">
+            <rect class="s-bg" width="320" height="162" style="fill:#2A3238"/>
+            <g class="s-ph" opacity=".6"><rect x="168" y="40" width="120" height="6" rx="3"/><rect x="168" y="60" width="96" height="6" rx="3"/><rect x="168" y="80" width="110" height="6" rx="3"/></g>
+            <rect width="150" height="162" fill="#20292F"/>
+            <text class="s-h" x="14" y="22">Open from</text>
+            <g class="s-t">
+              <circle cx="20" cy="42" r="4.5" fill="none" stroke="#8E9BA3" stroke-width="1.2"/><path d="M20 39.5 V42 H22" fill="none" stroke="#8E9BA3" stroke-width="1.1"/>
+              <text x="32" y="45.5">Recent</text>
+              <path d="M20 58 v6 M17 61.5 l3 3 3-3 M16 67 h8" fill="none" stroke="#8E9BA3" stroke-width="1.2"/>
+              <text x="32" y="66">Downloads</text>
+              <rect x="10" y="78" width="130" height="1" fill="#33414A"/>
+              <rect x="16.5" y="88" width="7" height="11" rx="1.5" fill="none" stroke="#8E9BA3" stroke-width="1.2"/>
+              <text x="32" y="97">Leapmotor C10</text>
+            </g>
+            <rect x="6" y="106" width="138" height="20" rx="4" fill="rgba(56,189,248,.22)"/>
+            <use href="#i-usb" x="14" y="110" width="12" height="12" style="color:#D8E0E4"/>
+            <text class="s-t" x="32" y="119.5" style="font-weight:500">LEAPMOTOR</text>
+            <rect class="hl" x="6" y="106" width="138" height="20" rx="4"/>
+            <use href="#i-img" x="14" y="136" width="13" height="11"/><text class="s-t" x="32" y="145">Gallery</text>
+            <circle class="pulse" cx="100" cy="116" r="4"/><circle class="tap" cx="100" cy="116" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Android&rsquo;s file browser</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Open your pictures folder</h3>
+        <p>Tap the folder you made in step 1.</p>
+        <p class="tip">You&rsquo;ll also see the dashcam folder, <b>LOST.DIR</b> and <b>System Volume Information</b>. Leave those alone.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The USB stick's folders in the file browser, with the Wallpapers folder highlighted">
+            <rect class="s-bg" width="320" height="162" style="fill:#2A3238"/>
+            <path d="M12 16 h10 M12 20 h10 M12 24 h10" stroke="#D8E0E4" stroke-width="1.3"/>
+            <text class="s-h" x="32" y="24">LEAPMOTOR</text>
+            <rect x="12" y="34" width="56" height="13" rx="6.5" fill="none" stroke="#56646C"/><text class="s-t2" x="40" y="43.5" text-anchor="middle">Large files</text>
+            <rect x="74" y="34" width="54" height="13" rx="6.5" fill="none" stroke="#56646C"/><text class="s-t2" x="101" y="43.5" text-anchor="middle">This week</text>
+            <text class="s-t2" x="14" y="64">Name &uarr;</text>
+            <use href="#i-folder" x="16" y="73" width="14" height="12"/><text class="s-t" x="38" y="82.5">driverecord</text>
+            <rect x="8" y="91" width="304" height="20" rx="4" fill="rgba(56,189,248,.22)"/>
+            <use href="#i-folder" x="16" y="95" width="14" height="12"/><text class="s-t" x="38" y="104.5" style="font-weight:500">Wallpapers</text>
+            <rect class="hl" x="8" y="91" width="304" height="20" rx="4"/>
+            <use href="#i-folder" x="16" y="117" width="14" height="12"/><text class="s-t" x="38" y="126.5">LOST.DIR</text>
+            <use href="#i-folder" x="16" y="139" width="14" height="12"/><text class="s-t" x="38" y="148.5">System Volume Information</text>
+            <circle class="pulse" cx="120" cy="101" r="4"/><circle class="tap" cx="120" cy="101" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Inside the USB stick</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Open the picture with the expand icon</h3>
+        <p>Each file has small icons at the right-hand end of its row. On the picture you want, tap the one that looks a bit like a plus but is really four corners. That opens the picture full screen.</p>
+        <p class="tip">Don&rsquo;t tap the file name. That hands the picture back to AutoKit as an icon instead.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="A list of pictures, with the four-corner expand icon at the end of the third row highlighted">
+            <rect class="s-bg" width="320" height="162" style="fill:#2A3238"/>
+            <path d="M12 16 h10 M12 20 h10 M12 24 h10" stroke="#D8E0E4" stroke-width="1.3"/>
+            <text class="s-h" x="32" y="24">Wallpapers</text>
+            <text class="s-t2" x="14" y="44">LEAPMOTOR &rsaquo; <tspan style="fill:#7CC8F0">Wallpapers</tspan></text>
+            <g class="s-t">
+              <use href="#i-img" x="14" y="56" width="16" height="13"/><text x="38" y="66">beach.jpg</text><text class="s-t2" x="250" y="66" text-anchor="end">2.1 MB</text>
+              <use href="#i-img" x="14" y="80" width="16" height="13"/><text x="38" y="90">harbour.jpg</text><text class="s-t2" x="250" y="90" text-anchor="end">1.8 MB</text>
+              <use href="#i-img" x="14" y="104" width="16" height="13"/><text x="38" y="114" style="font-weight:500">hills.png</text><text class="s-t2" x="250" y="114" text-anchor="end">3.4 MB</text>
+              <use href="#i-img" x="14" y="128" width="16" height="13"/><text x="38" y="138">road-trip.jpg</text><text class="s-t2" x="250" y="138" text-anchor="end">2.6 MB</text>
+            </g>
+            <use href="#i-expand" x="286" y="57" width="11" height="11"/>
+            <use href="#i-expand" x="286" y="81" width="11" height="11"/>
+            <use href="#i-expand" x="286" y="105" width="11" height="11"/>
+            <use href="#i-expand" x="286" y="129" width="11" height="11"/>
+            <rect class="hl" x="278" y="97" width="27" height="27" rx="6"/>
+            <circle class="pulse" cx="291.5" cy="110.5" r="3.5"/><circle class="tap" cx="291.5" cy="110.5" r="3.5"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Your pictures folder</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Tap the three dots, then &ldquo;Set as&hellip;&rdquo;</h3>
+        <p>With the picture open, tap the three dots in the top-right corner and choose <span class="ui">Set as&hellip;</span></p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The picture full screen, with the three-dot menu open and Set as highlighted">
+            <use href="#pic" x="0" y="0" width="320" height="162"/>
+            <rect width="320" height="26" fill="rgba(0,0,0,.35)"/>
+            <g fill="#fff"><circle cx="306" cy="8" r="1.7"/><circle cx="306" cy="13" r="1.7"/><circle cx="306" cy="18" r="1.7"/></g>
+            <rect x="206" y="26" width="106" height="50" rx="5" fill="#2A3238"/>
+            <rect x="210" y="31" width="98" height="19" rx="3" fill="rgba(56,189,248,.22)"/>
+            <text class="s-t" x="218" y="44" style="font-weight:500">Set as&hellip;</text>
+            <text class="s-t" x="218" y="67">Print</text>
+            <rect class="hl" x="210" y="31" width="98" height="19" rx="3"/>
+            <circle class="pulse" cx="282" cy="40.5" r="4"/><circle class="tap" cx="282" cy="40.5" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Picture preview</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Choose Wallpaper</h3>
+        <p>A panel pops up from the bottom. Tap <span class="ui">Wallpaper</span> (it sits under the Gallery app). Not <b>Contact photo</b>.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The Set as panel with the Wallpaper option highlighted">
+            <use href="#pic" x="0" y="0" width="320" height="162"/>
+            <rect width="320" height="162" fill="rgba(0,0,0,.5)"/>
+            <rect x="40" y="88" width="240" height="74" rx="10" fill="#E9EDF0"/>
+            <text x="160" y="104" text-anchor="middle" style="fill:#1A2329;font:500 10px var(--body)">Set as</text>
+            <rect x="74" y="111" width="66" height="46" rx="6" fill="rgba(10,147,209,.14)"/>
+            <rect x="98" y="115" width="18" height="16" rx="3" fill="#2B8FD6"/><path d="M98 128 l5-5 4 3.5 3-2.5 6 4" fill="none" stroke="#fff" stroke-width="1.2"/>
+            <text x="107" y="142" text-anchor="middle" style="fill:#1A2329;font:500 8.5px var(--body)">Wallpaper</text>
+            <text x="107" y="152" text-anchor="middle" style="fill:#55626A;font:400 7.5px var(--body)">Gallery</text>
+            <rect class="hl" x="74" y="111" width="66" height="46" rx="6" style="stroke:#0A93D1"/>
+            <rect x="196" y="115" width="18" height="16" rx="3" fill="#3C9DDB"/><circle cx="205" cy="121" r="2.6" fill="#fff"/><path d="M200 129 a5 4 0 0 1 10 0" fill="#fff"/>
+            <text x="205" y="142" text-anchor="middle" style="fill:#1A2329;font:400 8.5px var(--body)">Contact photo</text>
+            <text x="205" y="152" text-anchor="middle" style="fill:#55626A;font:400 7.5px var(--body)">Contacts</text>
+            <circle class="pulse" cx="120" cy="125" r="4"/><circle class="tap" cx="120" cy="125" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>The &ldquo;Set as&rdquo; panel</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Check the crop and tap Save</h3>
+        <p>The screen shows how it will crop the picture. The dotted box is the crop it would use if the screen turned to portrait. The C10&rsquo;s screen never turns, so only the wide landscape view matters. Tap <span class="ui">Save</span>.</p>
+        <p class="tip">A &ldquo;Setting wallpaper&hellip;&rdquo; message flashes up while it works.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The crop screen, with a dotted portrait crop guide and the Save button highlighted">
+            <use href="#pic" x="0" y="0" width="320" height="162"/>
+            <rect x="0" y="0" width="112" height="162" fill="rgba(0,0,0,.18)"/><rect x="208" y="0" width="112" height="162" fill="rgba(0,0,0,.18)"/>
+            <rect x="112" y="4" width="96" height="154" fill="none" stroke="#fff" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <rect x="0" y="0" width="320" height="24" fill="rgba(0,0,0,.4)"/>
+            <rect x="262" y="4" width="50" height="16" rx="8" fill="#fff"/>
+            <text x="287" y="15.5" text-anchor="middle" style="fill:#1A2329;font:500 9px var(--body)">Save</text>
+            <rect class="hl" x="258" y="1" width="58" height="22" rx="11"/>
+            <circle class="pulse" cx="305" cy="12" r="3"/><circle class="tap" cx="305" cy="12" r="3"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Wallpaper crop screen</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Go home</h3>
+        <p>Tap the home icon in the bar along the bottom of the screen. Your picture is now the wallpaper.</p>
+        <p class="tip">To try a different picture later, repeat steps 2 to 12.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The home screen showing the new wallpaper, with the home icon in the bottom bar highlighted">
+            <use href="#pic" x="0" y="0" width="320" height="162"/>
+            <g fill="rgba(22,29,34,.62)"><rect x="10" y="122" width="96" height="32" rx="7"/><rect x="112" y="122" width="96" height="32" rx="7"/><rect x="214" y="122" width="96" height="32" rx="7"/></g>
+            <g fill="rgba(255,255,255,.55)"><rect x="18" y="130" width="40" height="5" rx="2.5"/><rect x="18" y="140" width="64" height="5" rx="2.5"/><rect x="120" y="130" width="30" height="5" rx="2.5"/><rect x="120" y="140" width="56" height="5" rx="2.5"/><rect x="222" y="130" width="48" height="5" rx="2.5"/><rect x="222" y="140" width="34" height="5" rx="2.5"/></g>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+            <rect class="hl" x="9" y="163" width="22" height="16" rx="4"/>
+            <circle class="pulse" cx="20" cy="171" r="3"/><circle class="tap" cx="20" cy="171" r="3"/>
+          </svg>
+        </div>
+        <figcaption>Home screen, new wallpaper</figcaption>
+      </figure>
+    </li>
+  </ol>
+
+  <h2>If yours looks different</h2>
+  <div class="notes">
+    <details>
+      <summary>The menu names don&rsquo;t quite match</summary>
+      <p>The video this is based on was filmed on a car set to Spanish, so the names here are English translations. Your screen may word them slightly differently. The layout and the order of the steps should be the same.</p>
+    </details>
+    <details>
+      <summary>There&rsquo;s no gear icon in AutoKit</summary>
+      <p>Your phone has probably connected and AutoKit has gone into CarPlay or Android Auto. Turn off your phone&rsquo;s Bluetooth and Wi-Fi (or take it out of the car) and open AutoKit again.</p>
+    </details>
+    <details>
+      <summary>The USB stick doesn&rsquo;t appear in &ldquo;Open from&rdquo;</summary>
+      <p>Make sure it&rsquo;s in the USB-A (rectangular) port, not a USB-C charging port. If the dashcam records to the same stick, the screen can read it.</p>
+    </details>
+    <details>
+      <summary>How do I get the original wallpaper back?</summary>
+      <p>The only known way is to reset the car&rsquo;s screen system, which also clears your other settings. If a gentler way turns up, it will go here.</p>
+    </details>
+  </div>
+
+  <h2>Where this came from</h2>
+  <div class="credit">
+    <p>A Telegram user called <b>Wallas 630</b> worked this out, and Leapmotor C10 owner <b>Juanlu de Toledo</b> showed it step by step in a YouTube Short (in Spanish, 3 May 2026): <a href="https://www.youtube.com/shorts/PACgZIGd1wI">Fondo de pantalla personalizado en Leapmotor C10</a>. This page explains the same method in English, with drawn diagrams of each screen.</p>
+    <p>This guide is unofficial. Leapmotor doesn&rsquo;t make or support it, and a software update could stop it working or put the original wallpaper back.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Source and README: <a href="https://github.com/drewbroadley/unashamedai/tree/main/docs/leapmotor">github.com/drewbroadley/unashamedai</a><br>
+    A <a href="https://wearebroadleyspeaking.com/">BROADLEY/SPEAKING</a> side project. Built by AI, described by a human. Not affiliated with Leapmotor.
+  </div>
+</footer>
+</body>
+</html>
