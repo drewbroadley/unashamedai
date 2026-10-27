@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leapmotor Notes</title>
+<meta name="description" content="Plain-English how-tos for the Leapmotor C10, written up from what other owners have worked out. Unofficial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lexend+Deca:wght@300;400;500&display=swap">
+<style>
+  :root{--bg:#F4F6F7;--card:#FFFFFF;--ink:#1A2329;--ink-2:#55626A;--ink-3:#8A969C;--line:#E1E6E9;--blue:#0A93D1;--blue-soft:#E4F3FB;
+    --title:"Poppins","Helvetica Neue",Arial,sans-serif;--body:"Lexend Deca","Helvetica Neue",Arial,sans-serif;color-scheme:light}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:300 16px/1.7 var(--body);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  .wrap{width:min(100% - 32px,880px);margin:0 auto}
+  header{padding:28px 0 0}
+  .brand{font:600 14px/1 var(--title);letter-spacing:.04em;text-decoration:none;color:var(--ink-2)}
+  .brand span{color:var(--blue)}
+  .crumb{font:400 14px/1 var(--body);color:var(--ink-3);margin-left:6px}
+  .hero{padding:clamp(48px,9vh,96px) 0 clamp(28px,5vh,48px)}
+  .hero h1{font:600 clamp(28px,4.6vw,44px)/1.15 var(--title);margin:0 0 16px;letter-spacing:-.01em}
+  .hero h1 em{font-style:normal;color:var(--blue)}
+  .hero p{margin:0;font-size:17.5px;max-width:58ch;color:var(--ink-2)}
+  main{flex:1;padding-bottom:clamp(40px,8vh,80px)}
+  h2{font:600 13px/1.3 var(--title);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px}
+  .item{display:flex;flex-direction:column;gap:10px;color:inherit;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px 24px 20px;transition:border-color .15s,box-shadow .15s}
+  .item:hover,.item:focus-visible{border-color:var(--blue);box-shadow:0 6px 20px rgba(26,35,41,.06)}
+  .item:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+  .meta{font:500 11.5px/1.4 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 8px;border-radius:4px;align-self:flex-start}
+  .name{font:600 19px/1.25 var(--title)}
+  .what{color:var(--ink-2);font-size:15px;line-height:1.65;flex:1}
+  .go{font:500 13.5px/1 var(--body);color:var(--blue);margin-top:4px}
+  footer{border-top:1px solid var(--line);padding:26px 0 36px;font-size:13.5px;line-height:1.8;color:var(--ink-3)}
+  footer a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--blue);border-color:var(--blue)}
+  @media (prefers-reduced-motion:reduce){.item{transition:none}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <a class="brand" href="../">unashamed<span>/</span>ai</a><span class="crumb">/ Leapmotor</span>
+</header>
+
+<section class="hero wrap">
+  <h1>Leapmotor <em>notes</em></h1>
+  <p>Plain-English how-tos for the Leapmotor C10, written up from what other owners have worked out. All unofficial: nothing here comes from Leapmotor or has been checked by them.</p>
+</section>
+
+<main class="wrap">
+  <h2>How-tos</h2>
+  <div class="grid">
+    <a class="item" href="c10-change-wallpaper/">
+      <div class="meta">C10 &middot; 12 steps &middot; about 2 minutes</div>
+      <div class="name">Put your own picture on the wallpaper</div>
+      <div class="what">There&rsquo;s no setting for it, but the AutoKit app opens a file browser that can pass any picture from a USB stick to the screen&rsquo;s own &ldquo;set as wallpaper&rdquo; tool. There&rsquo;s no undo, so read the warning first.</div>
+      <div class="go">Open &rarr;</div>
+    </a>
+    <a class="item" href="c10-soft-reset/">
+      <div class="meta">C10 &middot; 5 steps &middot; about 1 minute</div>
+      <div class="name">Soft reset the screens</div>
+      <div class="what">Centre screen frozen or the driver&rsquo;s display acting up? Hold two steering-wheel buttons for 20 to 30 seconds and both screens restart without turning the car off. Nothing is erased.</div>
+      <div class="go">Open &rarr;</div>
+    </a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Source and README: <a href="https://github.com/drewbroadley/unashamedai/tree/main/docs/leapmotor">github.com/drewbroadley/unashamedai</a><br>
+    A <a href="https://wearebroadleyspeaking.com/">BROADLEY/SPEAKING</a> side project. Built by AI, described by a human. Not affiliated with Leapmotor.
+  </div>
+</footer>
+</body>
+</html>
