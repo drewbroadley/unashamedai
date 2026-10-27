@@ -46,6 +46,14 @@ cookies, no `localStorage`.
   `fonts.gstatic.com`) for Poppins and Lexend Deca. If it's blocked the pages
   fall back to system fonts and work unchanged. The source video is a plain link,
   **not an embed**, so nothing loads from YouTube unless you click it.
+- **Link previews:** each guide's Open Graph and X tags point at its own
+  `img/og-image.png`, a 1200×630 card built from the page's own drawings (the
+  "Set as › Wallpaper" panel, and the steering wheel with both buttons
+  highlighted). Only link-preview services (Slack, LinkedIn, Facebook, iMessage
+  and so on) fetch them; the pages themselves never load them. To rebuild them
+  after changing a drawing or a card's wording, run
+  `python3 scripts/leapmotor/render_og.py` (needs Google Chrome). It pastes each
+  page's drawings into `scripts/leapmotor/og-card.html` and screenshots it.
 - **Data:** none. The pages read nothing from you and send nothing anywhere.
 
 ## What they do NOT do
