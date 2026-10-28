@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<title>Leapmotor notes, link-preview cards</title>
+<!-- Template for render_og.py: it pastes in the drawing sprites from the guide pages and
+     screenshots this at 1200x630, once per card (?card=wallpaper, ?card=soft-reset). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lexend+Deca:wght@300;400;500&display=block">
+<style>
+:root{--ink:#1A2329;--ink-2:#55626A;--ink-3:#8A969C;--line:#E1E6E9;--blue:#0A93D1;--blue-soft:#E4F3FB;--hl:#38BDF8;
+  --title:"Poppins","Helvetica Neue",Arial,sans-serif;--body:"Lexend Deca","Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#fff}
+body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased}
+.card{display:none;grid-template-columns:540px 660px;width:1200px;height:630px}
+.card.on{display:grid}
+.txt{padding:56px 36px 44px 60px;display:flex;flex-direction:column;border-top:8px solid var(--blue)}
+.eyebrow{align-self:flex-start;font:500 15px/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:5px 12px;border-radius:5px}
+h1{font:600 60px/1.08 var(--title);letter-spacing:-.015em;margin:24px 0 20px}
+h1 em{font-style:normal;color:var(--blue)}
+p{font:400 23px/1.45 var(--body);color:var(--ink-2);margin:0;max-width:440px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.chips span{font:500 16px/1 var(--body);color:var(--ink);background:#EEF1F3;border:1px solid var(--line);border-radius:999px;padding:9px 14px}
+.url{margin-top:auto;font:400 17px/1 var(--body);color:var(--ink-3);white-space:nowrap}
+.url b{font:600 17px/1 var(--title);color:var(--ink-2)}
+.url b span{color:var(--blue)}
+.art{background:#E8ECEF;display:grid;place-items:center;padding:36px}
+.bezel{background:#0B0F12;border-radius:26px;padding:12px;box-shadow:0 24px 50px rgba(26,35,41,.22);width:100%}
+.bezel svg{display:block;width:100%;height:auto;border-radius:14px}
+.plate{width:100%}
+.plate svg{display:block;width:100%;height:auto}
+/* drawing classes used by the guide pages' diagrams; static, no animation */
+.hl{fill:none;stroke:var(--hl);stroke-width:2}
+.tap{fill:var(--hl)}
+.pulse{fill:none;stroke:var(--hl);stroke-width:1.5;opacity:.45}
+.lbl{fill:var(--ink);font:500 10px/1 var(--body)}
+.lead{stroke:var(--ink-2);stroke-width:1;fill:none}
+</style>
+</head>
+<body>
+<!--SPRITES-->
+
+<section class="card" id="wallpaper">
+  <div class="txt">
+    <span class="eyebrow">Leapmotor C10 &middot; how-to</span>
+    <h1>Put your own picture on the <em>wallpaper</em></h1>
+    <p>There&rsquo;s no setting for it, but AutoKit&rsquo;s file browser can do it. A USB stick and about two minutes.</p>
+    <div class="chips"><span>12 steps</span><span>USB stick</span><span>Needs AutoKit</span></div>
+    <div class="url"><b>unashamed<span>/</span>ai</b> &nbsp;&middot;&nbsp; Leapmotor notes</div>
+  </div>
+  <div class="art">
+    <div class="bezel">
+      <svg viewBox="0 0 320 180">
+        <use href="#pic" x="0" y="0" width="320" height="162"/>
+        <rect width="320" height="162" fill="rgba(0,0,0,.28)"/>
+        <rect x="40" y="88" width="240" height="74" rx="10" fill="#E9EDF0"/>
+        <text x="160" y="104" text-anchor="middle" style="fill:#1A2329;font:500 10px var(--body)">Set as</text>
+        <rect x="74" y="111" width="66" height="46" rx="6" fill="rgba(10,147,209,.14)"/>
+        <rect x="98" y="115" width="18" height="16" rx="3" fill="#2B8FD6"/><path d="M98 128 l5-5 4 3.5 3-2.5 6 4" fill="none" stroke="#fff" stroke-width="1.2"/>
+        <text x="107" y="142" text-anchor="middle" style="fill:#1A2329;font:500 8.5px var(--body)">Wallpaper</text>
+        <text x="107" y="152" text-anchor="middle" style="fill:#55626A;font:400 7.5px var(--body)">Gallery</text>
+        <rect class="hl" x="74" y="111" width="66" height="46" rx="6" style="stroke:#0A93D1"/>
+        <rect x="196" y="115" width="18" height="16" rx="3" fill="#3C9DDB"/><circle cx="205" cy="121" r="2.6" fill="#fff"/><path d="M200 129 a5 4 0 0 1 10 0" fill="#fff"/>
+        <text x="205" y="142" text-anchor="middle" style="fill:#1A2329;font:400 8.5px var(--body)">Contact photo</text>
+        <text x="205" y="152" text-anchor="middle" style="fill:#55626A;font:400 7.5px var(--body)">Contacts</text>
+        <circle class="pulse" cx="120" cy="125" r="7"/><circle class="tap" cx="120" cy="125" r="4"/>
+        <use href="#dock" x="0" y="162" width="320" height="18"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="soft-reset">
+  <div class="txt">
+    <span class="eyebrow">Leapmotor C10 &middot; how-to</span>
+    <h1>Soft reset the C10&rsquo;s <em>screens</em></h1>
+    <p>Screen frozen? Hold two steering-wheel buttons for 20 to 30 seconds. Nothing is erased.</p>
+    <div class="chips"><span>2 buttons</span><span>20&ndash;30 seconds</span><span>EV and REEV</span></div>
+    <div class="url"><b>unashamed<span>/</span>ai</b> &nbsp;&middot;&nbsp; Leapmotor notes</div>
+  </div>
+  <div class="art">
+    <div class="plate">
+      <svg viewBox="0 0 320 180">
+        <use href="#wheel" width="320" height="180"/>
+        <circle class="hl" cx="87" cy="114" r="14" style="stroke:#0A93D1"/>
+        <circle class="pulse" cx="87" cy="114" r="7" style="stroke:#0A93D1"/><circle class="tap" cx="87" cy="114" r="3" style="fill:#0A93D1"/>
+        <circle class="hl" cx="265" cy="101" r="8" style="stroke:#0A93D1"/>
+        <circle class="tap" cx="265" cy="101" r="3" style="fill:#0A93D1"/>
+        <circle cx="160" cy="124" r="21" fill="#F7F9FA"/>
+        <circle cx="160" cy="124" r="14" fill="none" stroke="#D6DDE1" stroke-width="3"/>
+        <circle cx="160" cy="124" r="14" fill="none" stroke="#0A93D1" stroke-width="3" stroke-linecap="round" stroke-dasharray="88" stroke-dashoffset="26" transform="rotate(-90 160 124)"/>
+        <text x="160" y="127.5" text-anchor="middle" style="fill:#1A2329;font:500 9px var(--body)">20&ndash;30s</text>
+        <text class="lbl" x="6" y="62"><tspan x="6">Push in</tspan><tspan x="6" dy="12">&amp; hold</tspan></text>
+        <path class="lead" d="M30 80 L77 104"/>
+        <text class="lbl" x="314" y="70" text-anchor="end">Hold</text>
+        <path class="lead" d="M292 76 L272 96"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="qdlink">
+  <div class="txt">
+    <span class="eyebrow">Leapmotor C10 &middot; how-to</span>
+    <h1>Get your iPhone onto <em>QDLink</em></h1>
+    <p>The car&rsquo;s Wi-Fi password is hiding on the last page of QDLink&rsquo;s help. Here&rsquo;s where, and what to do with it.</p>
+    <div class="chips"><span>7 steps</span><span>iPhone</span><span>Screen Mirroring</span></div>
+    <div class="url"><b>unashamed<span>/</span>ai</b> &nbsp;&middot;&nbsp; Leapmotor notes</div>
+  </div>
+  <div class="art">
+    <div class="bezel">
+      <svg viewBox="0 0 320 180">
+        <rect width="320" height="162" fill="#1D252B"/>
+        <text x="14" y="21" style="fill:#D8E0E4;font:500 11px var(--body)">&lsaquo; Help</text>
+        <circle cx="300" cy="17" r="8" fill="none" stroke="#D8E0E4" stroke-width="1.3"/>
+        <text x="300" y="20.5" text-anchor="middle" style="fill:#D8E0E4;font:500 10px var(--body)">?</text>
+        <rect x="40" y="32" width="240" height="104" rx="8" fill="#26313A"/>
+        <text x="56" y="54" style="fill:#D8E0E4;font:500 11px var(--body)">iOS</text>
+        <rect x="56" y="64" width="170" height="5" rx="2.5" fill="#33414A"/>
+        <rect x="52" y="78" width="216" height="46" rx="6" fill="rgba(56,189,248,.16)"/>
+        <text x="62" y="94" style="fill:#8E9BA3;font:400 8.5px var(--body)">Wi-Fi name</text>
+        <text x="138" y="94" style="fill:#D8E0E4;font:500 10px var(--body);letter-spacing:.5px">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</text>
+        <text x="62" y="114" style="fill:#8E9BA3;font:400 8.5px var(--body)">Password</text>
+        <text x="138" y="114" style="fill:#D8E0E4;font:500 10px var(--body);letter-spacing:.5px">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</text>
+        <rect class="hl" x="52" y="78" width="216" height="46" rx="6"/>
+        <g fill="#56646C"><circle cx="148" cy="148" r="3"/><circle cx="160" cy="148" r="3"/><circle cx="172" cy="148" r="3" fill="#D8E0E4"/></g>
+        <use href="#dock" x="0" y="162" width="320" height="18"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<script>
+  const id = new URLSearchParams(location.search).get('card') || 'wallpaper';
+  document.getElementById(id).classList.add('on');
+</script>
+</body>
+</html>
