@@ -15,7 +15,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 DOCS = os.path.join(ROOT, "docs", "leapmotor")
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-CARDS = {"wallpaper": "c10-change-wallpaper", "soft-reset": "c10-soft-reset"}
+CARDS = {"wallpaper": "c10-change-wallpaper", "soft-reset": "c10-soft-reset", "qdlink": "c10-qdlink-iphone"}
 
 sprites = []
 for page in CARDS.values():

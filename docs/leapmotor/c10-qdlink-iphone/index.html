@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leapmotor C10 QDLink iPhone</title>
+<meta name="description" content="How to mirror an iPhone on the Leapmotor C10's centre screen with QDLink. The car's Wi-Fi password is hidden on the last page of QDLink's help, behind the ? button.">
+<meta name="author" content="Drew Broadley">
+<link rel="canonical" href="https://unashamedai.broadley.org.nz/leapmotor/c10-qdlink-iphone/">
+
+<!-- Open Graph: Facebook, LinkedIn, Slack, WhatsApp, Signal, Bluesky, Mastodon -->
+<meta property="og:site_name" content="unashamedly AI-generated">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_NZ">
+<meta property="og:url" content="https://unashamedai.broadley.org.nz/leapmotor/c10-qdlink-iphone/">
+<meta property="og:title" content="Leapmotor C10: get your iPhone onto QDLink">
+<meta property="og:description" content="iPhones mirror to the C10's centre screen with Screen Mirroring, once they're on the car's Wi-Fi. The password is on the last page of QDLink's help, behind the ? button.">
+<meta property="og:image" content="https://unashamedai.broadley.org.nz/leapmotor/c10-qdlink-iphone/img/og-image.png">
+<meta property="og:image:secure_url" content="https://unashamedai.broadley.org.nz/leapmotor/c10-qdlink-iphone/img/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Leapmotor C10 how-to: get your iPhone onto QDLink. A drawing of QDLink's iOS help page on the car screen with the Wi-Fi name and password highlighted.">
+
+<!-- X / Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Leapmotor C10: get your iPhone onto QDLink">
+<meta name="twitter:description" content="iPhones mirror to the C10's centre screen with Screen Mirroring, once they're on the car's Wi-Fi. The password is on the last page of QDLink's help, behind the ? button.">
+<meta name="twitter:image" content="https://unashamedai.broadley.org.nz/leapmotor/c10-qdlink-iphone/img/og-image.png">
+<meta name="twitter:image:alt" content="Leapmotor C10 how-to: get your iPhone onto QDLink. A drawing of QDLink's iOS help page on the car screen with the Wi-Fi name and password highlighted.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lexend+Deca:wght@300;400;500&display=swap">
+<style>
+  :root{--bg:#F4F6F7;--card:#FFFFFF;--ink:#1A2329;--ink-2:#55626A;--ink-3:#8A969C;--line:#E1E6E9;--blue:#0A93D1;--blue-soft:#E4F3FB;--blue-line:#9FD3EE;
+    --scr:#161D22;--scr-2:#222C33;--scr-3:#33414A;--scr-ink:#D8E0E4;--scr-ink-2:#8E9BA3;--hl:#38BDF8;
+    --title:"Poppins","Helvetica Neue",Arial,sans-serif;--body:"Lexend Deca","Helvetica Neue",Arial,sans-serif;color-scheme:light}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:300 16px/1.7 var(--body);-webkit-font-smoothing:antialiased}
+  .wrap{width:min(100% - 32px,920px);margin:0 auto}
+  a{color:var(--blue)}
+  b,strong{font-weight:500}
+  header{padding:28px 0 0}
+  .brand{font:600 14px/1 var(--title);letter-spacing:.04em;text-decoration:none;color:var(--ink-2)}
+  .brand span{color:var(--blue)}
+  .crumb{font:400 14px/1 var(--body);color:var(--ink-3);margin-left:6px}
+  .crumb a{color:var(--ink-2);text-decoration:none}
+  .crumb a:hover{color:var(--blue)}
+
+  .hero{padding:clamp(40px,8vh,80px) 0 28px}
+  .eyebrow{display:inline-block;font:500 11.5px/1.4 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 8px;border-radius:4px}
+  .hero h1{font:600 clamp(28px,4.6vw,44px)/1.15 var(--title);margin:14px 0 16px;letter-spacing:-.01em;max-width:22ch;text-wrap:balance}
+  .hero h1 em{font-style:normal;color:var(--blue)}
+  .hero p{margin:0;font-size:17.5px;max-width:60ch;color:var(--ink-2)}
+  .hero p b{color:var(--ink)}
+
+  .info{display:flex;gap:14px;background:var(--blue-soft);border:1px solid var(--blue-line);border-radius:10px;padding:16px 18px;margin:8px 0 0;color:#0D3A52;font-size:15px;line-height:1.6}
+  .info svg{flex:none;width:22px;height:22px;margin-top:2px;fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .info b{color:#06263A}
+
+  h2{font:600 13px/1.3 var(--title);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:56px 0 16px}
+  .need{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;margin:0;padding:0;list-style:none}
+  .need li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+  .need li b{display:block;color:var(--ink);font:600 15.5px/1.35 var(--title);margin-bottom:4px}
+
+  .part{font:600 15px/1.3 var(--title);color:var(--ink-2);margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+  .part::after{content:"";flex:1;height:1px;background:var(--line)}
+  .steps{list-style:none;margin:0;padding:0;counter-reset:step}
+  .steps.cont{counter-reset:none}
+  .step{counter-increment:step;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:28px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:0 0 16px}
+  .step h3{font:600 19px/1.3 var(--title);margin:0 0 8px;display:flex;gap:12px;align-items:baseline}
+  .step h3::before{content:counter(step);flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font:600 14px/1 var(--title);transform:translateY(-2px)}
+  .step p{margin:0 0 8px;color:var(--ink-2);font-size:15.5px}
+  .step p:last-child{margin-bottom:0}
+  .step .tip{font-size:14px;color:var(--ink-3)}
+  .ui{font:500 .92em/1 var(--body);color:var(--ink);background:#EEF1F3;border:1px solid var(--line);border-radius:4px;padding:2px 6px;white-space:nowrap}
+  .bezel{background:#0B0F12;border-radius:14px;padding:7px;box-shadow:0 10px 26px rgba(26,35,41,.16)}
+  .bezel svg{display:block;width:100%;height:auto;border-radius:8px}
+  .plate{background:#E8ECEF;border:1px solid #DCE2E6;border-radius:14px;padding:6px;box-shadow:0 10px 26px rgba(26,35,41,.10)}
+  .plate svg{display:block;width:100%;height:auto}
+  figure{margin:0}
+  figcaption{font-size:12.5px;color:var(--ink-3);margin-top:8px;text-align:center}
+
+  /* drawing */
+  .s-t{fill:var(--scr-ink);font:400 10px/1 var(--body)} .s-t2{fill:var(--scr-ink-2);font:400 8.5px/1 var(--body)}
+  .s-h{fill:var(--scr-ink);font:500 11px/1 var(--body)} .s-ph{fill:var(--scr-3)}
+  .p-t{fill:#1A2329;font:400 6.5px/1 var(--body)} .p-t2{fill:#8A969C;font:400 5.5px/1 var(--body)}
+  .p-h{fill:#1A2329;font:500 9px/1 var(--body)} .p-blue{fill:#0A7CD6;font:500 6.5px/1 var(--body)}
+  .lbl{fill:var(--ink);font:500 9px/1 var(--body)}
+  .hl{fill:none;stroke:var(--hl);stroke-width:2}
+  .plate .hl{stroke:var(--blue);stroke-width:1.8}
+  .tap{fill:var(--hl)} .plate .tap{fill:rgba(10,147,209,.3);stroke:var(--blue);stroke-width:.8}
+  .pulse{fill:none;stroke:var(--hl);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:pulse 1.8s ease-out infinite}
+  .plate .pulse{stroke:var(--blue)}
+  @keyframes pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.2);opacity:0}}
+  .swipe{animation:swipe 2.4s ease-in-out infinite}
+  @keyframes swipe{0%,15%{transform:translateX(0);opacity:0}25%{opacity:1}70%{transform:translateX(-90px);opacity:1}85%,100%{transform:translateX(-90px);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.pulse{animation:none;opacity:.5;transform:scale(1.8)}.swipe{animation:none}}
+
+  .notes{display:grid;gap:12px}
+  .notes details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+  .notes summary{cursor:pointer;font:600 15.5px/1.4 var(--title);color:var(--ink)}
+  .notes summary::marker{color:var(--blue)}
+  .notes details p{margin:10px 0 0;color:var(--ink-2);font-size:15px}
+  .credit{color:var(--ink-2);font-size:15px;max-width:64ch}
+  .credit p{margin:0 0 12px}
+
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:26px 0 36px;font-size:13.5px;line-height:1.8;color:var(--ink-3)}
+  footer a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--blue);border-color:var(--blue)}
+
+  @media (max-width:720px){
+    .step{grid-template-columns:1fr;gap:18px;padding:18px}
+  }
+</style>
+</head>
+<body>
+
+<!-- shared drawing parts -->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <symbol id="pic" viewBox="0 0 320 162" preserveAspectRatio="xMidYMid slice">
+    <rect width="320" height="162" fill="#A9DCF0"/>
+    <circle cx="244" cy="44" r="16" fill="#F7C95C"/>
+    <path d="M0 104 L60 70 L118 98 L178 58 L250 100 L320 76 V162 H0Z" fill="#6BAF84"/>
+    <path d="M0 128 Q90 100 170 120 T320 112 V162 H0Z" fill="#3F8A5F"/>
+    <path d="M150 162 L178 118 L186 118 L206 162Z" fill="#E9E2D0"/>
+  </symbol>
+  <symbol id="dock" viewBox="0 0 320 18">
+    <rect width="320" height="18" fill="#0E1418"/>
+    <path d="M14 9.5 L20 4.5 L26 9.5 V14 H14Z" fill="none" stroke="#C9D3D8" stroke-width="1.4" stroke-linejoin="round"/>
+    <g fill="#5E6C74"><rect x="46" y="5" width="8" height="8" rx="2"/><rect x="74" y="5" width="8" height="8" rx="2"/><rect x="102" y="5" width="8" height="8" rx="2"/><rect x="210" y="5" width="8" height="8" rx="2"/><rect x="238" y="5" width="8" height="8" rx="2"/><rect x="292" y="5" width="8" height="8" rx="2"/></g>
+    <text x="160" y="12.5" text-anchor="middle" fill="#C9D3D8" font-size="8.5" font-family="Lexend Deca, Arial, sans-serif">23°</text>
+  </symbol>
+  <!-- phone-to-screen link icon (drawn for this page, not QDLink's own logo) -->
+  <symbol id="i-qd" viewBox="0 0 24 24">
+    <g fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="2.5" y="5" width="7" height="13" rx="1.6"/><rect x="12.5" y="7" width="9.5" height="7" rx="1.2"/>
+      <path d="M9.5 11.5h3M15.5 17.5h3.5M17.25 14v3.5"/>
+    </g>
+  </symbol>
+  <symbol id="i-mirror" viewBox="0 0 14 12">
+    <rect x="1" y="1" width="9" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.2"/>
+    <rect x="4" y="4" width="9" height="7" rx="1.6" fill="currentColor"/>
+  </symbol>
+  <symbol id="phone" viewBox="0 0 80 164">
+    <rect x="1" y="1" width="78" height="162" rx="14" fill="#1A2329"/>
+    <rect x="4.5" y="4.5" width="71" height="155" rx="11" fill="#F2F4F6"/>
+    <rect x="30" y="8" width="20" height="5.5" rx="2.75" fill="#1A2329"/>
+  </symbol>
+</svg>
+
+<header class="wrap">
+  <a class="brand" href="../../">unashamed<span>/</span>ai</a><span class="crumb">/ <a href="../">Leapmotor</a></span>
+</header>
+
+<section class="hero wrap">
+  <span class="eyebrow">Leapmotor C10 &middot; QDLink &middot; iPhone &middot; unofficial</span>
+  <h1>Get your iPhone onto <em>QDLink</em></h1>
+  <p>QDLink puts your phone&rsquo;s screen on the C10&rsquo;s centre display. An iPhone connects through Apple&rsquo;s built-in <b>Screen Mirroring</b>, but first it has to join the car&rsquo;s Wi-Fi, and QDLink doesn&rsquo;t make the password easy to find.</p>
+</section>
+
+<main class="wrap">
+  <div class="info" role="note">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v6M12 7.5v.2"/></svg>
+    <div><b>The bit that isn&rsquo;t obvious:</b> the car&rsquo;s Wi-Fi name and password are on QDLink&rsquo;s help screens. Tap the <b>?</b> in the top-right corner, then swipe across to the <b>last</b> help page, the one for iOS.</div>
+  </div>
+
+  <h2>Good to know</h2>
+  <ul class="need">
+    <li><b>What QDLink is</b>Leapmotor&rsquo;s phone-mirroring app on the C10, added by a software update because this generation of the car doesn&rsquo;t have Apple CarPlay or Android Auto.</li>
+    <li><b>iPhones work too</b>Some reviews describe QDLink as Android-only. An iPhone connects with Screen Mirroring, which is already built into iOS, over the car&rsquo;s own Wi-Fi.</li>
+    <li><b>Mostly a one-off</b>Your iPhone remembers the car&rsquo;s Wi-Fi after the first time, so next time you can jump straight to Screen Mirroring (step 6).</li>
+    <li><b>Do it parked</b>You&rsquo;ll be reading a password off the car screen and typing it into your phone.</li>
+  </ul>
+
+  <h2>Seven steps</h2>
+
+  <div class="part">On the car screen</div>
+  <ol class="steps">
+
+    <li class="step">
+      <div class="txt">
+        <h3>Open QDLink</h3>
+        <p>Open the app grid on the centre screen and tap <span class="ui">QDLink</span>.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The app grid with the QDLink app highlighted">
+            <use href="#pic" x="0" y="0" width="320" height="162" opacity=".25"/>
+            <rect width="320" height="162" fill="#161D22" opacity=".72"/>
+            <g class="s-ph">
+              <rect x="30" y="30" width="28" height="28" rx="7"/><rect x="74" y="30" width="28" height="28" rx="7"/><rect x="162" y="30" width="28" height="28" rx="7"/><rect x="206" y="30" width="28" height="28" rx="7"/><rect x="250" y="30" width="28" height="28" rx="7"/>
+              <rect x="30" y="86" width="28" height="28" rx="7"/><rect x="74" y="86" width="28" height="28" rx="7"/><rect x="118" y="86" width="28" height="28" rx="7"/><rect x="162" y="86" width="28" height="28" rx="7"/><rect x="206" y="86" width="28" height="28" rx="7"/><rect x="250" y="86" width="28" height="28" rx="7"/>
+              <rect x="34" y="64" width="20" height="4" rx="2"/><rect x="78" y="64" width="20" height="4" rx="2"/><rect x="166" y="64" width="20" height="4" rx="2"/><rect x="210" y="64" width="20" height="4" rx="2"/><rect x="254" y="64" width="20" height="4" rx="2"/>
+              <rect x="34" y="120" width="20" height="4" rx="2"/><rect x="78" y="120" width="20" height="4" rx="2"/><rect x="122" y="120" width="20" height="4" rx="2"/><rect x="166" y="120" width="20" height="4" rx="2"/><rect x="210" y="120" width="20" height="4" rx="2"/><rect x="254" y="120" width="20" height="4" rx="2"/>
+            </g>
+            <rect x="118" y="30" width="28" height="28" rx="7" fill="#1F9D74"/>
+            <use href="#i-qd" x="122" y="34" width="20" height="20"/>
+            <text class="s-t" x="132" y="72" text-anchor="middle">QDLink</text>
+            <rect class="hl" x="110" y="24" width="44" height="54" rx="9"/>
+            <circle class="pulse" cx="139" cy="52" r="4"/><circle class="tap" cx="139" cy="52" r="4"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>App grid</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Tap the ? in the top-right corner</h3>
+        <p>QDLink opens on its connect screen. The <span class="ui">?</span> in the top-right corner opens its help.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="QDLink's connect screen with the question-mark help button in the top-right corner highlighted">
+            <rect width="320" height="162" fill="#1D252B"/>
+            <text class="s-h" x="14" y="21">QDLink</text>
+            <circle cx="160" cy="70" r="28" fill="#1F9D74" opacity=".18"/>
+            <use href="#i-qd" x="140" y="50" width="40" height="40"/>
+            <text class="s-t" x="160" y="120" text-anchor="middle">Waiting for your phone&hellip;</text>
+            <circle cx="300" cy="17" r="8" fill="none" stroke="#D8E0E4" stroke-width="1.3"/>
+            <text x="300" y="20.5" text-anchor="middle" style="fill:#D8E0E4;font:500 10px var(--body)">?</text>
+            <circle class="hl" cx="300" cy="17" r="13"/>
+            <circle class="pulse" cx="306" cy="23" r="3.5"/><circle class="tap" cx="306" cy="23" r="3.5"/>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>QDLink&rsquo;s connect screen</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Swipe to the last help page</h3>
+        <p>The help has several pages. Swipe across them until you reach the <b>last</b> one, which is the iOS page.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="QDLink's first help page, with a swipe gesture and page markers showing the iOS page is the last one">
+            <rect width="320" height="162" fill="#1D252B"/>
+            <text class="s-h" x="14" y="21">&lsaquo; Help</text>
+            <rect x="40" y="32" width="240" height="104" rx="8" fill="#26313A"/>
+            <rect x="56" y="45" width="70" height="8" rx="4" fill="#4A5861"/>
+            <g class="s-ph"><rect x="56" y="66" width="150" height="5" rx="2.5"/><rect x="56" y="80" width="180" height="5" rx="2.5"/><rect x="56" y="94" width="130" height="5" rx="2.5"/><rect x="56" y="108" width="160" height="5" rx="2.5"/></g>
+            <g class="swipe">
+              <circle cx="250" cy="90" r="7" fill="rgba(56,189,248,.35)"/><circle cx="250" cy="90" r="4" class="tap"/>
+            </g>
+            <path d="M246 124 H166 M172 119 l-6 5 6 5" fill="none" stroke="#38BDF8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#56646C"><circle cx="148" cy="148" r="3" fill="#D8E0E4"/><circle cx="160" cy="148" r="3"/><circle cx="172" cy="148" r="3"/></g>
+            <circle class="hl" cx="172" cy="148" r="6.5"/>
+            <text class="s-t2" x="182" y="151">iOS</text>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Help, first page</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Note the Wi-Fi name and password</h3>
+        <p>The iOS page shows the car&rsquo;s <b>Wi-Fi name</b> and <b>password</b>. Leave it on screen, or write both down.</p>
+        <p class="tip">Passwords are case-sensitive, so watch for look-alikes such as l and 1, or O and 0.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="QDLink's iOS help page with the car's Wi-Fi name and password highlighted">
+            <rect width="320" height="162" fill="#1D252B"/>
+            <text class="s-h" x="14" y="21">&lsaquo; Help</text>
+            <rect x="40" y="32" width="240" height="104" rx="8" fill="#26313A"/>
+            <text class="s-h" x="56" y="54">iOS</text>
+            <g class="s-ph"><rect x="56" y="64" width="170" height="5" rx="2.5"/></g>
+            <rect x="52" y="78" width="216" height="46" rx="6" fill="rgba(56,189,248,.16)"/>
+            <text class="s-t2" x="62" y="94">Wi-Fi name</text>
+            <text class="s-t" x="138" y="94" style="font-weight:500;letter-spacing:.5px">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</text>
+            <text class="s-t2" x="62" y="114">Password</text>
+            <text class="s-t" x="138" y="114" style="font-weight:500;letter-spacing:.5px">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</text>
+            <rect class="hl" x="52" y="78" width="216" height="46" rx="6"/>
+            <g fill="#56646C"><circle cx="148" cy="148" r="3"/><circle cx="160" cy="148" r="3"/><circle cx="172" cy="148" r="3" fill="#D8E0E4"/></g>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Help, last page (iOS)</figcaption>
+      </figure>
+    </li>
+  </ol>
+
+  <div class="part">On your iPhone</div>
+  <ol class="steps cont">
+
+    <li class="step">
+      <div class="txt">
+        <h3>Join the car&rsquo;s Wi-Fi</h3>
+        <p>Open <span class="ui">Settings</span> &rsaquo; <span class="ui">Wi-Fi</span>, tap the network named on the iOS help page, enter the password and tap <span class="ui">Join</span>.</p>
+      </div>
+      <figure>
+        <div class="plate">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Two iPhone screens: the Wi-Fi list with the car's network highlighted, then the password screen with Join highlighted">
+            <use href="#phone" x="52" y="8" width="80" height="164"/>
+            <text class="p-blue" x="60" y="30">&lsaquo; Settings</text>
+            <text class="p-h" x="60" y="45">Wi-Fi</text>
+            <rect x="58" y="51" width="68" height="14" rx="3" fill="#fff"/>
+            <text class="p-t" x="62" y="60.5">Wi-Fi</text>
+            <rect x="109" y="54" width="13" height="8" rx="4" fill="#34C759"/><circle cx="118" cy="58" r="3.2" fill="#fff"/>
+            <text class="p-t2" x="61" y="75">NETWORKS</text>
+            <rect x="58" y="79" width="68" height="44" rx="3" fill="#fff"/>
+            <text class="p-t" x="62" y="88.5" style="font-weight:500">Car Wi-Fi</text>
+            <path d="M115 87.5a5 5 0 0 1 7 0M116.8 89.3a2.4 2.4 0 0 1 3.4 0" fill="none" stroke="#1A2329" stroke-width=".9" stroke-linecap="round"/>
+            <rect x="58" y="93" width="68" height=".6" fill="#E3E7EA"/><rect x="58" y="108" width="68" height=".6" fill="#E3E7EA"/>
+            <rect x="62" y="99" width="34" height="4" rx="2" fill="#D9DEE2"/><rect x="62" y="114" width="26" height="4" rx="2" fill="#D9DEE2"/>
+            <rect class="hl" x="58" y="79" width="68" height="14" rx="3"/>
+            <circle class="pulse" cx="102" cy="86" r="3"/><circle class="tap" cx="102" cy="86" r="3"/>
+
+            <path d="M142 90 h28 M164 85 l6 5 -6 5" fill="none" stroke="#8A969C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <use href="#phone" x="188" y="8" width="80" height="164"/>
+            <text class="p-t2" x="196" y="30">Cancel</text>
+            <text class="p-blue" x="260" y="30" text-anchor="end" style="font-weight:600">Join</text>
+            <text class="p-t" x="228" y="42" text-anchor="middle" style="font-weight:500">Enter Password</text>
+            <rect x="194" y="50" width="68" height="14" rx="3" fill="#fff"/>
+            <text class="p-t2" x="198" y="59.5">Password</text>
+            <text class="p-t" x="226" y="59.5" style="letter-spacing:.4px">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</text>
+            <rect x="192.5" y="112" width="71" height="47.5" fill="#D3D8DD"/>
+            <path d="M192.5 159.5 V150 H263.5 V159.5 a11 11 0 0 1 -11 0.0Z" fill="#D3D8DD"/>
+            <g fill="#fff"><rect x="195" y="116" width="66" height="8" rx="2"/><rect x="198" y="127" width="60" height="8" rx="2"/><rect x="203" y="138" width="50" height="8" rx="2"/></g>
+            <rect class="hl" x="245" y="21" width="19" height="20" rx="4"/>
+            <circle class="pulse" cx="254.5" cy="36" r="2.4"/><circle class="tap" cx="254.5" cy="36" r="2.4"/>
+          </svg>
+        </div>
+        <figcaption>Settings &rsaquo; Wi-Fi</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Start Screen Mirroring</h3>
+        <p>Open Control Center: swipe down from the top-right corner of the screen (or up from the bottom on an iPhone with a Home button). Tap <span class="ui">Screen Mirroring</span>, then pick the car from the list.</p>
+      </div>
+      <figure>
+        <div class="plate">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Two iPhone screens: Control Center with the Screen Mirroring button highlighted, then the Screen Mirroring list with the car highlighted">
+            <use href="#phone" x="52" y="8" width="80" height="164"/>
+            <rect x="56.5" y="12.5" width="71" height="155" rx="11" fill="#48525A"/>
+            <rect x="60" y="22" width="30" height="30" rx="7" fill="#5E676F"/>
+            <g fill="#8C959C"><circle cx="68" cy="30" r="4"/><circle cx="82" cy="30" r="4"/><circle cx="68" cy="44" r="4"/><circle cx="82" cy="44" r="4"/></g>
+            <rect x="94" y="22" width="30" height="30" rx="7" fill="#5E676F"/>
+            <rect x="99" y="28" width="16" height="3" rx="1.5" fill="#8C959C"/><rect x="99" y="34" width="10" height="3" rx="1.5" fill="#8C959C"/>
+            <rect x="60" y="56" width="30" height="16" rx="5" fill="#F2F4F6"/>
+            <use href="#i-mirror" x="69" y="59.5" width="10" height="9" style="color:#1A2329"/>
+            <rect x="94" y="56" width="13" height="40" rx="5" fill="#5E676F"/><rect x="94" y="78" width="13" height="18" rx="5" fill="#C9D0D5"/>
+            <rect x="111" y="56" width="13" height="40" rx="5" fill="#5E676F"/><rect x="111" y="72" width="13" height="24" rx="5" fill="#C9D0D5"/>
+            <g fill="#5E676F"><rect x="60" y="76" width="13" height="13" rx="4"/><rect x="77" y="76" width="13" height="13" rx="4"/><circle cx="66.5" cy="106" r="6.5"/><circle cx="83.5" cy="106" r="6.5"/><circle cx="100.5" cy="106" r="6.5"/><circle cx="117.5" cy="106" r="6.5"/></g>
+            <rect class="hl" x="58" y="54" width="34" height="20" rx="6"/>
+            <circle class="pulse" cx="85" cy="68" r="2.4"/><circle class="tap" cx="85" cy="68" r="2.4"/>
+
+            <path d="M142 90 h28 M164 85 l6 5 -6 5" fill="none" stroke="#8A969C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <use href="#phone" x="188" y="8" width="80" height="164"/>
+            <rect x="192.5" y="12.5" width="71" height="155" rx="11" fill="#48525A"/>
+            <rect x="196" y="44" width="64" height="62" rx="8" fill="#F2F4F6"/>
+            <text class="p-t" x="228" y="58" text-anchor="middle" style="font-weight:500">Screen Mirroring</text>
+            <rect x="199" y="64" width="58" height="14" rx="3" fill="#fff"/>
+            <rect x="203" y="68" width="8" height="6" rx="1" fill="none" stroke="#1A2329" stroke-width=".8"/>
+            <text class="p-t" x="215" y="73.5">Your car</text>
+            <rect x="199" y="82" width="58" height="14" rx="3" fill="#fff"/>
+            <rect x="203" y="87" width="30" height="4" rx="2" fill="#D9DEE2"/>
+            <rect class="hl" x="199" y="64" width="58" height="14" rx="3"/>
+            <circle class="pulse" cx="248" cy="71" r="2.6"/><circle class="tap" cx="248" cy="71" r="2.6"/>
+          </svg>
+        </div>
+        <figcaption>Control Center &rsaquo; Screen Mirroring</figcaption>
+      </figure>
+    </li>
+
+    <li class="step">
+      <div class="txt">
+        <h3>Your iPhone is on the car screen</h3>
+        <p>Your iPhone&rsquo;s screen now appears on the centre display. To stop, open Control Center again, tap <span class="ui">Screen Mirroring</span> and then <span class="ui">Stop Mirroring</span>.</p>
+        <p class="tip">Names in these drawings are placeholders. Use the Wi-Fi name from the iOS help page, and whatever name the car shows in the Screen Mirroring list.</p>
+      </div>
+      <figure>
+        <div class="bezel">
+          <svg viewBox="0 0 320 180" role="img" aria-label="The car's centre screen showing the iPhone's home screen in the middle">
+            <rect width="320" height="162" fill="#0B0F12"/>
+            <svg x="124" y="8" width="72" height="148" viewBox="0 0 72 148">
+              <rect width="72" height="148" rx="9" fill="#A9DCF0"/>
+              <use href="#pic" x="-60" y="40" width="192" height="108"/>
+              <g fill="rgba(255,255,255,.88)">
+                <rect x="8" y="12" width="11" height="11" rx="3"/><rect x="23" y="12" width="11" height="11" rx="3"/><rect x="38" y="12" width="11" height="11" rx="3"/><rect x="53" y="12" width="11" height="11" rx="3"/>
+                <rect x="8" y="30" width="11" height="11" rx="3"/><rect x="23" y="30" width="11" height="11" rx="3"/><rect x="38" y="30" width="11" height="11" rx="3"/><rect x="53" y="30" width="11" height="11" rx="3"/>
+                <rect x="8" y="48" width="11" height="11" rx="3"/><rect x="23" y="48" width="11" height="11" rx="3"/><rect x="38" y="48" width="11" height="11" rx="3"/>
+              </g>
+              <rect x="5" y="128" width="62" height="15" rx="6" fill="rgba(255,255,255,.4)"/>
+              <g fill="rgba(255,255,255,.92)"><rect x="9" y="130.5" width="10" height="10" rx="3"/><rect x="24" y="130.5" width="10" height="10" rx="3"/><rect x="39" y="130.5" width="10" height="10" rx="3"/><rect x="54" y="130.5" width="10" height="10" rx="3"/></g>
+            </svg>
+            <use href="#dock" x="0" y="162" width="320" height="18"/>
+          </svg>
+        </div>
+        <figcaption>Centre screen, mirroring</figcaption>
+      </figure>
+    </li>
+  </ol>
+
+  <h2>If it doesn&rsquo;t work</h2>
+  <div class="notes">
+    <details>
+      <summary>The car isn&rsquo;t in the Screen Mirroring list</summary>
+      <p>Check your iPhone is on the car&rsquo;s Wi-Fi (in Settings &rsaquo; Wi-Fi it should have a tick next to it) and that QDLink is open on the centre screen. Then open Screen Mirroring again.</p>
+    </details>
+    <details>
+      <summary>The password won&rsquo;t work</summary>
+      <p>Go back to QDLink&rsquo;s iOS help page and check it character by character. It&rsquo;s case-sensitive, and some letters and numbers look alike.</p>
+    </details>
+    <details>
+      <summary>I can&rsquo;t find the iOS page</summary>
+      <p>It&rsquo;s the last page of the help, not the first. Keep swiping in the same direction until you can&rsquo;t go any further.</p>
+    </details>
+  </div>
+
+  <h2>Where this came from</h2>
+  <div class="credit">
+    <p>Worked out on the site author&rsquo;s own C10. There&rsquo;s no video for this one; the hidden password on the help screen was the part that took a while to find.</p>
+    <p>This guide is unofficial. Leapmotor doesn&rsquo;t make or support it, and a software update could move things around.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Source and README: <a href="https://github.com/drewbroadley/unashamedai/tree/main/docs/leapmotor">github.com/drewbroadley/unashamedai</a><br>
+    A <a href="https://wearebroadleyspeaking.com/">BROADLEY/SPEAKING</a> side project. Built by AI, described by a human. Not affiliated with Leapmotor.
+  </div>
+</footer>
+</body>
+</html>
