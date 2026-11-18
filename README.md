@@ -77,6 +77,16 @@ And one that watches a feed instead of pruning it:
   this group holds posts for admin approval. Refreshes itself in the background,
   with or without a tab open.
 
+And one that does a chore YouTube makes you do one click at a time:
+
+- **[YouTube: Clear Watch Later](chrome-extensions/youtube-clear-watch-later/)**
+  — empties your Watch Later playlist in about a minute. YouTube's own
+  "Remove from Watch later" request takes a *list* of removals but the page only
+  ever sends one; the extension sends 500 per request, oldest first, and keeps a
+  downloadable list of everything it removed. Honest about the trade-off: to
+  sign those requests the way YouTube's page does, it reads your YouTube sign-in
+  cookie inside the YouTube tab (never stored, never sent anywhere else).
+
 ### Web pages
 
 Static pages, published from [`docs/`](docs/) to

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Clear Watch Later</h1>
+        <p class="sub">Up to 500 videos per request, oldest first</p>
+      </div>
+    </header>
+
+    <section class="main">
+      <p class="status" id="status">Checking this tab…</p>
+
+      <div class="progress" id="progressWrap" hidden>
+        <div class="bar"><span id="bar"></span></div>
+        <p class="detail" id="detail"></p>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="primary" id="clear" disabled>Clear Watch Later</button>
+        <button type="button" class="secondary" id="stop" hidden>Stop</button>
+      </div>
+      <p class="hint" id="hint">Removed videos can't be restored in bulk. Everything removed is listed below so you can download it.</p>
+    </section>
+
+    <section class="last" id="last" hidden>
+      <p class="last-head">Removed list <small id="lastWhen"></small></p>
+      <p class="last-body"><span id="lastCount">0</span> videos removed by this extension</p>
+      <div class="links">
+        <button type="button" class="link" id="download">Download list (CSV)</button>
+        <button type="button" class="link" id="forget">Forget list</button>
+      </div>
+    </section>
+
+    <footer>Works in any signed-in <a href="https://www.youtube.com/playlist?list=WL" target="_blank" rel="noopener">YouTube</a> tab.</footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

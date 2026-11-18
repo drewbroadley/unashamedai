@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube: Clear Watch Later",
+  "description": "Empties your YouTube Watch Later playlist in seconds: removes up to 500 videos per request instead of one click per video.",
+  "version": "1.0.0",
+  "permissions": ["storage"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'none'"
+  },
+  "action": {
+    "default_title": "Clear Watch Later",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["innertube.js", "content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

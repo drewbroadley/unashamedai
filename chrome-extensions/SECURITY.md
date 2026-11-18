@@ -49,8 +49,9 @@ pre-commit check should keep it green.
 - **Use `chrome.storage`**, not `localStorage`, for extension state.
   `sessionStorage` is acceptable *only* for non-sensitive, per-tab flags (e.g.
   the Facebook "already redirected" guard).
-- **Store nothing sensitive.** These extensions store only boolean UI
-  preferences. No tokens, credentials, or personal data.
+- **Store nothing sensitive.** No tokens, credentials or cookie values, ever.
+  Beyond UI preferences, what an extension keeps must be named in its README
+  (Reddit's profile cache, the YouTube removed-videos list) and be local-only.
 - **No hardcoded secrets** — no API keys, tokens, or passwords in code.
 
 ## Third-party code & dependencies
@@ -67,7 +68,7 @@ pre-commit check should keep it green.
 - **No network calls by default.** Every network call an extension makes must be
   **HTTPS only**, validate the response before use, send the minimum data
   necessary, and be named in that extension's README. Never HTTP. Today there
-  are two:
+  are three:
   - `facebook-group-player-wanted-alerts`: optional phone push to `ntfy.sh`,
     off by default, behind a runtime-granted optional host permission.
   - `reddit-remove-promoted-keep-rising`: likely-bot detection reads public
@@ -75,6 +76,14 @@ pre-commit check should keep it green.
     `www.reddit.com` itself, the same origin the content script already runs
     on, so no host permission is involved. Usernames are validated before they
     go into the URL, requests are throttled, and nothing is sent anywhere else.
+  - `youtube-clear-watch-later`: lists and removes Watch Later entries through
+    YouTube's own web API (`/youtubei/v1/browse` and
+    `/youtubei/v1/browse/edit_playlist`) on `www.youtube.com`, the origin the
+    content script runs on, only after the user confirms in the popup. Those
+    requests must carry YouTube's `SAPISIDHASH` header, so this is the one
+    extension that reads cookies: the `SAPISID` family, via `document.cookie`,
+    at request time, hashed, sent only to `www.youtube.com`, never stored. The
+    README spells this trade-off out.
 
 ## Anti-patterns (never do)
 

@@ -422,6 +422,83 @@ node tests/owasp-audit.mjs    # static security audit of every extension here</c
 <p style="margin-top:14px">Then allow notifications for Chrome if macOS or Windows prompts. On macOS also set <b>System Settings → Notifications → Google Chrome</b> to <b>Alerts</b> (not Banners) so the alert stays on screen, and click <b>Test alert</b> in the popup to confirm the notification and chime both land.</p>
 """),
     ]),
+
+  dict(
+    slug="youtube-clear-watch-later",
+    tag="Chrome extension · YouTube",
+    title="YouTube: Clear Watch Later",
+    desc="Empties your YouTube Watch Later playlist in about a minute: up to 500 videos per request through YouTube's own API, oldest first, with a downloadable list of everything removed.",
+    lede="Empties your YouTube <b>Watch Later</b> playlist in about a minute instead of three clicks per video. It removes up to <b>500 videos per request</b>, oldest-added first, and keeps a <b>list of everything it removed</b> so you can download it.",
+    facts=[("Version","1.0.0"),("Permissions","storage only"),("Runs on","www.youtube.com, HTTPS, top frame"),("Network","www.youtube.com only, after you confirm")],
+    sections=[
+      ("Why this is fast", """
+<p>YouTube has no "remove all" for Watch Later. Its only bulk option is <b>Remove watched videos</b>, which leaves everything you never started. By hand it is ⋮ → <b>Remove from Watch later</b> for every video.</p>
+<p>That menu item sends one request to YouTube's own web API, <code>POST /youtubei/v1/browse/edit_playlist</code>, with a list of actions. The page only ever puts one action in the list; the endpoint accepts many. Measured against a real 4,681-video Watch Later in November 2026:</p>
+<div class="tablewrap"><table><tr><th>Videos in one request</th><th>Time for the request</th></tr>
+<tr><td>5</td><td>3.8 s</td></tr><tr><td>100</td><td>3.9 s</td></tr><tr><td>200</td><td>4.1 s</td></tr><tr><td>500</td><td>4.4 s</td></tr></table></div>
+<p>The time barely moves with batch size, so the extension sends 500 at a time (the largest size tested). Listing is the slow part: YouTube returns the playlist 100 entries per request, so 4,681 videos took 46 requests and about 30 seconds. A full clear of that list is about a minute and a quarter.</p>
+"""),
+      ("How it works", """
+<ol>
+<li><b>Count.</b> Opening the popup makes one request for the first page and shows the playlist's video count.</li>
+<li><b>List.</b> When you confirm, it pages through the whole playlist collecting each entry's id, video id and title, including unavailable (deleted or private) videos the page normally hides.</li>
+<li><b>Remove, oldest-added first,</b> 500 per request. Stop half way and the newest videos are the ones left.</li>
+<li><b>Check again</b> and make another pass if anything is left (up to three).</li>
+<li><b>Reload</b> the tab if you're on the Watch Later page.</li>
+</ol>
+<p>A rejected batch is split in half and retried down to single entries; rate limits and server errors are retried with backoff (2, 4, 8, 16 s) before it stops with an error.</p>
+<h3>Signing the requests</h3>
+<p>YouTube's API ignores your sign-in cookies unless the request also carries the <code>Authorization: SAPISIDHASH …</code> header YouTube's own page computes; without it, removals quietly do nothing. So the content script reads the <code>SAPISID</code> cookies with <code>document.cookie</code> inside the YouTube tab, at the moment it sends each request, and builds the same header: <code>SAPISIDHASH &lt;time&gt;_&lt;SHA-1 of "&lt;time&gt; &lt;SAPISID&gt; https://www.youtube.com"&gt;</code>.</p>
+<div class="callout warn"><b>This is the one extension in the repo that reads cookies.</b> The values are hashed and sent only to <code>www.youtube.com</code>, exactly as YouTube's page sends them, and are never stored, logged, shown or sent anywhere else. It is the price of doing this through the API instead of clicking through menus.</div>
+"""),
+      ("Using it", """
+<ul>
+<li><b>Clear Watch Later</b> turns into <b>Yes, remove all N</b> for five seconds; click again to start. No browser dialog.</li>
+<li>A progress bar shows the listing, then the removals. <b>Stop</b> finishes the current request and stops.</li>
+<li>You can close the popup while it runs; the work happens in the YouTube tab. Closing or reloading the tab stops it.</li>
+<li><b>Download list (CSV)</b> saves <code>url,title</code> for every video it removed, across runs, so you can re-add anything you didn't mean to lose. <b>Forget list</b> deletes it.</li>
+</ul>
+"""),
+      ("What it can touch", touch_table([
+        ('permissions: ["storage"]', "The removed-videos list in <code>chrome.storage.local</code>. The only permission requested."),
+        ("host_permissions", "<b>None.</b> Every request goes to <code>www.youtube.com</code>, the page the script already runs on."),
+        ('content_scripts.matches: ["https://www.youtube.com/*"]', "HTTPS only, and only YouTube's main site."),
+        ('content_scripts.js: ["innertube.js", "content.js"]', "The API helpers (pure, unit-tested) and the worker that runs a clear when the popup asks."),
+        ("content_scripts.all_frames: false", "Top-level document only; nothing runs in embedded players on other sites."),
+        ('run_at: "document_idle"', "It only needs the page's settings script. Nothing happens until you click."),
+        ("content_security_policy", "<code>script-src 'self'</code>: no remote code, no <code>eval</code>, no inline script."),
+      ]) + """
+<h3>What data it reads, stores or sends</h3>
+<ul>
+<li><b>Reads</b> YouTube's inline <code>ytcfg</code> settings script and the <code>SAPISID</code>, <code>__Secure-1PAPISID</code> and <code>__Secure-3PAPISID</code> cookies; from the API, your Watch Later entries and count.</li>
+<li><b>Network:</b> only <code>POST https://www.youtube.com/youtubei/v1/browse</code> and <code>…/browse/edit_playlist</code>, only after you click. <b>Nothing goes to any other server.</b> No analytics, no telemetry.</li>
+<li><b>Stores</b> the removed-videos list (video id and title, up to 6,000) in <code>chrome.storage.local</code> until you forget it. No cookie or header value is ever stored.</li>
+</ul>
+"""),
+      ("What it does not do", """
+<ul>
+<li>Does not touch any playlist but Watch Later, and does not like, subscribe, comment or change settings.</li>
+<li>Does nothing until you confirm; opening the popup makes one read-only request.</li>
+<li>Does not keep or forward your cookies or the signed header.</li>
+<li>Does not inject UI into YouTube or load code from anywhere.</li>
+</ul>
+"""),
+      ("Honest caveats", """
+<ul>
+<li><b>It uses YouTube's private web API</b>, the same one its own page uses but undocumented. If YouTube changes it, the extension stops with an error rather than guessing; <code>innertube.js</code> is the file to update.</li>
+<li><b>Removals can't be undone in bulk.</b> The downloadable list is the safety net.</li>
+<li><b>500 per request is what was tested.</b> The split-in-half fallback covers a rejected batch.</li>
+<li><b>It acts as whichever account the tab is signed in as.</b> Brand accounts should work but only a personal account was tested.</li>
+<li>If you'd rather an extension never see your sign-in cookie, use YouTube's <b>Remove watched videos</b> and the ⋮ menu instead.</li>
+</ul>
+"""),
+      ("Security", """
+<p>Follows the repo's shared <a href="{repo}/blob/main/chrome-extensions/SECURITY.md">security guidelines</a> (the OWASP Browser Extension Vulnerabilities Cheat Sheet): <code>storage</code> is the only permission, the content script runs HTTPS-only in the top frame, a strict CSP forbids remote code, no <code>innerHTML</code> or <code>eval</code>, popup&#8596;page messaging checks <code>sender.id</code> and allows four message types, and the CSV export defuses spreadsheet formulas in titles. The API helpers have their own unit tests, and <code>tests/owasp-audit.mjs</code> enforces the static rules.</p>
+""".format(repo=REPO)),
+      ("Install", install("youtube-clear-watch-later") + """
+<p style="margin-top:14px">Then reload any YouTube tab that was already open, and click the toolbar icon on it.</p>
+"""),
+    ]),
 ]
 
 
